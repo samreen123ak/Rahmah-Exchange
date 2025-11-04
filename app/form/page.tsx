@@ -1216,7 +1216,7 @@ export default function ApplyPage() {
         submitData.append(`documents`, file)
       })
 
-      const response = await axios.post("http://localhost:5000/api/zakatApplicants", submitData, {
+      const response = await axios.post("https://rahmah-exchange-backend-production.up.railway.app", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
