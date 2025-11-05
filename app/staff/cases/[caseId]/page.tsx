@@ -82,7 +82,7 @@ export default function CaseDetailPage({ params }: { params: { caseId: string } 
   const [updateStatus, setUpdateStatus] = useState(caseData.status)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-teal-50 to-blue-50">
+    <div className="min-h-screen bg-linear-to-b from-teal-50 to-blue-50">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-8 py-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
