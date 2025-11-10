@@ -12,11 +12,7 @@ interface ApplicationData {
   requestType: string
 }
 
-<<<<<<< HEAD
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
-=======
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
->>>>>>> ff0056ed (Updated project)
 
 export default function ApplicationStatus({ email }: { email: string }) {
   const [data, setData] = useState<ApplicationData | null>(null)
@@ -28,20 +24,9 @@ export default function ApplicationStatus({ email }: { email: string }) {
       try {
         setLoading(true)
         setError(null)
-<<<<<<< HEAD
-        console.log("[v0] Fetching applicant data for email:", email)
-
-        const res = await fetch(`${API_BASE_URL}/api/zakatApplicants?email=${encodeURIComponent(email)}`)
-
-        console.log("Response status:", res.status)
-
-        const result = await res.json()
-        console.log("API Response:", result)
-=======
         const res = await fetch(`${API_BASE_URL}/api/zakat-applicants?q=${encodeURIComponent(email)}`)
 
         const result = await res.json()
->>>>>>> ff0056ed (Updated project)
 
         let applicantData = null
 
@@ -62,11 +47,6 @@ export default function ApplicationStatus({ email }: { email: string }) {
           applicantData = result
         }
 
-<<<<<<< HEAD
-        console.log("Parsed applicant data:", applicantData)
-
-=======
->>>>>>> ff0056ed (Updated project)
         if (applicantData) {
           setData(applicantData)
         } else {

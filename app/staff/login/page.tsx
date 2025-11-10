@@ -21,27 +21,19 @@ export default function StaffLoginPage() {
     setLoading(true)
 
     try {
-<<<<<<< HEAD
-      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-=======
       const apiUrl = `${API_BASE_URL}/api/auth/login`
       console.log("Login API URL:", apiUrl)
 
       const res = await fetch(apiUrl, {
->>>>>>> ff0056ed (Updated project)
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
 
-<<<<<<< HEAD
-      const data = await res.json()
-=======
       console.log("Login response status:", res.status)
 
       const data = await res.json()
       console.log("Login response data:", data)
->>>>>>> ff0056ed (Updated project)
 
       if (!res.ok) {
         setError(data.message || "Invalid credentials")
@@ -50,17 +42,9 @@ export default function StaffLoginPage() {
       }
 
       setAuthToken(data.token)
-<<<<<<< HEAD
-
-    
-        router.push("/staff/dashboard")
-    
-    } catch (err) {
-=======
       router.push("/staff/dashboard")
     } catch (err) {
       console.error("Login error:", err)
->>>>>>> ff0056ed (Updated project)
       setError("Connection error. Please try again.")
     } finally {
       setLoading(false)

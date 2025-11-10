@@ -5,11 +5,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { CheckCircle2, TrendingUp, FileText, Heart, LogOut, Shield } from "lucide-react"
-<<<<<<< HEAD
-import { removeAuthToken, getAuthToken, API_BASE_URL } from "@/lib/auth-utils"
-=======
 import { removeAuthToken, getAuthToken, API_BASE_URL, authenticatedFetch } from "@/lib/auth-utils"
->>>>>>> ff0056ed (Updated project)
 
 type ZakatApplicant = {
   id?: string | number
@@ -37,10 +33,6 @@ export default function DashboardPage() {
   const [applicants, setApplicants] = useState<ZakatApplicant[]>([])
   const [totalFromAPI, setTotalFromAPI] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
-<<<<<<< HEAD
-  const [showDebug] = useState(false)
-=======
->>>>>>> ff0056ed (Updated project)
   const router = useRouter()
 
   useEffect(() => {
@@ -59,18 +51,10 @@ export default function DashboardPage() {
     try {
       const token = getAuthToken()
       if (token) {
-<<<<<<< HEAD
-        await fetch(`${API_BASE_URL}/api/auth/logout`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-=======
         await authenticatedFetch(`${API_BASE_URL}/api/auth/logout`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
->>>>>>> ff0056ed (Updated project)
           },
         }).catch(() => {})
       }
@@ -86,11 +70,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchApplicants = async () => {
       try {
-<<<<<<< HEAD
-        const res = await fetch(`${API_BASE_URL}/api/zakatApplicants`)
-=======
         const res = await authenticatedFetch(`${API_BASE_URL}/api/zakat-applicants`)
->>>>>>> ff0056ed (Updated project)
         const json = await res.json()
 
         const dataArray: any[] = Array.isArray(json) ? json : json.items || json.data || []

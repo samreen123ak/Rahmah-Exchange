@@ -21,12 +21,36 @@
   },
   "dynamicRoutes": [
     {
-      "page": "/staff/cases/[caseId]",
+      "page": "/api/documents/[filename]",
+      "regex": "^/api/documents/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPfilename": "nxtPfilename"
+      },
+      "namedRegex": "^/api/documents/(?<nxtPfilename>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/grants/[id]",
+      "regex": "^/api/grants/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/grants/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/zakat-applicants/[id]",
+      "regex": "^/api/zakat\\-applicants/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/zakat\\-applicants/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/staff/cases/[id]",
       "regex": "^/staff/cases/([^/]+?)(?:/)?$",
       "routeKeys": {
-        "nxtPcaseId": "nxtPcaseId"
+        "nxtPid": "nxtPid"
       },
-      "namedRegex": "^/staff/cases/(?<nxtPcaseId>[^/]+?)(?:/)?$"
+      "namedRegex": "^/staff/cases/(?<nxtPid>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [
@@ -47,6 +71,36 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/auth/login",
+      "regex": "^/api/auth/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/login(?:/)?$"
+    },
+    {
+      "page": "/api/auth/logout",
+      "regex": "^/api/auth/logout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/logout(?:/)?$"
+    },
+    {
+      "page": "/api/auth/signup",
+      "regex": "^/api/auth/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/signup(?:/)?$"
+    },
+    {
+      "page": "/api/grants",
+      "regex": "^/api/grants(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/grants(?:/)?$"
+    },
+    {
+      "page": "/api/zakat-applicants",
+      "regex": "^/api/zakat\\-applicants(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/zakat\\-applicants(?:/)?$"
     },
     {
       "page": "/form",

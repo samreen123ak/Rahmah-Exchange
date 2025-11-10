@@ -1,4 +1,460 @@
-[00:00:04.453] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-[00:00:05.731] Server  LOG      ✓ Ready in 4.7s
-[00:00:10.453] Server  LOG      ○ Compiling / ...
-[00:00:27.672] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:05.751] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:07.408] Server  LOG      ✓ Ready in 6.1s
+[00:00:11.311] Server  LOG      ○ Compiling / ...
+[00:00:26.155] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:26.155] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:00:26.155] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1762791015917}
+[00:00:34.576] Server  ERROR    ⨯ ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+
+
+[00:00:34.876] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:00:37.341] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:00:37.578] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:00:37.682] Server  LOG      ○ Compiling /_error ...
+[00:00:39.097] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:00:39.516] Server  ERROR    ⨯ ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+
+
+[00:00:41.499] Browser ERROR   uncaughtError: Error: ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+
+
+[00:00:41.673] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:00:42.392] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:02:13.359] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:02:14.503] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:02:14.503] Browser ERROR   ./app/form/page.tsx:36:1
+Parsing ecmascript source code failed
+  34 | }
+  35 |
+> 36 | <<<<<<< HEAD
+     | ^
+  37 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  38 | const API_URL = `${API_BASE_URL}/api/zakatApplicants`
+  39 | =======
+
+Expression expected
+[00:03:11.361] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:03:55.254] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:03:55.254] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:03:55.254] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:03.629] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:03.629] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:10.286] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:10.772] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:12.572] Browser ERROR   uncaughtError: Error: ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+
+
+[00:04:12.943] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:13.371] Browser ERROR   ./components/application-status.tsx:15:1
+Parsing ecmascript source code failed
+  13 | }
+  14 |
+> 15 | <<<<<<< HEAD
+     | ^
+  16 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
+  17 | =======
+  18 | const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:35.359] Browser ERROR   ./components/application-status.tsx:65:1
+Parsing ecmascript source code failed
+  63 |
+  64 | =======
+> 65 | >>>>>>> ff0056ed (Updated project)
+     | ^^^^^^^
+  66 |         if (applicantData) {
+  67 |           setData(applicantData)
+  68 |         } else {
+
+Merge conflict marker encountered.
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:35.359] Browser ERROR   ./components/application-status.tsx:65:1
+Parsing ecmascript source code failed
+  63 |
+  64 | =======
+> 65 | >>>>>>> ff0056ed (Updated project)
+     | ^^^^^^^
+  66 |         if (applicantData) {
+  67 |           setData(applicantData)
+  68 |         } else {
+
+Merge conflict marker encountered.
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:04:35.359] Browser ERROR   ./components/application-status.tsx:65:1
+Parsing ecmascript source code failed
+  63 |
+  64 | =======
+> 65 | >>>>>>> ff0056ed (Updated project)
+     | ^^^^^^^
+  66 |         if (applicantData) {
+  67 |           setData(applicantData)
+  68 |         } else {
+
+Merge conflict marker encountered.
+
+Import traces:
+  Client Component Browser:
+    ./components/application-status.tsx [Client Component Browser]
+    ./app/form/page.tsx [Client Component Browser]
+    ./app/form/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/application-status.tsx [Client Component SSR]
+    ./app/form/page.tsx [Client Component SSR]
+    ./app/form/page.tsx [Server Component]
+[00:05:09.098] Server  LOG      ✓ Compiled in 245ms
+[00:05:12.389] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:05:12.389] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:05:12.389] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1762791301645}
+[00:08:33.278] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/form color: rgb(120, 120, 120) color: inherit {"dp":"/form","o":"http://localhost:3000/form","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1762791503130}

@@ -1,3 +1,5 @@
 {
+  "/api/zakat-applicants/route": "app/api/zakat-applicants/route.js",
+  "/form/page": "app/form/page.js",
   "/page": "app/page.js"
 }

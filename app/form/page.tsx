@@ -33,13 +33,8 @@ interface ValidationErrors {
   [key: string]: string
 }
 
-<<<<<<< HEAD
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
-const API_URL = `${API_BASE_URL}/api/zakatApplicants`
-=======
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
 const API_URL = `${API_BASE_URL}/api/zakat-applicants`
->>>>>>> ff0056ed (Updated project)
 
 const STEPS = [
   { number: 1, label: "Personal" },

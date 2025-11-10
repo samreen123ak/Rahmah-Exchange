@@ -1,18 +1,12 @@
 "use client"
 
-<<<<<<< HEAD
-=======
 import type React from "react"
 
->>>>>>> ff0056ed (Updated project)
 import { useState } from "react"
 import Link from "next/link"
 import { Heart } from "lucide-react"
 import { useRouter } from "next/navigation"
-<<<<<<< HEAD
-=======
 import { setAuthToken, API_BASE_URL } from "@/lib/auth-utils"
->>>>>>> ff0056ed (Updated project)
 
 export default function StaffSignupPage() {
   const router = useRouter()
@@ -28,22 +22,11 @@ export default function StaffSignupPage() {
     setLoading(true)
 
     try {
-<<<<<<< HEAD
-      const res = await fetch(
-        "https://rahmah-exchange-backend-production.up.railway.app/api/auth/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
-        }
-      )
-=======
       const res = await fetch(`${API_BASE_URL}/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       })
->>>>>>> ff0056ed (Updated project)
 
       const data = await res.json()
 
@@ -53,15 +36,8 @@ export default function StaffSignupPage() {
         return
       }
 
-<<<<<<< HEAD
-      // ✅ Save token
-      localStorage.setItem("rahmah_admin_token", data.token)
-
-      // ✅ Redirect
-=======
       setAuthToken(data.token)
 
->>>>>>> ff0056ed (Updated project)
       router.push("/staff/dashboard")
     } catch (err) {
       setError("Server problem, Please try again")

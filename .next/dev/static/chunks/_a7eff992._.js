@@ -109,7 +109,7 @@ var _s = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
-const API_BASE_URL = ("TURBOPACK compile-time value", "https://rahmah-exchange-backend-production.up.railway.app") || "https://rahmah-exchange-backend-production.up.railway.app";
+const API_BASE_URL = ("TURBOPACK compile-time value", "http://localhost:3000") || "";
 function ApplicationStatus({ email }) {
     _s();
     const [data, setData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
@@ -122,11 +122,8 @@ function ApplicationStatus({ email }) {
                     try {
                         setLoading(true);
                         setError(null);
-                        console.log("[v0] Fetching applicant data for email:", email);
-                        const res = await fetch(`${API_BASE_URL}/api/zakatApplicants?email=${encodeURIComponent(email)}`);
-                        console.log("Response status:", res.status);
+                        const res = await fetch(`${API_BASE_URL}/api/zakat-applicants?q=${encodeURIComponent(email)}`);
                         const result = await res.json();
-                        console.log("API Response:", result);
                         let applicantData = null;
                         if (Array.isArray(result) && result.length > 0) {
                             // If API returns array directly
@@ -144,7 +141,6 @@ function ApplicationStatus({ email }) {
                             // If API returns object directly
                             applicantData = result;
                         }
-                        console.log("Parsed applicant data:", applicantData);
                         if (applicantData) {
                             setData(applicantData);
                         } else {
@@ -174,7 +170,7 @@ function ApplicationStatus({ email }) {
             children: "Loading application details... ⏳"
         }, void 0, false, {
             fileName: "[project]/components/application-status.tsx",
-            lineNumber: 79,
+            lineNumber: 72,
             columnNumber: 12
         }, this);
     }
@@ -186,7 +182,7 @@ function ApplicationStatus({ email }) {
                     className: "w-5 h-5 text-red-600 shrink-0"
                 }, void 0, false, {
                     fileName: "[project]/components/application-status.tsx",
-                    lineNumber: 85,
+                    lineNumber: 78,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -196,7 +192,7 @@ function ApplicationStatus({ email }) {
                             children: "Unable to load application"
                         }, void 0, false, {
                             fileName: "[project]/components/application-status.tsx",
-                            lineNumber: 87,
+                            lineNumber: 80,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -204,19 +200,19 @@ function ApplicationStatus({ email }) {
                             children: error
                         }, void 0, false, {
                             fileName: "[project]/components/application-status.tsx",
-                            lineNumber: 88,
+                            lineNumber: 81,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/application-status.tsx",
-                    lineNumber: 86,
+                    lineNumber: 79,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/application-status.tsx",
-            lineNumber: 84,
+            lineNumber: 77,
             columnNumber: 7
         }, this);
     }
@@ -228,7 +224,7 @@ function ApplicationStatus({ email }) {
                     className: "w-5 h-5 text-yellow-600 shrink-0"
                 }, void 0, false, {
                     fileName: "[project]/components/application-status.tsx",
-                    lineNumber: 97,
+                    lineNumber: 90,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -236,13 +232,13 @@ function ApplicationStatus({ email }) {
                     children: "No application data available"
                 }, void 0, false, {
                     fileName: "[project]/components/application-status.tsx",
-                    lineNumber: 98,
+                    lineNumber: 91,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/application-status.tsx",
-            lineNumber: 96,
+            lineNumber: 89,
             columnNumber: 7
         }, this);
     }
@@ -254,7 +250,7 @@ function ApplicationStatus({ email }) {
                 children: "Application Status"
             }, void 0, false, {
                 fileName: "[project]/components/application-status.tsx",
-                lineNumber: 105,
+                lineNumber: 98,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -265,7 +261,7 @@ function ApplicationStatus({ email }) {
                         children: "Current Status"
                     }, void 0, false, {
                         fileName: "[project]/components/application-status.tsx",
-                        lineNumber: 108,
+                        lineNumber: 101,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -275,7 +271,7 @@ function ApplicationStatus({ email }) {
                                 className: "w-2 h-2 bg-blue-600 rounded-full"
                             }, void 0, false, {
                                 fileName: "[project]/components/application-status.tsx",
-                                lineNumber: 110,
+                                lineNumber: 103,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -283,19 +279,19 @@ function ApplicationStatus({ email }) {
                                 children: data.status || "Submitted"
                             }, void 0, false, {
                                 fileName: "[project]/components/application-status.tsx",
-                                lineNumber: 111,
+                                lineNumber: 104,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/application-status.tsx",
-                        lineNumber: 109,
+                        lineNumber: 102,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/application-status.tsx",
-                lineNumber: 107,
+                lineNumber: 100,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -306,7 +302,7 @@ function ApplicationStatus({ email }) {
                         children: "Application Details"
                     }, void 0, false, {
                         fileName: "[project]/components/application-status.tsx",
-                        lineNumber: 116,
+                        lineNumber: 109,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -319,7 +315,7 @@ function ApplicationStatus({ email }) {
                                         children: "Case ID"
                                     }, void 0, false, {
                                         fileName: "[project]/components/application-status.tsx",
-                                        lineNumber: 119,
+                                        lineNumber: 112,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -327,13 +323,13 @@ function ApplicationStatus({ email }) {
                                         children: data.caseId || "N/A"
                                     }, void 0, false, {
                                         fileName: "[project]/components/application-status.tsx",
-                                        lineNumber: 120,
+                                        lineNumber: 113,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/application-status.tsx",
-                                lineNumber: 118,
+                                lineNumber: 111,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -343,12 +339,36 @@ function ApplicationStatus({ email }) {
                                         children: "Submitted Date"
                                     }, void 0, false, {
                                         fileName: "[project]/components/application-status.tsx",
-                                        lineNumber: 124,
+                                        lineNumber: 117,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-gray-900 font-semibold",
                                         children: data.createdAt ? new Date(data.createdAt).toLocaleDateString("en-GB") : "N/A"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/application-status.tsx",
+                                        lineNumber: 118,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/application-status.tsx",
+                                lineNumber: 116,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-gray-600 text-sm mb-1",
+                                        children: "Applicant Name"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/application-status.tsx",
+                                        lineNumber: 124,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-gray-900 font-semibold",
+                                        children: data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : "N/A"
                                     }, void 0, false, {
                                         fileName: "[project]/components/application-status.tsx",
                                         lineNumber: 125,
@@ -364,7 +384,7 @@ function ApplicationStatus({ email }) {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-gray-600 text-sm mb-1",
-                                        children: "Applicant Name"
+                                        children: "Email"
                                     }, void 0, false, {
                                         fileName: "[project]/components/application-status.tsx",
                                         lineNumber: 131,
@@ -372,7 +392,7 @@ function ApplicationStatus({ email }) {
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-gray-900 font-semibold",
-                                        children: data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : "N/A"
+                                        children: data.email || "N/A"
                                     }, void 0, false, {
                                         fileName: "[project]/components/application-status.tsx",
                                         lineNumber: 132,
@@ -388,34 +408,10 @@ function ApplicationStatus({ email }) {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-gray-600 text-sm mb-1",
-                                        children: "Email"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/application-status.tsx",
-                                        lineNumber: 138,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-gray-900 font-semibold",
-                                        children: data.email || "N/A"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/application-status.tsx",
-                                        lineNumber: 139,
-                                        columnNumber: 13
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/application-status.tsx",
-                                lineNumber: 137,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-gray-600 text-sm mb-1",
                                         children: "Request Type"
                                     }, void 0, false, {
                                         fileName: "[project]/components/application-status.tsx",
-                                        lineNumber: 143,
+                                        lineNumber: 136,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -423,25 +419,25 @@ function ApplicationStatus({ email }) {
                                         children: data.requestType || "N/A"
                                     }, void 0, false, {
                                         fileName: "[project]/components/application-status.tsx",
-                                        lineNumber: 144,
+                                        lineNumber: 137,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/application-status.tsx",
-                                lineNumber: 142,
+                                lineNumber: 135,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/application-status.tsx",
-                        lineNumber: 117,
+                        lineNumber: 110,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/application-status.tsx",
-                lineNumber: 115,
+                lineNumber: 108,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -451,18 +447,18 @@ function ApplicationStatus({ email }) {
                     children: "Your application has been received and is pending review."
                 }, void 0, false, {
                     fileName: "[project]/components/application-status.tsx",
-                    lineNumber: 150,
+                    lineNumber: 143,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/application-status.tsx",
-                lineNumber: 149,
+                lineNumber: 142,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/application-status.tsx",
-        lineNumber: 104,
+        lineNumber: 97,
         columnNumber: 5
     }, this);
 }
@@ -529,8 +525,8 @@ function Toast({ message, type, isVisible }) {
     }, this);
 }
 _c = Toast;
-const API_BASE_URL = ("TURBOPACK compile-time value", "https://rahmah-exchange-backend-production.up.railway.app") || "https://rahmah-exchange-backend-production.up.railway.app";
-const API_URL = `${API_BASE_URL}/api/zakatApplicants`;
+const API_BASE_URL = ("TURBOPACK compile-time value", "http://localhost:3000") || "";
+const API_URL = `${API_BASE_URL}/api/zakat-applicants`;
 const STEPS = [
     {
         number: 1,
@@ -4123,7 +4119,7 @@ function ApplyPage() {
         columnNumber: 5
     }, this);
 }
-_s(ApplyPage, "OI5rv/BNuF8hfcWWumkbQmjvpH8=");
+_s(ApplyPage, "T/3H9l7u9MWn28kDCow+IATSnlw=");
 _c1 = ApplyPage;
 var _c, _c1;
 __turbopack_context__.k.register(_c, "Toast");
