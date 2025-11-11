@@ -60,32 +60,22 @@ export async function POST(request: NextRequest) {
 
     const uploadedFiles = formData.getAll("documents") as any[]
     console.log("[v0] POST received", uploadedFiles.length, "files")
-    console.log("[v0] FormData keys:", Array.from(formData.keys()))
 
     const documentMetadata: any[] = []
 
     for (const f of uploadedFiles) {
-      console.log("[v0] Processing file - type:", typeof f, "isFile:", f instanceof File, "name:", (f as any).name)
-
       if (f && typeof f === "object" && typeof f.arrayBuffer === "function") {
         const originalName = (f as any).name || `upload-${Date.now()}`
         const buffer = Buffer.from(await (f as any).arrayBuffer())
 
-        console.log("[v0] File buffer created - size:", buffer.length, "name:", originalName)
-
         try {
-          if (!process.env.BLOB_READ_WRITE_TOKEN) {
-            console.error("[v0] BLOB_READ_WRITE_TOKEN not set!")
-            throw new Error("Blob storage not configured")
-          }
-
           // Upload to Vercel Blob
           const blob = await put(originalName, buffer, {
             access: "public",
             addRandomSuffix: true,
           })
 
-          console.log("[v0] File uploaded to Blob:", blob.pathname, "URL:", blob.url)
+          console.log("[v0] File uploaded to Blob:", blob.pathname, blob.url)
 
           // Store metadata in database
           documentMetadata.push({
@@ -96,22 +86,15 @@ export async function POST(request: NextRequest) {
             url: blob.url,
             uploadedAt: new Date(),
           })
-
-          console.log("[v0] Document metadata added. Total so far:", documentMetadata.length)
         } catch (blobError) {
           console.error("[v0] Blob upload error:", blobError)
-          throw blobError
         }
       } else {
-        console.warn("[v0] Received non-File object:", typeof f, f)
+        console.warn("[v0] Received non-File object:", f)
       }
     }
 
-    console.log(
-      "[v0] Final documents array before save:",
-      documentMetadata.length,
-      JSON.stringify(documentMetadata.map((d) => ({ filename: d.filename, size: d.size }))),
-    )
+    console.log("[v0] Documents to save:", documentMetadata.length)
 
     await dbConnect()
 
@@ -161,17 +144,14 @@ export async function POST(request: NextRequest) {
       previousZakat: formData.get("previousZakat"),
       reference1,
       reference2,
-      documents: documentMetadata,
+      documents: documentMetadata, // Explicitly set documents array
       caseId: await generateUniqueCaseId(),
     }
-
-    console.log("[v0] Creating applicant with data - documents array length:", applicantData.documents.length)
 
     const applicant = new ZakatApplicant(applicantData)
     await applicant.save()
 
-    console.log("[v0] Applicant SAVED - _id:", applicant._id, "documents.length:", applicant.documents.length)
-    console.log("[v0] Saved documents:", JSON.stringify(applicant.documents))
+    console.log("[v0] Applicant saved with", applicant.documents.length, "documents")
 
     // Fire-and-forget emails (do not block success)
     ;(async () => {
@@ -238,7 +218,7 @@ We will review your application and get back to you. JazakAllahu Khairan.
 
     return NextResponse.json({ message: "Application saved successfully", applicant }, { status: 201 })
   } catch (error: any) {
-    console.error("[v0] POST error:", error)
+    console.error("POST error:", error)
     if (error.code === 11000 && error.keyPattern?.email) {
       return NextResponse.json({ error: "Email already exists" }, { status: 409 })
     }
