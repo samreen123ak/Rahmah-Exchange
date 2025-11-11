@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import { dbConnect } from "@/lib/db"
 import ZakatApplicant from "@/lib/models/ZakatApplicant"
 import { getAdminEmail, sendEmail } from "@/lib/email"
+import { put } from "@vercel/blob"
 
 // Generate unique case ID
 async function generateUniqueCaseId(): Promise<string> {
@@ -56,42 +57,47 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
-  // Handle file uploads (save to ephemeral /tmp/uploads on serverless environments)
-  try {
+
     const uploadedFiles = formData.getAll("documents") as any[]
-    const uploadsDir = "/tmp/uploads"
-    // create uploads dir if not exists
-    // Note: /tmp is ephemeral on serverless platforms like Vercel. For production use S3/Cloudinary.
-    try {
-      const fs = require("fs")
-      const path = require("path")
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true })
-      }
-      for (const f of uploadedFiles) {
-        if (f && typeof f === "object" && typeof f.arrayBuffer === "function") {
-          const originalName = (f as any).name || `upload-${Date.now()}`
-          const uniqueName = `${Date.now()}-${originalName.replace(/[^a-zA-Z0-9.\-_]/g, "_")}`
-          const buffer = Buffer.from(await (f as any).arrayBuffer())
-          const filePath = path.join(uploadsDir, uniqueName)
-          fs.writeFileSync(filePath, buffer)
-          // push to applicantData.documents (store filename or path as needed)
-          applicantData.documents.push(uniqueName)
+    const documentMetadata: any[] = []
+
+    for (const f of uploadedFiles) {
+      if (f && typeof f === "object" && typeof f.arrayBuffer === "function") {
+        const originalName = (f as any).name || `upload-${Date.now()}`
+        const buffer = Buffer.from(await (f as any).arrayBuffer())
+
+        try {
+          // Upload to Vercel Blob
+          const blob = await put(originalName, buffer, {
+            access: "public",
+            addRandomSuffix: true,
+          })
+
+          // Store metadata in database
+          documentMetadata.push({
+            filename: blob.pathname,
+            originalname: originalName,
+            mimeType: f.type || "application/octet-stream",
+            size: buffer.length,
+            url: blob.url,
+            uploadedAt: new Date(),
+          })
+        } catch (blobError) {
+          console.error("[zakat] Blob upload error:", blobError)
         }
       }
-    } catch (err) {
-      console.error("File save warning:", err)
     }
-  } catch (err) {
-    console.error("File handling error:", err)
-  }
 
     await dbConnect()
 
     // Parse references if sent as JSON strings
     let reference1, reference2
-    try { reference1 = formData.get("reference1") ? JSON.parse(formData.get("reference1")!.toString()) : undefined } catch {}
-    try { reference2 = formData.get("reference2") ? JSON.parse(formData.get("reference2")!.toString()) : undefined } catch {}
+    try {
+      reference1 = formData.get("reference1") ? JSON.parse(formData.get("reference1")!.toString()) : undefined
+    } catch {}
+    try {
+      reference2 = formData.get("reference2") ? JSON.parse(formData.get("reference2")!.toString()) : undefined
+    } catch {}
 
     // Check for duplicate email
     const email = formData.get("email")?.toString()
@@ -130,7 +136,7 @@ export async function POST(request: NextRequest) {
       previousZakat: formData.get("previousZakat"),
       reference1,
       reference2,
-      documents: [],
+      documents: documentMetadata, // Now stores actual document metadata
       caseId: await generateUniqueCaseId(),
     }
 
@@ -200,10 +206,7 @@ We will review your application and get back to you. JazakAllahu Khairan.
       }
     })().catch(() => {})
 
-    return NextResponse.json(
-      { message: "Application saved successfully", applicant },
-      { status: 201 },
-    )
+    return NextResponse.json({ message: "Application saved successfully", applicant }, { status: 201 })
   } catch (error: any) {
     console.error("POST error:", error)
     if (error.code === 11000 && error.keyPattern?.email) {
