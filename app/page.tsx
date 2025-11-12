@@ -159,6 +159,7 @@ import { Heart, Shield, Users, HeartIcon, ArrowRight, LogIn, PlayCircle } from "
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import Header from "@/components/header";
 
 export default function Home() {
   const [playing, setPlaying] = useState(false);
@@ -177,43 +178,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
-      {/* Audio */}
-      <audio id="quranAudio" src="/quran.mp3" />
-
-      {/* Floating Quran Button */}
-      {/* <button
-        onClick={toggleAudio}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-teal-600 to-cyan-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition"
-        aria-label="Play Quran Recitation"
-      >
-        <PlayCircle className="w-6 h-6" />
-      </button> */}
-
-      {/* Header */}
-      <header className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full border-b border-gray-200">
-        <div className="flex items-center gap-3">
-        
-              <Image
-                src="/logo1.svg"
-                alt="Compassionate Help"
-                width={170}
-                height={170}
-              />
-          
-        </div>
-        <div className="flex items-center gap-6">
-          <Link href="/staff/login">
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-teal-600 border border-teal-600 rounded-lg hover:bg-teal-50 transition">
-              <LogIn className="w-4 h-4" />
-              Admin Login
-            </button>
-          </Link>
-        </div>
-      </header>
-
+        <Header />
       {/* Hero Section */}
-    <section className="px-8 py-12 max-w-7xl mx-auto w-full flex flex-col md:flex-row items-center gap-12">
-
+    <section className="px-8 pt-40 max-w-7xl mx-auto w-full flex flex-col md:flex-row items-center gap-12">
 
         {/* Text Side */}
         <div className="flex-1 text-left">
@@ -245,26 +212,50 @@ export default function Home() {
 
         {/* Image Side */}
        <div className="flex-1 -mt-16">
-  <Image
-    src="/31.svg" // or "/32.svg"
-    alt="Compassionate Help"
-    width={600}
-    height={600}
-  />
-</div>
-      </section>
-
-      {/* About Us */}
-      <section className="py-24 bg-white px-8">
-        <div className="max-w-5xl mx-auto text-center">
-          <h3 className="text-3xl font-bold text-gray-900 mb-6">About Us</h3>
-          <p className="text-gray-600 text-lg leading-relaxed max-w-3xl mx-auto">
-            Rahmah Exchange is a faith-inspired initiative rooted in compassion and mercy. Our mission is to connect
-            generous hearts with those in need — ensuring every act of giving is filled with dignity, trust, and
-            transparency.
-          </p>
+          <Image
+            src="/31.svg"
+            alt="Compassionate Help"
+            width={600}
+            height={600}
+          />
         </div>
       </section>
+        {/* About Us Section */}
+        <section className="relative py-24 px-8 bg-gradient-to-b from-white via-gray-50 to-white overflow-hidden">
+          {/* Background Image Wrapper */}
+          <div className="absolute inset-0 flex justify-center items-center -z-10 opacity-20">
+            <Image
+              src="/32.svg"
+              alt="About Rahmah Exchange background"
+              width={200}
+              height={200}
+              className="object-contain"
+            />
+          </div>
+
+          {/* Light overlay for readability */}
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-[1px] -z-10" />
+
+          {/* Content */}
+          <div className="max-w-5xl mx-auto text-center relative">
+            <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+              About{" "}
+              <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                Us
+              </span>
+            </h3>
+            <p className="text-gray-700 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+              <span className="font-semibold text-teal-700">Rahmah Exchange</span> is a faith-inspired initiative rooted in
+              compassion and mercy. Our mission is to connect generous hearts with those in need — ensuring every act of giving
+              is filled with{" "}
+              <span className="text-teal-600 font-semibold">dignity, trust,</span> and{" "}
+              <span className="text-cyan-600 font-semibold">transparency.</span>
+            </p>
+          </div>
+        </section>
+
+
+
      {/* Features Section */}
        <section className="px-8 py-24 max-w-7xl mx-auto w-full bg-gradient-to-b from-gray-50 to-white">
          <h3 className="text-3xl font-bold text-gray-900 text-center mb-4">Why Choose Us</h3>
@@ -311,20 +302,33 @@ export default function Home() {
        </section>
 
        {/* CTA Section */}
-       <section className="px-8 py-24 max-w-4xl mx-auto w-full text-center">
-         <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-2xl p-12 text-white shadow-lg">
-           <h3 className="text-3xl font-bold mb-4">Ready to Apply?</h3>
-           <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-             The application process typically takes 10-15 minutes. Gather your documents and start your application
-             today.
-           </p>
-           <Link href="/form">
-             <button className="px-8 py-3 bg-white text-teal-600 rounded-lg font-semibold hover:shadow-lg transition">
-               Start Application Now
-             </button>
-           </Link>
-         </div>
-       </section>
+           <section
+  className="relative py-24 bg-gray-900"
+  style={{
+    backgroundImage: "url('/32.svg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  }}
+>
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-r from-teal-600/70 to-cyan-600/70"></div>
+
+  {/* Content */}
+  <div className="relative max-w-4xl mx-auto w-full text-center px-8">
+    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-12 text-white shadow-lg">
+      <h3 className="text-3xl font-bold mb-4">Ready to Apply?</h3>
+      <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+        The application process typically takes 10-15 minutes. Gather your documents and start your application today.
+      </p>
+      <Link href="/form">
+        <button className="px-8 py-3 bg-white text-teal-600 rounded-lg font-semibold hover:shadow-lg transition">
+          Start Application Now
+        </button>
+      </Link>
+    </div>
+  </div>
+</section>
 
        {/* Footer */}
        <footer className="px-8 py-12 bg-gray-900 text-white border-t border-gray-800">

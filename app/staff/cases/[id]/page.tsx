@@ -1,6 +1,7 @@
 "use client"
 import React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Heart, ChevronLeft, Download, X } from "lucide-react"
 import { useState, useEffect } from "react"
 
@@ -345,12 +346,15 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     <div className="min-h-screen bg-gradient-to-b from-teal-50 to-blue-50">
       <header className="bg-white border-b border-gray-200 px-8 py-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
-              <Heart className="w-5 h-5 text-white fill-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">Caseworker Dashboard</h1>
-          </div>
+          <Link href="/staff/dashboard" className="flex items-center gap-3">
+          <Image
+            src="/logo1.svg"
+            alt="Rahmah Exchange Logo"
+            width={140}
+            height={140}
+            priority
+          />
+        </Link>
           <Link href="/staff/cases" className="text-gray-600 hover:text-gray-900 text-sm flex items-center gap-1">
             <ChevronLeft className="w-4 h-4" />
             Back to Cases

@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Heart, AlertCircle, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { setAuthToken} from "@/lib/auth-utils"
@@ -60,24 +61,34 @@ export default function StaffLoginPage() {
         </Link>
       </header>
 
-      <div className="flex-1 flex items-center justify-center px-4 py-12">
+      <div className="flex-1 flex items-center justify-center px-4 py-10">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
+          {/* <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center gap-3 mb-6 bg-white rounded-full px-6 py-3 shadow-lg">
-              <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full flex items-center justify-center">
-                <Heart className="w-6 h-6 text-white fill-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-                Rahmah Exchange
-              </h1>
+              <Image
+                           src="/logo1.svg"
+                           alt="Rahmah Exchange Logo"
+                           width={170}
+                           height={170}
+                           priority
+                         />
             </div>
             <p className="text-white/80 text-sm">Staff Administration Portal</p>
-          </div>
+          </div> */}
 
-          <div className="bg-white rounded-2xl p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Staff Login</h2>
-            <p className="text-gray-600 mb-8">Access the admin dashboard</p>
-
+          <div className="bg-white rounded-2xl p-8 shadow-2xl justify-center items-center">
+              <div className="flex items-center justify-center py-4">
+             <Image
+                  src="/logo1.svg"
+                  alt="Rahmah Exchange Logo"
+                  width={170}
+                  height={170}
+                  priority
+                  />
+                  </div>
+            {/* <h2 className="text-2xl font-bold text-gray-900 mb-2">Staff Login</h2> */}
+             {/*<p className="text-gray-600 mb-8">Access the admin dashboard</p> */}
+           
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>

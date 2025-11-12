@@ -1,10 +1,10 @@
 "use client"
 import axios from "axios"
 import type React from "react"
-
 import { useState } from "react"
 import { ChevronLeft, Upload, CheckCircle2, AlertCircle, CheckCircle } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image";
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import ApplicationStatus from "@/components/application-status"
 
@@ -486,12 +486,18 @@ export default function ApplyPage() {
   return (
     <div className="min-h-screen bg-linear-to-b from-teal-50 to-blue-50">
       <Toast message={toast.message} type={toast.type} isVisible={toast.isVisible} />
-
       <header className="flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-white">
-        <Link href="/" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition font-medium">
-          <ChevronLeft className="w-5 h-5" />
-          Back to Home
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/logo1.svg"
+              alt="Rahmah Exchange Logo"
+              width={170}
+              height={170}
+              priority
+            />
+          </Link>
+        </div>
         <button className="px-6 py-2 text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition">
           Save Progress
         </button>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Heart, LogOut } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { getAuthToken, removeAuthToken, authenticatedFetch } from "@/lib/auth-utils"
@@ -89,12 +90,15 @@ export default function CasesPage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-8 py-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full flex items-center justify-center shadow-lg">
-              <Heart className="w-6 h-6 text-white fill-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">Case Management</h1>
-          </div>
+          <Link href="/staff/dashboard" className="flex items-center gap-3">
+          <Image
+            src="/logo1.svg"
+            alt="Rahmah Exchange Logo"
+            width={140}
+            height={140}
+            priority
+          />
+        </Link>
           <div className="flex items-center gap-4">
             <Link href="/staff/dashboard" className="text-gray-600 hover:text-gray-900 font-medium transition">
               Dashboard

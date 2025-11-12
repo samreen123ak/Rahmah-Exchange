@@ -3,9 +3,11 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { CheckCircle2, TrendingUp, FileText, Heart, LogOut, Shield } from "lucide-react"
 import { removeAuthToken, getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
+import AdminHeader from "@/components/header-admin"
 
 type ZakatApplicant = {
   id?: string | number
@@ -126,13 +128,21 @@ export default function DashboardPage() {
       <header className="bg-white border-b border-gray-200 px-8 py-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full flex items-center justify-center shadow-lg">
+            {/* <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full flex items-center justify-center shadow-lg">
               <Heart className="w-6 h-6 text-white fill-white" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
               <p className="text-sm text-gray-500">Case Management System</p>
-            </div>
+            </div> */}
+                         <Image
+                              src="/logo1.svg"
+                              alt="Rahmah Exchange Logo"
+                              width={170}
+                              height={170}
+                              priority
+                              />
+                            
           </div>
           <button
             onClick={handleLogout}

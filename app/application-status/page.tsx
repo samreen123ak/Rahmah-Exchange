@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { CheckCircle, XCircle, Clock, Mail, ArrowRight, Heart } from "lucide-react"
@@ -98,12 +100,15 @@ export default function ApplicationStatusPage() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
      <header className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full flex items-center justify-center shadow-lg">
-            <Heart className="w-6 h-6 text-white fill-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">Rahmah Exchange</h1>
-        </div>
+        <Link href="/" className="flex items-center gap-2">
+      <Image
+                  src="/logo1.svg"
+                  alt="Rahmah Exchange Logo"
+                  width={170}
+                  height={170}
+                  priority
+                  />
+          </Link>
       </header>
 
       {/* Main Content */}
@@ -148,7 +153,7 @@ export default function ApplicationStatusPage() {
             <p className="text-gray-700">{statusInfo.message}</p>
             <div className="text-gray-600 text-sm">
               <p>Case ID: {applicationData.caseId}</p>
-              {applicationData.requestedAmount && <p>Amount: PKR {applicationData.requestedAmount.toLocaleString()}</p>}
+              {/* {applicationData.requestedAmount && <p>Amount: PKR {applicationData.requestedAmount.toLocaleString()}</p>} */}
               {applicationData.applicationDate && <p>Date: {applicationData.applicationDate}</p>}
               <p>Email: {applicationData.email}</p>
             </div>
