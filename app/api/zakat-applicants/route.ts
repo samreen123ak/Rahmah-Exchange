@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
 
     const uploadedFiles = formData.getAll("documents") as any[]
-    console.log("[v0] POST received", uploadedFiles.length, "files")
+    console.log(" POST received", uploadedFiles.length, "files")
 
     const documentMetadata: any[] = []
 
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
             addRandomSuffix: true,
           })
 
-          console.log("[v0] File uploaded to Blob:", blob.pathname, blob.url)
+          console.log(" File uploaded to Blob:", blob.pathname, blob.url)
 
           // Store metadata in database
           documentMetadata.push({
@@ -88,14 +88,14 @@ export async function POST(request: NextRequest) {
             uploadedAt: new Date(),
           })
         } catch (blobError) {
-          console.error("[v0] Blob upload error:", blobError)
+          console.error(" Blob upload error:", blobError)
         }
       } else {
-        console.warn("[v0] Received non-File object:", f)
+        console.warn(" Received non-File object:", f)
       }
     }
 
-    console.log("[v0] Documents to save:", documentMetadata.length)
+    console.log(" Documents to save:", documentMetadata.length)
 
     await dbConnect()
 
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
     const applicant = new ZakatApplicant(applicantData)
     await applicant.save()
 
-    console.log("[v0] Applicant saved with", applicant.documents.length, "documents")
+    console.log(" Applicant saved with", applicant.documents.length, "documents")
 
     // Fire-and-forget emails (do not block success)
     ;(async () => {

@@ -25,7 +25,7 @@ export async function apiCall<T = any>(endpoint: string, options: RequestOptions
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      console.log(`[v0] API Call (attempt ${attempt + 1}):`, url)
+      console.log(` API Call (attempt ${attempt + 1}):`, url)
 
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), timeout)
@@ -51,11 +51,11 @@ export async function apiCall<T = any>(endpoint: string, options: RequestOptions
         }
 
         const errorMessage = errorData?.message || `HTTP ${response.status}: ${response.statusText}`
-        console.error(`[v0] API Error (${url}):`, errorMessage)
+        console.error(` API Error (${url}):`, errorMessage)
 
         // Retry on 5xx errors
         if (response.status >= 500 && attempt < retries) {
-          console.log(`[v0] Retrying due to server error...`)
+          console.log(` Retrying due to server error...`)
           await new Promise((resolve) => setTimeout(resolve, 1000 * (attempt + 1)))
           continue
         }
@@ -72,7 +72,7 @@ export async function apiCall<T = any>(endpoint: string, options: RequestOptions
       try {
         data = await response.json()
       } catch (e) {
-        console.error(`[v0] Failed to parse JSON response from ${url}`)
+        console.error(` Failed to parse JSON response from ${url}`)
         return {
           status: response.status,
           data: null,
@@ -82,10 +82,10 @@ export async function apiCall<T = any>(endpoint: string, options: RequestOptions
 
       // Validate data structure
       if (!data || typeof data !== "object") {
-        console.warn(`[v0] Unexpected data structure from ${url}:`, data)
+        console.warn(` Unexpected data structure from ${url}:`, data)
       }
 
-      console.log(`[v0] API Success (${url}):`, data)
+      console.log(` API Success (${url}):`, data)
       return {
         status: response.status,
         data,
@@ -97,7 +97,7 @@ export async function apiCall<T = any>(endpoint: string, options: RequestOptions
 
       // Don't retry on timeout or abort
       if (errorMessage.includes("abort") || errorMessage.includes("timeout")) {
-        console.error(`[v0] Request timeout/abort for ${url}`)
+        console.error(` Request timeout/abort for ${url}`)
         return {
           status: 0,
           data: null,
@@ -105,11 +105,11 @@ export async function apiCall<T = any>(endpoint: string, options: RequestOptions
         }
       }
 
-      console.error(`[v0] API call failed (attempt ${attempt + 1}):`, errorMessage)
+      console.error(` API call failed (attempt ${attempt + 1}):`, errorMessage)
 
       // Retry on network errors
       if (attempt < retries) {
-        console.log(`[v0] Retrying due to network error...`)
+        console.log(` Retrying due to network error...`)
         await new Promise((resolve) => setTimeout(resolve, 1000 * (attempt + 1)))
         continue
       }
@@ -117,7 +117,7 @@ export async function apiCall<T = any>(endpoint: string, options: RequestOptions
   }
 
   const finalError = lastError?.message || "Network error. Please check your connection."
-  console.error(`[v0] All retries exhausted for ${url}:`, finalError)
+  console.error(` All retries exhausted for ${url}:`, finalError)
   return {
     status: 0,
     data: null,

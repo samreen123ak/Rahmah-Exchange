@@ -192,10 +192,14 @@ export default function Home() {
       {/* Header */}
       <header className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full flex items-center justify-center shadow-lg">
-            <Heart className="w-6 h-6 text-white fill-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">Rahmah Exchange</h1>
+        
+              <Image
+                src="/logo1.svg"
+                alt="Compassionate Help"
+                width={170}
+                height={170}
+              />
+          
         </div>
         <div className="flex items-center gap-6">
           <Link href="/staff/login">
