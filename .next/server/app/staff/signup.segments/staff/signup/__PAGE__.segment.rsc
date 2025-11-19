@@ -3,7 +3,7 @@
 3:I[7464,["2619","static/chunks/2619-1f5178c83eda1d11.js","2488","static/chunks/app/staff/signup/page-4c7f5ac936f2c52e.js"],"default"]
 6:I[4431,[],"OutletBoundary"]
 7:"$Sreact.suspense"
-0:{"buildId":"mjHXVUPVcffVPlzqz8m7e","rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],null,["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"loading":null,"isPartial":false}
+0:{"buildId":"QGijwDeV8XFXb0_SwI_5F","rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],null,["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"loading":null,"isPartial":false}
 4:{}
 5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
 8:null
