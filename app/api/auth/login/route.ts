@@ -27,11 +27,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         message: "Login successful",
-        token: generateToken(user._id.toString()),
+        token: generateToken({
+          id: user._id.toString(),
+          role: user.role,
+          name: user.name,
+          email: user.email,
+        }),
         user: {
           id: user._id,
           name: user.name,
           email: user.email,
+          role: user.role,
         },
       },
       { status: 200 },

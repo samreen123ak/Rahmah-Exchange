@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+import { LogOut, Mail } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { removeAuthToken } from "@/lib/auth-utils";
 
@@ -29,13 +30,20 @@ export default function Header() {
         </Link>
 
         {/* Right Section */}
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded-lg transition font-medium"
-        >
-          <LogOut className="w-4 h-4" />
-          Logout
-        </button>
+        <div className="flex items-center gap-3">
+          <Link href="/messages" className="hidden md:flex items-center gap-2 px-4 py-2 text-gray-700 bg-teal-50 hover:bg-teal-100 rounded-lg transition font-medium">
+            <Mail className="w-4 h-4 text-teal-600" />
+            Messages
+          </Link>
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded-lg transition font-medium"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </button>
+        </div>
       </div>
     </header>
   );

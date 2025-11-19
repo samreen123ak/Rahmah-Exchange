@@ -2,7 +2,8 @@ import { type NextRequest, NextResponse } from "next/server"
 import { dbConnect } from "@/lib/db"
 import ZakatApplicant from "@/lib/models/ZakatApplicant"
 import { getAdminEmail, sendEmail } from "@/lib/email"
-import { put } from "@vercel/blob"
+import { generateMagicLink } from "@/lib/applicant-token-utils"
+import { uploadBuffer } from "@/lib/storage"
 
 // Generate unique case ID
 async function generateUniqueCaseId(): Promise<string> {
@@ -70,13 +71,9 @@ export async function POST(request: NextRequest) {
         const buffer = Buffer.from(await (f as any).arrayBuffer())
 
         try {
-          // Upload to Vercel Blob
-          const blob = await put(originalName, buffer, {
-            access: "public",
-            addRandomSuffix: true,
-          })
+          const blob = await uploadBuffer(buffer, originalName, new URL(request.url).origin)
 
-          console.log(" File uploaded to Blob:", blob.pathname, blob.url)
+          console.log(" File uploaded:", blob.pathname, blob.url)
 
           // Store metadata in database
           documentMetadata.push({
@@ -87,8 +84,8 @@ export async function POST(request: NextRequest) {
             url: blob.url,
             uploadedAt: new Date(),
           })
-        } catch (blobError) {
-          console.error(" Blob upload error:", blobError)
+        } catch (err) {
+          console.error(" File upload error:", err)
         }
       } else {
         console.warn(" Received non-File object:", f)
@@ -165,8 +162,10 @@ export async function POST(request: NextRequest) {
     ;(async () => {
       try {
         const baseUrl = new URL(request.url).origin
-        const applicantLink = `${baseUrl}/` // Adjust if you add a dedicated status page
         const adminEmail = getAdminEmail()
+        const magicLink = generateMagicLink(applicant._id.toString(), baseUrl)
+        
+        console.log(`Generated magic link for applicant ${applicant._id.toString()}: ${magicLink}`)
 
         // Email to applicant (if email provided)
         if (applicant.email) {
@@ -177,19 +176,30 @@ export async function POST(request: NextRequest) {
               <p>Assalamu Alaikum ${applicant.firstName || ""},</p>
               <p>We have received your Zakat assistance application.</p>
               <p><strong>Case ID:</strong> ${applicant.caseId}</p>
-              <p>You can check your application status from our website.</p>
-              <p><a href="${applicantLink}">Go to Rahmah Foundation</a></p>
+              <p>You can access your application portal and upload additional documents using the link below:</p>
+              <p><a href="${magicLink}" style="display: inline-block; padding: 10px 20px; background-color: #0d9488; color: white; text-decoration: none; border-radius: 5px;">Access Your Portal</a></p>
+              <p>This link will allow you to:</p>
+              <ul>
+                <li>View your application status</li>
+                <li>Upload missing or additional documents</li>
+              </ul>
               <p>We will review your application and get back to you. JazakAllahu Khairan.</p>
               <p>— Rahmah Foundation Team</p>
             `,
             text: `Assalamu Alaikum ${applicant.firstName || ""},
 
-                  We have received your Zakat assistance application.
-                  Case ID: ${applicant.caseId}
-                  You can check your application status from our website: ${applicantLink}
+We have received your Zakat assistance application.
+Case ID: ${applicant.caseId}
 
-                  We will review your application and get back to you. JazakAllahu Khairan.
-                  — Rahmah Foundation Team`,
+You can access your application portal and upload additional documents using this link:
+${magicLink}
+
+This link will allow you to:
+- View your application status
+- Upload missing or additional documents
+
+We will review your application and get back to you. JazakAllahu Khairan.
+— Rahmah Foundation Team`,
           })
         }
 

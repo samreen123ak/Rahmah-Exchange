@@ -4,6 +4,14 @@ import BlacklistedToken from "./models/BlacklistedToken"
 import User from "./models/User"
 import { verifyToken } from "./jwt-utils"
 
+// Local interface for authenticated user
+interface AuthenticatedUser {
+  _id: string
+  name: string
+  email: string
+  role: string
+}
+
 export async function authenticateRequest(request: NextRequest) {
   try {
     const authHeader = request.headers.get("authorization")
@@ -13,27 +21,30 @@ export async function authenticateRequest(request: NextRequest) {
 
     const token = authHeader.substring(7)
 
-    // Check if token is blacklisted
     await dbConnect()
+
     const blacklistedToken = await BlacklistedToken.findOne({ token })
     if (blacklistedToken) {
       return { user: null, error: "Token is blacklisted" }
     }
 
-    // Verify token
     const decoded = verifyToken(token)
-    if (!decoded) {
+    if (!decoded || !decoded.id) {
       return { user: null, error: "Invalid or expired token" }
     }
 
-    // Get user from database
-    const user = await User.findById(decoded.id)
+    // Explicitly type the user
+    const user = (await User.findById(decoded.id).lean()) as AuthenticatedUser | null
     if (!user) {
       return { user: null, error: "User not found" }
     }
 
+    // Ensure role exists
+    if (!user.role) user.role = "user"
+
     return { user, error: null }
   } catch (error) {
+    console.error("Authentication error:", error)
     return { user: null, error: "Authentication failed" }
   }
 }

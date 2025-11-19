@@ -123,7 +123,7 @@ export default function DashboardPage() {
     .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-linear-to-b from-gray-50 to-gray-100">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-8 py-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -209,9 +209,24 @@ export default function DashboardPage() {
                   <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
                     <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
                     <div className="space-y-3">
+                      <Link href="/staff/cases/add">
+                        <button className="w-full px-6 py-3 border-2 border-teal-600 text-white bg-teal-600 rounded-lg font-medium hover:bg-teal-700 transition flex items-center justify-center gap-2">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          </svg>
+                          Add New Case
+                        </button>
+                      </Link>
+
                       <Link href="/staff/cases">
                         <button className="w-full px-6 py-3 border-2 border-teal-600 text-teal-600 rounded-lg font-medium hover:bg-teal-50 transition">
                           View All Cases
+                        </button>
+                      </Link>
+
+                      <Link href="/messages">
+                        <button className="w-full px-6 py-3 border-2 border-teal-600 text-white bg-teal-600 rounded-lg font-medium hover:bg-teal-700 transition">
+                          Open Messages
                         </button>
                       </Link>
                       <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -236,7 +251,7 @@ function StatCard({ title, value, icon, color = "text-gray-900" }: any) {
     <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-gray-600 font-medium">{title}</h3>
-        <div className={`w-10 h-10 bg-gradient-to-br ${color} rounded-lg flex items-center justify-center text-white`}>
+        <div className={`w-10 h-10 bg-linear-to-br ${color} rounded-lg flex items-center justify-center text-white`}>
           {icon}
         </div>
       </div>
@@ -249,7 +264,7 @@ function StatusRow({ label, value, color }: any) {
   return (
     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
       <span className="text-gray-700 font-medium">{label}</span>
-      <div className={`px-4 py-2 bg-gradient-to-r ${color} text-white rounded-lg font-semibold`}>{value}</div>
+      <div className={`px-4 py-2 bg-linear-to-r ${color} text-white rounded-lg font-semibold`}>{value}</div>
     </div>
   )
 }

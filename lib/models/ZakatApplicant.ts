@@ -53,7 +53,7 @@ const zakatApplicantSchema = new mongoose.Schema(
         uploadedAt: { type: Date, default: Date.now },
       },
     ],
-    status: { type: String, default: "Pending", enum: ["Pending", "Approved", "Rejected"] },
+    status: { type: String, default: "Pending", enum: ["Pending", "Approved", "Rejected","Ready for Approval","Need Info","In Review"] },
     caseId: { type: String, unique: true, index: true },
   },
   { timestamps: true }

@@ -2,8 +2,9 @@ import jwt from "jsonwebtoken"
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production"
 
-export function generateToken(id: string): string {
-  return jwt.sign({ id }, JWT_SECRET, {
+// Allow full payload instead of only id
+export function generateToken(payload: any): string {
+  return jwt.sign(payload, JWT_SECRET, {
     expiresIn: "30d",
   })
 }

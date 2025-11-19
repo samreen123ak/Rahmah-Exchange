@@ -21,6 +21,39 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/api/applicant/messages/conversations/[conversationId]",
+      "regex": "^/api/applicant/messages/conversations/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPconversationId": "nxtPconversationId"
+      },
+      "namedRegex": "^/api/applicant/messages/conversations/(?<nxtPconversationId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/case-assignments/[assignmentId]/accept",
+      "regex": "^/api/case\\-assignments/([^/]+?)/accept(?:/)?$",
+      "routeKeys": {
+        "nxtPassignmentId": "nxtPassignmentId"
+      },
+      "namedRegex": "^/api/case\\-assignments/(?<nxtPassignmentId>[^/]+?)/accept(?:/)?$"
+    },
+    {
+      "page": "/api/cases/[caseId]/notes",
+      "regex": "^/api/cases/([^/]+?)/notes(?:/)?$",
+      "routeKeys": {
+        "nxtPcaseId": "nxtPcaseId"
+      },
+      "namedRegex": "^/api/cases/(?<nxtPcaseId>[^/]+?)/notes(?:/)?$"
+    },
+    {
+      "page": "/api/cases/[caseId]/notes/[noteId]",
+      "regex": "^/api/cases/([^/]+?)/notes/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPcaseId": "nxtPcaseId",
+        "nxtPnoteId": "nxtPnoteId"
+      },
+      "namedRegex": "^/api/cases/(?<nxtPcaseId>[^/]+?)/notes/(?<nxtPnoteId>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/documents/[filename]",
       "regex": "^/api/documents/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -37,12 +70,61 @@
       "namedRegex": "^/api/grants/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/messages/conversations/[conversationId]",
+      "regex": "^/api/messages/conversations/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPconversationId": "nxtPconversationId"
+      },
+      "namedRegex": "^/api/messages/conversations/(?<nxtPconversationId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/messages/conversations/[conversationId]/mark-read",
+      "regex": "^/api/messages/conversations/([^/]+?)/mark\\-read(?:/)?$",
+      "routeKeys": {
+        "nxtPconversationId": "nxtPconversationId"
+      },
+      "namedRegex": "^/api/messages/conversations/(?<nxtPconversationId>[^/]+?)/mark\\-read(?:/)?$"
+    },
+    {
+      "page": "/api/users/[userId]",
+      "regex": "^/api/users/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPuserId": "nxtPuserId"
+      },
+      "namedRegex": "^/api/users/(?<nxtPuserId>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/zakat-applicants/[id]",
       "regex": "^/api/zakat\\-applicants/([^/]+?)(?:/)?$",
       "routeKeys": {
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/zakat\\-applicants/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/zakat-applicants/[id]/documents",
+      "regex": "^/api/zakat\\-applicants/([^/]+?)/documents(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/zakat\\-applicants/(?<nxtPid>[^/]+?)/documents(?:/)?$"
+    },
+    {
+      "page": "/api/zakat-applicants/[id]/documents/[documentId]",
+      "regex": "^/api/zakat\\-applicants/([^/]+?)/documents/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid",
+        "nxtPdocumentId": "nxtPdocumentId"
+      },
+      "namedRegex": "^/api/zakat\\-applicants/(?<nxtPid>[^/]+?)/documents/(?<nxtPdocumentId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/applicant-portal/[id]",
+      "regex": "^/applicant\\-portal/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/applicant\\-portal/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
       "page": "/staff/cases/[id]",
@@ -73,6 +155,36 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/api/admin/import-cases",
+      "regex": "^/api/admin/import\\-cases(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/import\\-cases(?:/)?$"
+    },
+    {
+      "page": "/api/applicant/messages/conversations/create",
+      "regex": "^/api/applicant/messages/conversations/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/applicant/messages/conversations/create(?:/)?$"
+    },
+    {
+      "page": "/api/applicant/messages/send",
+      "regex": "^/api/applicant/messages/send(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/applicant/messages/send(?:/)?$"
+    },
+    {
+      "page": "/api/applicant-token/verify",
+      "regex": "^/api/applicant\\-token/verify(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/applicant\\-token/verify(?:/)?$"
+    },
+    {
+      "page": "/api/applicants/request-login-link",
+      "regex": "^/api/applicants/request\\-login\\-link(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/applicants/request\\-login\\-link(?:/)?$"
+    },
+    {
       "page": "/api/auth/login",
       "regex": "^/api/auth/login(?:/)?$",
       "routeKeys": {},
@@ -91,10 +203,64 @@
       "namedRegex": "^/api/auth/signup(?:/)?$"
     },
     {
+      "page": "/api/case-assignments",
+      "regex": "^/api/case\\-assignments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/case\\-assignments(?:/)?$"
+    },
+    {
+      "page": "/api/debug/applicant-message",
+      "regex": "^/api/debug/applicant\\-message(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/debug/applicant\\-message(?:/)?$"
+    },
+    {
+      "page": "/api/debug/fix-indexes",
+      "regex": "^/api/debug/fix\\-indexes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/debug/fix\\-indexes(?:/)?$"
+    },
+    {
       "page": "/api/grants",
       "regex": "^/api/grants(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/grants(?:/)?$"
+    },
+    {
+      "page": "/api/messages/conversations",
+      "regex": "^/api/messages/conversations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/messages/conversations(?:/)?$"
+    },
+    {
+      "page": "/api/messages/conversations/create",
+      "regex": "^/api/messages/conversations/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/messages/conversations/create(?:/)?$"
+    },
+    {
+      "page": "/api/messages/send",
+      "regex": "^/api/messages/send(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/messages/send(?:/)?$"
+    },
+    {
+      "page": "/api/notifications",
+      "regex": "^/api/notifications(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/notifications(?:/)?$"
+    },
+    {
+      "page": "/api/payments",
+      "regex": "^/api/payments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/payments(?:/)?$"
+    },
+    {
+      "page": "/api/users",
+      "regex": "^/api/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users(?:/)?$"
     },
     {
       "page": "/api/zakat-applicants",
@@ -103,16 +269,40 @@
       "namedRegex": "^/api/zakat\\-applicants(?:/)?$"
     },
     {
+      "page": "/applicant-portal/login",
+      "regex": "^/applicant\\-portal/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/applicant\\-portal/login(?:/)?$"
+    },
+    {
+      "page": "/application-status",
+      "regex": "^/application\\-status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/application\\-status(?:/)?$"
+    },
+    {
       "page": "/form",
       "regex": "^/form(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/form(?:/)?$"
     },
     {
+      "page": "/messages",
+      "regex": "^/messages(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/messages(?:/)?$"
+    },
+    {
       "page": "/staff/cases",
       "regex": "^/staff/cases(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/staff/cases(?:/)?$"
+    },
+    {
+      "page": "/staff/cases/add",
+      "regex": "^/staff/cases/add(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff/cases/add(?:/)?$"
     },
     {
       "page": "/staff/dashboard",

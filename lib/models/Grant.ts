@@ -76,12 +76,14 @@ grantSchema.pre("save", function (next) {
 grantSchema.set("toJSON", { virtuals: true })
 grantSchema.set("toObject", { virtuals: true })
 
-// Force model recreation in development to avoid schema cache issues
+// Force model recreation to avoid schema cache issues
 // Delete the existing model if it exists to ensure fresh schema
-if (process.env.NODE_ENV === "development" && mongoose.models.Grant) {
+if (mongoose.models.Grant) {
   delete mongoose.models.Grant
-  delete (mongoose as any).modelSchemas.Grant
+  if ((mongoose as any).modelSchemas?.Grant) {
+    delete (mongoose as any).modelSchemas.Grant
+  }
 }
 
 // Use the standard Next.js pattern for Mongoose models
-export default mongoose.models.Grant || mongoose.model("Grant", grantSchema)
+export default mongoose.model("Grant", grantSchema)

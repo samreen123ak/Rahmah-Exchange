@@ -60,16 +60,35 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { dbConnect } from "@/lib/db"
 import ZakatApplicant from "@/lib/models/ZakatApplicant"
+import DocumentAudit from "@/lib/models/DocumentAudit"
 import { authenticateRequest } from "@/lib/auth-middleware"
+import { verifyApplicantToken } from "@/lib/applicant-token-utils"
 import { sendEmail } from "@/lib/email"
 
-// GET by ID – public
+// GET by ID – supports both public access and applicant portal access with token
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
+    const token = new URL(request.url).searchParams.get("token")
+
+    // If token is provided, verify applicant access
+    if (token) {
+      const decoded = verifyApplicantToken(token)
+      if (!decoded || decoded.applicantId !== id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      }
+    }
+
     await dbConnect()
     const applicant = await ZakatApplicant.findById(id)
     if (!applicant) return NextResponse.json({ error: "Applicant not found" }, { status: 404 })
+
+    // If token was used, also return document logs
+    if (token) {
+      const documentLogs = await DocumentAudit.find({ applicantId: id }).sort({ createdAt: -1 })
+      return NextResponse.json({ applicant, documentLogs }, { status: 200 })
+    }
+
     return NextResponse.json(applicant)
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
@@ -93,9 +112,23 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const currentApplicant = await ZakatApplicant.findById(id)
+    if (!currentApplicant) {
+      return NextResponse.json({ error: "Applicant not found" }, { status: 404 })
+    }
+    
     const statusChanged = currentApplicant && body.status && currentApplicant.status !== body.status
 
-    const updated = await ZakatApplicant.findByIdAndUpdate(id, body, { new: true, runValidators: true })
+    // Don't overwrite documents if they're not provided in the body
+    // Documents should be managed separately via the documents API
+    const updateBody = { ...body }
+    // Only preserve documents if they're explicitly provided and not empty
+    // If documents field is missing or is an empty array, don't include it in the update
+    if (!updateBody.hasOwnProperty('documents') || (Array.isArray(updateBody.documents) && updateBody.documents.length === 0)) {
+      // Preserve existing documents by not including documents in the update
+      delete updateBody.documents
+    }
+
+    const updated = await ZakatApplicant.findByIdAndUpdate(id, updateBody, { new: true, runValidators: true })
     if (!updated) return NextResponse.json({ error: "Applicant not found" }, { status: 404 })
 
     if (statusChanged && updated.email && (body.status === "Approved" || body.status === "Rejected")) {

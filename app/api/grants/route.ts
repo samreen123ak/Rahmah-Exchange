@@ -20,6 +20,13 @@ export async function POST(request: NextRequest) {
 
     await dbConnect()
 
+    // Verify applicant exists
+    const ZakatApplicant = (await import("@/lib/models/ZakatApplicant")).default
+    const applicant = await ZakatApplicant.findById(applicantId)
+    if (!applicant) {
+      return NextResponse.json({ message: "Applicant not found" }, { status: 404 })
+    }
+
     // Support both field names for backwards compatibility
     // Handle both undefined and null cases, but allow 0 as a valid value
     const amount = grantedAmount !== undefined && grantedAmount !== null 
@@ -34,12 +41,25 @@ export async function POST(request: NextRequest) {
 
     const grantRemarks = remarks || notes || ""
 
+    // Validate status is one of the allowed enum values
+    const validStatuses = ["Pending", "Approved", "Rejected"]
+    const grantStatus = status && status.trim() && validStatuses.includes(status.trim()) 
+      ? status.trim() 
+      : "Pending"
+    
     // Create grant with ONLY the new field names - never include amountGranted
     const grantData: any = {
       applicantId,
       grantedAmount: Number(amount),
-      status: status || "Pending",
+      status: grantStatus,
     }
+    
+    console.log("Creating grant:", {
+      applicantId,
+      grantedAmount: grantData.grantedAmount,
+      status: grantData.status,
+      remarks: grantRemarks || "none"
+    })
 
     if (grantRemarks) {
       grantData.remarks = grantRemarks
@@ -60,18 +80,34 @@ export async function POST(request: NextRequest) {
     grant.markModified('grantedAmount')
     grant.unmarkModified('amountGranted')
 
-    // Save with validation, but catch any amountGranted validation errors
+    // Save with validation, but catch any validation errors
     try {
       await grant.save({ validateBeforeSave: true })
+      console.log("✅ Grant saved successfully:", grant._id)
     } catch (saveError: any) {
+      console.error("❌ Grant save error:", {
+        message: saveError.message,
+        name: saveError.name,
+        code: saveError.code,
+        errors: saveError.errors,
+      })
+      
       // If the error is about amountGranted being required, it's a schema cache issue
       if (saveError.message && saveError.message.includes('amountGranted') && saveError.message.includes('required')) {
         console.error('Schema cache issue detected. Please restart the development server.')
         // Try saving without validation as a fallback (not ideal, but works)
         await grant.save({ validateBeforeSave: false })
       } else {
-        throw saveError
+        // Re-throw with more context
+        throw new Error(`Failed to save grant: ${saveError.message || saveError}`)
       }
+    }
+
+    // Update applicant status to match grant status if grant is Approved
+    if (grantStatus === "Approved" && applicant.status !== "Approved") {
+      applicant.status = "Approved"
+      await applicant.save()
+      console.log("✅ Updated applicant status to Approved")
     }
 
     // Populate applicant data before returning
@@ -163,8 +199,26 @@ JazakAllahu Khairan.
 
     return NextResponse.json(grantObj, { status: 201 })
   } catch (error: any) {
-    console.error("POST grant error:", error)
-    return NextResponse.json({ message: error.message || "Server error" }, { status: 500 })
+    console.error("POST grant error:", {
+      message: error?.message,
+      name: error?.name,
+      code: error?.code,
+      stack: error?.stack?.split('\n').slice(0, 5).join('\n'),
+    })
+    
+    // Return detailed error in development
+    const isDev = process.env.NODE_ENV !== "production"
+    return NextResponse.json(
+      { 
+        message: error?.message || "Server error",
+        error: isDev ? error?.message : undefined,
+        details: isDev ? {
+          name: error?.name,
+          code: error?.code,
+        } : undefined,
+      }, 
+      { status: 500 }
+    )
   }
 }
 

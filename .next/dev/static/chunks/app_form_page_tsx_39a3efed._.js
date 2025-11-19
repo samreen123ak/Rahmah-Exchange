@@ -2,972 +2,10 @@
 "[project]/app/form/page.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
-// "use client"
-// import axios from "axios"
-// import type React from "react"
-// import { useState } from "react"
-// import { ChevronLeft, Upload, CheckCircle2, AlertCircle, CheckCircle } from "lucide-react"
-// import Link from "next/link"
-// function Toast({ message, type, isVisible }: { message: string; type: "success" | "error"; isVisible: boolean }) {
-//   if (!isVisible) return null
-//   return (
-//     <div
-//       className={`fixed top-4 right-4 p-4 rounded-lg flex items-center gap-2 text-white font-semibold z-50 animate-in fade-in slide-in-from-top-5 ${
-//         type === "success" ? "bg-green-500" : "bg-red-500"
-//       }`}
-//     >
-//       {type === "success" ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-//       {message}
-//     </div>
-//   )
-// }
-// const STEPS = [
-//   { number: 1, label: "Personal" },
-//   { number: 2, label: "Employment" },
-//   { number: 3, label: "Family" },
-//   { number: 4, label: "Financial" },
-//   { number: 5, label: "Request" },
-//   { number: 6, label: "References" },
-//   { number: 7, label: "Documents" },
-//   { number: 8, label: "Review" },
-// ]
-// export default function ApplyPage() {
-//   const [currentStep, setCurrentStep] = useState(1)
-//   const [isSubmitted, setIsSubmitted] = useState(false)
-//   const [isSubmitting, setIsSubmitting] = useState(false)
-//   const [toast, setToast] = useState<{ message: string; type: "success" | "error"; isVisible: boolean }>({
-//     message: "",
-//     type: "success",
-//     isVisible: false,
-//   })
-//   const [formData, setFormData] = useState({
-//     // Step 1: Personal
-//     firstName: "",
-//     lastName: "",
-//     streetAddress: "",
-//     city: "",
-//     state: "",
-//     zipCode: "",
-//     gender: "",
-//     dateOfBirth: "",
-//     mobilePhone: "",
-//     homePhone: "",
-//     email: "",
-//     legalStatus: "",
-//     referredBy: "",
-//     referrerPhone: "",
-//     // Step 2: Employment
-//     employmentStatus: "",
-//     // Step 3: Family
-//     dependentsInfo: "",
-//     // Step 4: Financial
-//     totalMonthlyIncome: "",
-//     incomeSources: "",
-//     rentMortgage: "",
-//     utilities: "",
-//     food: "",
-//     otherExpenses: "",
-//     totalDebts: "",
-//     // Step 5: Request
-//     requestType: "Zakat",
-//     amountRequested: "",
-//     whyApplying: "",
-//     circumstances: "",
-//     previousZakat: "",
-//     // Step 6: References
-//     reference1: { fullName: "", phoneNumber: "", email: "", relationship: "" },
-//     reference2: { fullName: "", phoneNumber: "", email: "", relationship: "" },
-//     // Step 7: Documents
-//     documents: [] as File[],
-//   })
-//   const showToast = (message: string, type: "success" | "error") => {
-//     setToast({ message, type, isVisible: true })
-//     setTimeout(() => setToast((prev) => ({ ...prev, isVisible: false })), 4000)
-//   }
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-//     const { name, value } = e.target
-//     setFormData((prev) => ({ ...prev, [name]: value }))
-//   }
-//   const handleReferenceChange = (refNumber: 1 | 2, field: string, value: string) => {
-//     const refKey = refNumber === 1 ? "reference1" : "reference2"
-//     setFormData((prev) => ({
-//       ...prev,
-//       [refKey]: { ...prev[refKey], [field]: value },
-//     }))
-//   }
-//   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const files = e.target.files
-//     if (!files) return
-//     const uploadedFiles = Array.from(files)
-//     const maxSize = 10 * 1024 * 1024 // 10MB
-//     for (const file of uploadedFiles) {
-//       if (file.size > maxSize) {
-//         showToast(`File ${file.name} exceeds 10MB limit`, "error")
-//         return
-//       }
-//     }
-//     setFormData((prev) => ({
-//       ...prev,
-//       documents: [...prev.documents, ...uploadedFiles],
-//     }))
-//     showToast(`${uploadedFiles.length} file(s) uploaded successfully`, "success")
-//   }
-//   const removeDocument = (index: number) => {
-//     setFormData((prev) => ({
-//       ...prev,
-//       documents: prev.documents.filter((_, i) => i !== index),
-//     }))
-//   }
-//   const handleNext = () => {
-//     if (currentStep < STEPS.length) {
-//       setCurrentStep(currentStep + 1)
-//     }
-//   }
-//   const handleBack = () => {
-//     if (currentStep > 1) {
-//       setCurrentStep(currentStep - 1)
-//     }
-//   }
-//   const handleSubmit = async () => {
-//     setIsSubmitting(true)
-//     try {
-//       const API_BASE_URL =
-//         process.env.NEXT_PUBLIC_API_URL || "https://rahmah-exchange-backend-production.up.railway.app"
-//       // Create FormData to handle file uploads
-//       const submitData = new FormData()
-//       // Add all form data
-//       submitData.append("firstName", formData.firstName)
-//       submitData.append("lastName", formData.lastName)
-//       submitData.append("streetAddress", formData.streetAddress)
-//       submitData.append("city", formData.city)
-//       submitData.append("state", formData.state)
-//       submitData.append("zipCode", formData.zipCode)
-//       submitData.append("gender", formData.gender)
-//       submitData.append("dateOfBirth", formData.dateOfBirth)
-//       submitData.append("mobilePhone", formData.mobilePhone)
-//       submitData.append("homePhone", formData.homePhone)
-//       submitData.append("email", formData.email)
-//       submitData.append("legalStatus", formData.legalStatus)
-//       submitData.append("referredBy", formData.referredBy)
-//       submitData.append("referrerPhone", formData.referrerPhone)
-//       submitData.append("employmentStatus", formData.employmentStatus)
-//       submitData.append("dependentsInfo", formData.dependentsInfo)
-//       submitData.append("totalMonthlyIncome", formData.totalMonthlyIncome)
-//       submitData.append("incomeSources", formData.incomeSources)
-//       submitData.append("rentMortgage", formData.rentMortgage)
-//       submitData.append("utilities", formData.utilities)
-//       submitData.append("food", formData.food)
-//       submitData.append("otherExpenses", formData.otherExpenses)
-//       submitData.append("totalDebts", formData.totalDebts)
-//       submitData.append("requestType", formData.requestType)
-//       submitData.append("amountRequested", formData.amountRequested)
-//       submitData.append("whyApplying", formData.whyApplying)
-//       submitData.append("circumstances", formData.circumstances)
-//       submitData.append("previousZakat", formData.previousZakat)
-//       submitData.append("reference1", JSON.stringify(formData.reference1))
-//       submitData.append("reference2", JSON.stringify(formData.reference2))
-//       // Add documents
-//       formData.documents.forEach((file, index) => {
-//         submitData.append(`documents`, file)
-//       })
-//       const response = await axios.post(
-//         "https://rahmah-exchange-backend-production.up.railway.app/api/zakatApplicants",
-//         submitData,
-//         {
-//           headers: { "Content-Type": "multipart/form-data" },
-//         },
-//       )
-//       console.log("✅ Application submitted:", response.data)
-//       showToast("Application submitted successfully!", "success")
-//       setIsSubmitted(true)
-//     } catch (error: any) {
-//       const errorMessage =
-//         error.response?.data?.message || "Something went wrong submitting your application. Please try again."
-//       console.error("❌ Error submitting application:", error)
-//       showToast(errorMessage, "error")
-//     } finally {
-//       setIsSubmitting(false)
-//     }
-//   }
-//   const isStepCompleted = (step: number) => step < currentStep
-//   if (isSubmitted) {
-//     return (
-//       <div className="min-h-screen bg-gradient-to-b from-teal-50 to-blue-50">
-//         <header className="flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-white">
-//           <Link href="/" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition font-medium">
-//             <ChevronLeft className="w-5 h-5" />
-//             Back to Home
-//           </Link>
-//         </header>
-//         <div className="px-8 py-12 max-w-2xl mx-auto">
-//           {/* Success Banner */}
-//           <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-//             <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
-//             <p className="text-green-800 font-semibold">Application submitted successfully!</p>
-//           </div>
-//           {/* Status Card */}
-//           <div className="bg-white rounded-2xl p-8 shadow-sm">
-//             <h1 className="text-3xl font-bold text-gray-900 mb-8">Application Status</h1>
-//             {/* Current Status */}
-//             <div className="mb-8 pb-8 border-b border-gray-200">
-//               <p className="text-gray-600 text-sm font-medium mb-2">Current Status</p>
-//               <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-//                 <div className="w-2 h-2 bg-blue-600 rounded-full" />
-//                 <span className="text-blue-700 font-semibold text-sm">Submitted</span>
-//               </div>
-//             </div>
-//             {/* Application Details */}
-//             <div className="mb-8">
-//               <h2 className="text-xl font-semibold text-gray-900 mb-6">Application Details</h2>
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                 <div>
-//                   <p className="text-gray-600 text-sm mb-1">Application ID</p>
-//                   <p className="text-gray-900 font-semibold">b6b368b5</p>
-//                 </div>
-//                 <div>
-//                   <p className="text-gray-600 text-sm mb-1">Submitted Date</p>
-//                   <p className="text-gray-900 font-semibold">03/11/2025</p>
-//                 </div>
-//                 <div>
-//                   <p className="text-gray-600 text-sm mb-1">Applicant Name</p>
-//                   <p className="text-gray-900 font-semibold">
-//                     {formData.firstName} {formData.lastName}
-//                   </p>
-//                 </div>
-//                 <div>
-//                   <p className="text-gray-600 text-sm mb-1">Request Type</p>
-//                   <p className="text-gray-900 font-semibold">{formData.requestType}</p>
-//                 </div>
-//               </div>
-//             </div>
-//             {/* Info Box */}
-//             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-//               <p className="text-blue-900 text-sm">Your application has been received and is pending review.</p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     )
-//   }
-//   return (
-//     <div className="min-h-screen bg-gradient-to-b from-teal-50 to-blue-50">
-//       <Toast message={toast.message} type={toast.type} isVisible={toast.isVisible} />
-//       {/* Header */}
-//       <header className="flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-white">
-//         <Link href="/" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition font-medium">
-//           <ChevronLeft className="w-5 h-5" />
-//           Back to Home
-//         </Link>
-//         <button className="px-6 py-2 text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition">
-//           Save Progress
-//         </button>
-//       </header>
-//       {/* Main Content */}
-//       <div className="px-8 py-12 max-w-4xl mx-auto">
-//         {/* Page Title */}
-//         <div className="mb-12">
-//           <h1 className="text-4xl font-bold text-gray-900 mb-3">Assistance Application</h1>
-//           <p className="text-gray-600">Complete all steps to submit your application for verified support</p>
-//         </div>
-//         {/* Step Indicator */}
-//         <div className="mb-12">
-//           <div className="flex justify-between items-start mb-4">
-//             {STEPS.map((step) => (
-//               <div key={step.number} className="flex flex-col items-center flex-1">
-//                 <div
-//                   className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg mb-2 transition ${
-//                     step.number === currentStep
-//                       ? "bg-teal-600 text-white"
-//                       : isStepCompleted(step.number)
-//                         ? "bg-teal-600 text-white"
-//                         : "bg-gray-200 text-gray-500"
-//                   }`}
-//                 >
-//                   {isStepCompleted(step.number) ? "✓" : step.number}
-//                 </div>
-//                 <p className="text-sm text-gray-600 text-center text-balance font-medium">{step.label}</p>
-//               </div>
-//             ))}
-//           </div>
-//           {/* Progress Bar */}
-//           <div className="w-full bg-gray-300 rounded-full h-1">
-//             <div
-//               className="bg-gray-900 h-1 rounded-full transition-all duration-300"
-//               style={{ width: `${(currentStep / STEPS.length) * 100}%` }}
-//             />
-//           </div>
-//         </div>
-//         {/* Form Card */}
-//         <div className="bg-white rounded-2xl p-8 shadow-sm">
-//           {currentStep === 1 && (
-//             <div>
-//               <h2 className="text-2xl font-bold text-gray-900 mb-8">Personal Information</h2>
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                 {/* First Name */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                     First Name <span className="text-red-500">*</span>
-//                   </label>
-//                   <input
-//                     type="text"
-//                     name="firstName"
-//                     value={formData.firstName}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//                 {/* Last Name */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                     Last Name <span className="text-red-500">*</span>
-//                   </label>
-//                   <input
-//                     type="text"
-//                     name="lastName"
-//                     value={formData.lastName}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//               </div>
-//               {/* Street Address */}
-//               <div className="mb-6">
-//                 <label className="block text-sm font-semibold text-gray-900 mb-2">Street Address</label>
-//                 <input
-//                   type="text"
-//                   name="streetAddress"
-//                   value={formData.streetAddress}
-//                   onChange={handleChange}
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                   placeholder=""
-//                 />
-//               </div>
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                 {/* City */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">City</label>
-//                   <input
-//                     type="text"
-//                     name="city"
-//                     value={formData.city}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//                 {/* State */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">State</label>
-//                   <input
-//                     type="text"
-//                     name="state"
-//                     value={formData.state}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//               </div>
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                 {/* ZIP Code */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">ZIP Code</label>
-//                   <input
-//                     type="text"
-//                     name="zipCode"
-//                     value={formData.zipCode}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//                 {/* Gender */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Gender</label>
-//                   <select
-//                     name="gender"
-//                     value={formData.gender}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-gray-600"
-//                   >
-//                     <option value="">Select gender</option>
-//                     <option value="male">Male</option>
-//                     <option value="female">Female</option>
-//                     <option value="other">Other</option>
-//                     <option value="prefer-not">Prefer not to say</option>
-//                   </select>
-//                 </div>
-//               </div>
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                 {/* Date of Birth */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Date of Birth</label>
-//                   <input
-//                     type="date"
-//                     name="dateOfBirth"
-//                     value={formData.dateOfBirth}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                   />
-//                 </div>
-//                 {/* Mobile Phone */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                     Mobile Phone <span className="text-red-500">*</span>
-//                   </label>
-//                   <input
-//                     type="tel"
-//                     name="mobilePhone"
-//                     value={formData.mobilePhone}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//               </div>
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                 {/* Home Phone */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Home Phone</label>
-//                   <input
-//                     type="tel"
-//                     name="homePhone"
-//                     value={formData.homePhone}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//                 {/* Email */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Email</label>
-//                   <input
-//                     type="email"
-//                     name="email"
-//                     value={formData.email}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//               </div>
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-//                 {/* Legal Status */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Legal Status</label>
-//                   <select
-//                     name="legalStatus"
-//                     value={formData.legalStatus}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-gray-600"
-//                   >
-//                     <option value="">Select status</option>
-//                     <option value="citizen">Citizen</option>
-//                     <option value="resident">Resident</option>
-//                     <option value="other">Other</option>
-//                   </select>
-//                 </div>
-//                 {/* Referred By */}
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Referred By</label>
-//                   <input
-//                     type="text"
-//                     name="referredBy"
-//                     value={formData.referredBy}
-//                     onChange={handleChange}
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     placeholder=""
-//                   />
-//                 </div>
-//               </div>
-//               <div className="mb-8">
-//                 {/* Referrer Phone */}
-//                 <label className="block text-sm font-semibold text-gray-900 mb-2">Referrer Phone</label>
-//                 <input
-//                   type="tel"
-//                   name="referrerPhone"
-//                   value={formData.referrerPhone}
-//                   onChange={handleChange}
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                   placeholder=""
-//                 />
-//               </div>
-//             </div>
-//           )}
-//           {currentStep === 2 && (
-//             <div>
-//               <h2 className="text-2xl font-bold text-gray-900 mb-8">Employment Information</h2>
-//               <div className="mb-6">
-//                 <label className="block text-sm font-semibold text-gray-900 mb-2">Employment Status</label>
-//                 <select
-//                   name="employmentStatus"
-//                   value={formData.employmentStatus}
-//                   onChange={handleChange}
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                 >
-//                   <option value="">Select status</option>
-//                   <option value="employed">Employed</option>
-//                   <option value="self-employed">Self-Employed</option>
-//                   <option value="unemployed">Unemployed</option>
-//                   <option value="retired">Retired</option>
-//                   <option value="student">Student</option>
-//                   <option value="other">Other</option>
-//                 </select>
-//               </div>
-//             </div>
-//           )}
-//           {currentStep === 3 && (
-//             <div>
-//               <h2 className="text-2xl font-bold text-gray-900 mb-8">Family Information</h2>
-//               <div className="mb-6">
-//                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Dependents Information</h3>
-//                 <textarea
-//                   name="dependentsInfo"
-//                   value={formData.dependentsInfo}
-//                   onChange={handleChange}
-//                   placeholder="List your dependents with their names, ages, and relationship. Example:&#10;- John Smith, 8 years old, Son&#10;- Mary Smith, 5 years old, Daughter&#10;- Mother-in-law, 65 years old, lives with us"
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-48"
-//                 />
-//                 <p className="text-sm text-gray-500 mt-2">Please list all people who depend on you financially</p>
-//               </div>
-//             </div>
-//           )}
-//           {currentStep === 4 && (
-//             <div>
-//               <h2 className="text-2xl font-bold text-gray-900 mb-8">Financial Information</h2>
-//               <div className="mb-8">
-//                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Income</h3>
-//                 <div className="mb-6">
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Total Monthly Income</label>
-//                   <input
-//                     type="number"
-//                     name="totalMonthlyIncome"
-//                     value={formData.totalMonthlyIncome}
-//                     onChange={handleChange}
-//                     placeholder="0.00"
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Income Sources</label>
-//                   <textarea
-//                     name="incomeSources"
-//                     value={formData.incomeSources}
-//                     onChange={handleChange}
-//                     placeholder="List all income sources: salary, spouse salary, social security, unemployment, child support, etc."
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32"
-//                   />
-//                 </div>
-//               </div>
-//               <div>
-//                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Expenses</h3>
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">Rent/Mortgage</label>
-//                     <input
-//                       type="number"
-//                       name="rentMortgage"
-//                       value={formData.rentMortgage}
-//                       onChange={handleChange}
-//                       placeholder="0.00"
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                       Utilities (Electric, Gas, Water)
-//                     </label>
-//                     <input
-//                       type="number"
-//                       name="utilities"
-//                       value={formData.utilities}
-//                       onChange={handleChange}
-//                       placeholder="0.00"
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                 </div>
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">Food</label>
-//                     <input
-//                       type="number"
-//                       name="food"
-//                       value={formData.food}
-//                       onChange={handleChange}
-//                       placeholder="0.00"
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">Other Expenses</label>
-//                     <input
-//                       type="text"
-//                       name="otherExpenses"
-//                       value={formData.otherExpenses}
-//                       onChange={handleChange}
-//                       placeholder="Transportation, medical, school, etc."
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                 </div>
-//                 <div>
-//                   <label className="block text-sm font-semibold text-gray-900 mb-2">Total Debts</label>
-//                   <input
-//                     type="number"
-//                     name="totalDebts"
-//                     value={formData.totalDebts}
-//                     onChange={handleChange}
-//                     placeholder="0.00"
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                   />
-//                 </div>
-//               </div>
-//             </div>
-//           )}
-//           {currentStep === 5 && (
-//             <div>
-//               <h2 className="text-2xl font-bold text-gray-900 mb-8">Application Request</h2>
-//               <div className="mb-6">
-//                 <label className="block text-sm font-semibold text-gray-900 mb-2">Request Type</label>
-//                 <select
-//                   name="requestType"
-//                   value={formData.requestType}
-//                   onChange={handleChange}
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                 >
-//                   <option value="Zakat">Zakat</option>
-//                   <option value="Sadaqah">Sadaqah</option>
-//                   <option value="Other">Other</option>
-//                 </select>
-//               </div>
-//               <div className="mb-6">
-//                 <label className="block text-sm font-semibold text-gray-900 mb-2">Amount Requested</label>
-//                 <input
-//                   type="number"
-//                   name="amountRequested"
-//                   value={formData.amountRequested}
-//                   onChange={handleChange}
-//                   placeholder="0.00"
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                 />
-//               </div>
-//               <div className="mb-6">
-//                 <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                   Why Are You Applying for {formData.requestType}?
-//                 </label>
-//                 <textarea
-//                   name="whyApplying"
-//                   value={formData.whyApplying}
-//                   onChange={handleChange}
-//                   placeholder="Please provide detailed information about your situation and why you need assistance..."
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32"
-//                 />
-//               </div>
-//               <div className="mb-6">
-//                 <label className="block text-sm font-semibold text-gray-900 mb-2">Explain Your Circumstances</label>
-//                 <textarea
-//                   name="circumstances"
-//                   value={formData.circumstances}
-//                   onChange={handleChange}
-//                   placeholder="Explain your circumstances and how the assistance will help"
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                   Have you received {formData.requestType}/Sadaqa in the past 12 months?
-//                 </label>
-//                 <select
-//                   name="previousZakat"
-//                   value={formData.previousZakat}
-//                   onChange={handleChange}
-//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                 >
-//                   <option value="">Select</option>
-//                   <option value="yes">Yes</option>
-//                   <option value="no">No</option>
-//                 </select>
-//               </div>
-//             </div>
-//           )}
-//           {currentStep === 6 && (
-//             <div>
-//               <h2 className="text-2xl font-bold text-gray-900 mb-3">References (2 Required)</h2>
-//               <p className="text-gray-600 mb-8">Please provide two references who can vouch for you</p>
-//               {/* Reference 1 */}
-//               <div className="mb-8 pb-8 border-b border-gray-200">
-//                 <div className="flex items-center gap-3 mb-6">
-//                   <div className="w-1 h-8 bg-teal-600 rounded" />
-//                   <h3 className="text-lg font-bold text-gray-900">Reference 1</h3>
-//                 </div>
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                       Full Name <span className="text-red-500">*</span>
-//                     </label>
-//                     <input
-//                       type="text"
-//                       value={formData.reference1.fullName}
-//                       onChange={(e) => handleReferenceChange(1, "fullName", e.target.value)}
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                       Phone Number <span className="text-red-500">*</span>
-//                     </label>
-//                     <input
-//                       type="tel"
-//                       value={formData.reference1.phoneNumber}
-//                       onChange={(e) => handleReferenceChange(1, "phoneNumber", e.target.value)}
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                 </div>
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">Email</label>
-//                     <input
-//                       type="email"
-//                       value={formData.reference1.email}
-//                       onChange={(e) => handleReferenceChange(1, "email", e.target.value)}
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                       How do you know this person?
-//                     </label>
-//                     <input
-//                       type="text"
-//                       value={formData.reference1.relationship}
-//                       onChange={(e) => handleReferenceChange(1, "relationship", e.target.value)}
-//                       placeholder="e.g., Friend from Masjid, Neighbor"
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                 </div>
-//               </div>
-//               {/* Reference 2 */}
-//               <div>
-//                 <div className="flex items-center gap-3 mb-6">
-//                   <div className="w-1 h-8 bg-blue-500 rounded" />
-//                   <h3 className="text-lg font-bold text-gray-900">Reference 2</h3>
-//                 </div>
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                       Full Name <span className="text-red-500">*</span>
-//                     </label>
-//                     <input
-//                       type="text"
-//                       value={formData.reference2.fullName}
-//                       onChange={(e) => handleReferenceChange(2, "fullName", e.target.value)}
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                       Phone Number <span className="text-red-500">*</span>
-//                     </label>
-//                     <input
-//                       type="tel"
-//                       value={formData.reference2.phoneNumber}
-//                       onChange={(e) => handleReferenceChange(2, "phoneNumber", e.target.value)}
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                 </div>
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">Email</label>
-//                     <input
-//                       type="email"
-//                       value={formData.reference2.email}
-//                       onChange={(e) => handleReferenceChange(2, "email", e.target.value)}
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label className="block text-sm font-semibold text-gray-900 mb-2">
-//                       How do you know this person?
-//                     </label>
-//                     <input
-//                       type="text"
-//                       value={formData.reference2.relationship}
-//                       onChange={(e) => handleReferenceChange(2, "relationship", e.target.value)}
-//                       placeholder="e.g., Family friend, Colleague"
-//                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-//                     />
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           )}
-//           {currentStep === 7 && (
-//             <div>
-//               <h2 className="text-2xl font-bold text-gray-900 mb-8">Supporting Documents</h2>
-//               <p className="text-gray-600 mb-6">
-//                 Please upload supporting documents such as: ID, bills, pay stubs, bank statements, etc.
-//               </p>
-//               <div className="mb-6">
-//                 <input
-//                   type="file"
-//                   id="file-upload"
-//                   multiple
-//                   accept=".pdf,.jpg,.jpeg,.png"
-//                   onChange={handleFileUpload}
-//                   className="hidden"
-//                 />
-//                 <label
-//                   htmlFor="file-upload"
-//                   className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center bg-gray-50 hover:bg-gray-100 transition cursor-pointer block"
-//                 >
-//                   <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-//                   <p className="text-teal-600 font-semibold text-lg mb-2">Click to upload documents</p>
-//                   <p className="text-gray-500">PDF, JPG, PNG up to 10MB</p>
-//                 </label>
-//               </div>
-//               {formData.documents.length > 0 && (
-//                 <div className="mt-6">
-//                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-//                     Uploaded Files ({formData.documents.length})
-//                   </h3>
-//                   <div className="space-y-2">
-//                     {formData.documents.map((doc, index) => (
-//                       <div
-//                         key={index}
-//                         className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg"
-//                       >
-//                         <div className="flex items-center gap-2">
-//                           <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-//                           <span className="text-gray-700 font-medium text-sm">{doc.name}</span>
-//                           <span className="text-gray-500 text-xs">({(doc.size / 1024 / 1024).toFixed(2)} MB)</span>
-//                         </div>
-//                         <button
-//                           onClick={() => removeDocument(index)}
-//                           className="px-3 py-1 text-red-600 hover:bg-red-50 rounded transition text-sm font-medium"
-//                         >
-//                           Remove
-//                         </button>
-//                       </div>
-//                     ))}
-//                   </div>
-//                 </div>
-//               )}
-//             </div>
-//           )}
-//           {currentStep === 8 && (
-//             <div>
-//               <h2 className="text-2xl font-bold text-gray-900 mb-8">Review Your Application</h2>
-//               <div className="space-y-8">
-//                 {/* Personal Information Section */}
-//                 <div className="pb-6 border-b border-gray-200">
-//                   <h3 className="font-semibold text-gray-900 mb-3">Personal Information</h3>
-//                   <div className="text-sm text-gray-600 space-y-1">
-//                     <p>
-//                       {formData.firstName} {formData.lastName}
-//                     </p>
-//                     <p>{formData.email}</p>
-//                     <p>{formData.mobilePhone}</p>
-//                   </div>
-//                 </div>
-//                 {/* Employment Section */}
-//                 <div className="pb-6 border-b border-gray-200">
-//                   <h3 className="font-semibold text-gray-900 mb-3">Employment</h3>
-//                   <div className="text-sm text-gray-600">
-//                     <p>Status: {formData.employmentStatus || "Not provided"}</p>
-//                   </div>
-//                 </div>
-//                 {/* Financial Summary Section */}
-//                 <div className="pb-6 border-b border-gray-200">
-//                   <h3 className="font-semibold text-gray-900 mb-3">Financial Summary</h3>
-//                   <div className="text-sm text-gray-600 space-y-1">
-//                     <p>Monthly Income: ${formData.totalMonthlyIncome || "0"}</p>
-//                     <p>Monthly Rent: ${formData.rentMortgage || "0"}</p>
-//                     <p>Total Debts: ${formData.totalDebts || "0"}</p>
-//                   </div>
-//                 </div>
-//                 {/* Request Details Section */}
-//                 <div className="pb-6 border-b border-gray-200">
-//                   <h3 className="font-semibold text-gray-900 mb-3">Request Details</h3>
-//                   <div className="text-sm text-gray-600 space-y-1">
-//                     <p>Type: {formData.requestType}</p>
-//                     <p>Amount Requested: ${formData.amountRequested || "0"}</p>
-//                     <p>Reason: {formData.whyApplying.substring(0, 100) || "..."}</p>
-//                   </div>
-//                 </div>
-//                 {/* References Section */}
-//                 <div className="pb-6 border-b border-gray-200">
-//                   <h3 className="font-semibold text-gray-900 mb-3">References</h3>
-//                   <div className="text-sm text-gray-600 space-y-1">
-//                     <p>1. {formData.reference1.fullName || "-"}</p>
-//                     <p>2. {formData.reference2.fullName || "-"}</p>
-//                   </div>
-//                 </div>
-//                 {formData.documents.length > 0 && (
-//                   <div className="pb-6 border-b border-gray-200">
-//                     <h3 className="font-semibold text-gray-900 mb-3">Uploaded Documents</h3>
-//                     <div className="text-sm text-gray-600 space-y-1">
-//                       {formData.documents.map((doc, index) => (
-//                         <p key={index}>
-//                           {index + 1}. {doc.name}
-//                         </p>
-//                       ))}
-//                     </div>
-//                   </div>
-//                 )}
-//                 {/* Declaration Section */}
-//                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-//                   <p className="text-sm text-blue-900">
-//                     <span className="font-semibold">Declaration:</span> I testify that the information provided in this
-//                     application is true and accurate to the best of my knowledge. I authorize the verification of this
-//                     information to determine my eligibility for {formData.requestType}.
-//                   </p>
-//                 </div>
-//               </div>
-//             </div>
-//           )}
-//           {/* Navigation Buttons */}
-//           <div className="flex items-center justify-between pt-8 border-t border-gray-200 mt-8">
-//             <button
-//               onClick={handleBack}
-//               className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition font-medium disabled:opacity-50"
-//               disabled={currentStep === 1}
-//             >
-//               ← Back
-//             </button>
-//             {currentStep === STEPS.length ? (
-//               <button
-//                 onClick={handleSubmit}
-//                 disabled={isSubmitting}
-//                 className="px-8 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-//               >
-//                 {isSubmitting ? "Submitting..." : "Submit Application"}
-//               </button>
-//             ) : (
-//               <button
-//                 onClick={handleNext}
-//                 className="px-8 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition inline-flex items-center gap-2"
-//               >
-//                 Next
-//                 <span>→</span>
-//               </button>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
 __turbopack_context__.s([
     "default",
     ()=>ApplyPage
 ]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/axios/lib/axios.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
@@ -977,9 +15,23 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-alert.js [app-client] (ecmascript) <export default as AlertCircle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2d$big$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-check-big.js [app-client] (ecmascript) <export default as CheckCircle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
+(()=>{
+    const e = new Error("Cannot find module '@/components/ui/alert'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
+(()=>{
+    const e = new Error("Cannot find module '@/components/application-status'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
+;
+;
 ;
 ;
 ;
@@ -993,24 +45,25 @@ function Toast({ message, type, isVisible }) {
                 className: "w-5 h-5"
             }, void 0, false, {
                 fileName: "[project]/app/form/page.tsx",
-                lineNumber: 1053,
+                lineNumber: 19,
                 columnNumber: 29
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
                 className: "w-5 h-5"
             }, void 0, false, {
                 fileName: "[project]/app/form/page.tsx",
-                lineNumber: 1053,
+                lineNumber: 19,
                 columnNumber: 67
             }, this),
             message
         ]
     }, void 0, true, {
         fileName: "[project]/app/form/page.tsx",
-        lineNumber: 1048,
+        lineNumber: 14,
         columnNumber: 5
     }, this);
 }
 _c = Toast;
+const API_URL = "/api/zakat-applicants";
 const STEPS = [
     {
         number: 1,
@@ -1055,6 +108,10 @@ function ApplyPage() {
         type: "success",
         isVisible: false
     });
+    const [errors, setErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const [emailExists, setEmailExists] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [checkingEmail, setCheckingEmail] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [successMessage, setSuccessMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         // Step 1: Personal
         firstName: "",
@@ -1089,6 +146,7 @@ function ApplyPage() {
         whyApplying: "",
         circumstances: "",
         previousZakat: "",
+        zakatResourceSource: "",
         // Step 6: References
         reference1: {
             fullName: "",
@@ -1122,6 +180,194 @@ function ApplyPage() {
                 ...prev,
                 [name]: value
             }));
+        if (errors[name]) {
+            setErrors((prev)=>({
+                    ...prev,
+                    [name]: ""
+                }));
+        }
+    };
+    const validateEmail = (email)=>{
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+    // const = (phone: string): boolean => {
+    //   const digitsOnly = phone.replace(/\D/g, "")
+    //   return digitsOnly.length === 12
+    // }
+    const validateDateOfBirth = (date)=>{
+        if (!date) return false;
+        const [year, month, day] = date.split("-");
+        if (year.length !== 4) return false;
+        const yearNum = Number.parseInt(year, 10);
+        const currentYear = new Date().getFullYear();
+        return yearNum >= 1900 && yearNum <= currentYear;
+    };
+    const checkEmailExists = async (email)=>{
+        if (!email || !validateEmail(email)) return false;
+        setCheckingEmail(true);
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            if (data.items && Array.isArray(data.items)) {
+                const emailExists = data.items.some((item)=>item.email?.toLowerCase() === email.toLowerCase());
+                setEmailExists(emailExists);
+                return emailExists;
+            }
+        } catch (error) {
+            console.error("Error checking email:", error);
+        } finally{
+            setCheckingEmail(false);
+        }
+        return false;
+    };
+    const validateStep1 = async ()=>{
+        const newErrors = {};
+        if (!formData.firstName.trim()) newErrors.firstName = "Please fill this field";
+        if (!formData.lastName.trim()) newErrors.lastName = "Please fill this field";
+        if (!formData.streetAddress.trim()) newErrors.streetAddress = "Please fill this field";
+        if (!formData.city.trim()) newErrors.city = "Please fill this field";
+        if (!formData.state.trim()) newErrors.state = "Please fill this field";
+        if (!formData.zipCode.trim()) newErrors.zipCode = "Please fill this field";
+        if (!formData.gender) newErrors.gender = "Please fill this field";
+        if (!formData.dateOfBirth) newErrors.dateOfBirth = "Please fill this field";
+        if (!formData.mobilePhone.trim()) newErrors.mobilePhone = "Please fill this field";
+        if (!formData.email.trim()) newErrors.email = "Please fill this field";
+        if (!formData.legalStatus) newErrors.legalStatus = "Please fill this field";
+        if (!formData.referredBy.trim()) newErrors.referredBy = "Please fill this field";
+        if (formData.dateOfBirth && !validateDateOfBirth(formData.dateOfBirth)) {
+            newErrors.dateOfBirth = "Year must be 4 digits (YYYY-MM-DD) and a valid year.";
+        }
+        if (formData.email.trim() && !validateEmail(formData.email)) {
+            newErrors.email = "Please enter a valid email address";
+        }
+        if (formData.email.trim() && validateEmail(formData.email)) {
+            const exists = await checkEmailExists(formData.email);
+            if (exists) {
+                newErrors.email = "You are already registered";
+            }
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    const validateStep2 = ()=>{
+        const newErrors = {};
+        if (!formData.employmentStatus) {
+            newErrors.employmentStatus = "Please select employment status";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    const validateStep3 = ()=>{
+        const newErrors = {};
+        if (!formData.dependentsInfo.trim()) {
+            newErrors.dependentsInfo = "Please provide dependents information";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    const validateStep4 = ()=>{
+        const newErrors = {};
+        if (!formData.totalMonthlyIncome) {
+            newErrors.totalMonthlyIncome = "Please enter total monthly income";
+        }
+        if (!formData.incomeSources.trim()) {
+            newErrors.incomeSources = "Please describe your income sources";
+        }
+        if (!formData.rentMortgage) {
+            newErrors.rentMortgage = "Please enter rent/mortgage amount";
+        }
+        if (!formData.utilities) {
+            newErrors.utilities = "Please enter utilities amount";
+        }
+        if (!formData.food) {
+            newErrors.food = "Please enter food amount";
+        }
+        if (!formData.otherExpenses.trim()) {
+            newErrors.otherExpenses = "Please enter other expenses";
+        }
+        if (!formData.totalDebts) {
+            newErrors.totalDebts = "Please enter total debts";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    const validateStep5 = ()=>{
+        const newErrors = {};
+        if (!formData.amountRequested) {
+            newErrors.amountRequested = "Please enter amount requested";
+        }
+        if (!formData.whyApplying.trim()) {
+            newErrors.whyApplying = "Please explain why you are applying";
+        }
+        if (!formData.circumstances.trim()) {
+            newErrors.circumstances = "Please explain your circumstances";
+        }
+        if (!formData.previousZakat) {
+            newErrors.previousZakat = "Please select an option";
+        }
+        if (formData.previousZakat === "yes" && !formData.zakatResourceSource.trim()) {
+            newErrors.zakatResourceSource = "Please specify where you received the Zakat";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    const validateStep6 = ()=>{
+        const newErrors = {};
+        if (!formData.reference1.fullName.trim()) {
+            newErrors["reference1.fullName"] = "Please enter full name";
+        }
+        if (!formData.reference1.phoneNumber.trim()) {
+            newErrors["reference1.phoneNumber"] = "Please enter phone number";
+        }
+        if (!formData.reference1.relationship.trim()) {
+            newErrors["reference1.relationship"] = "Please explain relationship";
+        }
+        if (!formData.reference2.fullName.trim()) {
+            newErrors["reference2.fullName"] = "Please enter full name";
+        }
+        if (!formData.reference2.phoneNumber.trim()) {
+            newErrors["reference2.phoneNumber"] = "Please enter phone number";
+        }
+        if (!formData.reference2.relationship.trim()) {
+            newErrors["reference2.relationship"] = "Please explain relationship";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    const validateStep7 = ()=>{
+        const newErrors = {};
+        if (formData.documents.length === 0) {
+            newErrors.documents = "Please upload at least one document before continuing";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    const handleNext = async ()=>{
+        let isValid = false;
+        if (currentStep === 1) {
+            isValid = await validateStep1();
+        } else if (currentStep === 2) {
+            isValid = validateStep2();
+        } else if (currentStep === 3) {
+            isValid = validateStep3();
+        } else if (currentStep === 4) {
+            isValid = validateStep4();
+        } else if (currentStep === 5) {
+            isValid = validateStep5();
+        } else if (currentStep === 6) {
+            isValid = validateStep6();
+        } else if (currentStep === 7) {
+            isValid = validateStep7();
+            if (!isValid) {
+                showToast("Please upload at least one document", "error");
+                return;
+            }
+        }
+        if (!isValid) return;
+        if (currentStep < 8) {
+            setCurrentStep(currentStep + 1);
+        }
     };
     const handleReferenceChange = (refNumber, field, value)=>{
         const refKey = refNumber === 1 ? "reference1" : "reference2";
@@ -1132,13 +378,19 @@ function ApplyPage() {
                     [field]: value
                 }
             }));
+        const errorKey = `reference${refNumber}.${field}`;
+        if (errors[errorKey]) {
+            setErrors((prev)=>({
+                    ...prev,
+                    [errorKey]: ""
+                }));
+        }
     };
     const handleFileUpload = (e)=>{
         const files = e.target.files;
         if (!files) return;
         const uploadedFiles = Array.from(files);
-        const maxSize = 10 * 1024 * 1024 // 10MB
-        ;
+        const maxSize = 10 * 1024 * 1024;
         for (const file of uploadedFiles){
             if (file.size > maxSize) {
                 showToast(`File ${file.name} exceeds 10MB limit`, "error");
@@ -1152,6 +404,12 @@ function ApplyPage() {
                     ...uploadedFiles
                 ]
             }));
+        if (errors.documents) {
+            setErrors((prev)=>({
+                    ...prev,
+                    documents: ""
+                }));
+        }
         showToast(`${uploadedFiles.length} file(s) uploaded successfully`, "success");
     };
     const removeDocument = (index)=>{
@@ -1160,23 +418,23 @@ function ApplyPage() {
                 documents: prev.documents.filter((_, i)=>i !== index)
             }));
     };
-    const handleNext = ()=>{
-        if (currentStep < STEPS.length) {
-            setCurrentStep(currentStep + 1);
-        }
-    };
     const handleBack = ()=>{
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
+            setErrors({});
         }
     };
     const handleSubmit = async ()=>{
+        console.log("handleSubmit called. Documents count:", formData.documents.length);
+        if (!formData.documents || formData.documents.length === 0) {
+            console.log("No documents found. Form data documents:", formData.documents);
+            showToast("Please upload at least one document", "error");
+            setIsSubmitting(false);
+            return;
+        }
         setIsSubmitting(true);
         try {
-            const API_BASE_URL = ("TURBOPACK compile-time value", "https://rahmah-exchange-backend-production.up.railway.app") || "https://rahmah-exchange-backend-production.up.railway.app";
-            // Create FormData to handle file uploads
             const submitData = new FormData();
-            // Add all form data
             submitData.append("firstName", formData.firstName);
             submitData.append("lastName", formData.lastName);
             submitData.append("streetAddress", formData.streetAddress);
@@ -1205,35 +463,43 @@ function ApplyPage() {
             submitData.append("whyApplying", formData.whyApplying);
             submitData.append("circumstances", formData.circumstances);
             submitData.append("previousZakat", formData.previousZakat);
+            submitData.append("zakatResourceSource", formData.zakatResourceSource);
             submitData.append("reference1", JSON.stringify(formData.reference1));
             submitData.append("reference2", JSON.stringify(formData.reference2));
-            // Add documents
-            formData.documents.forEach((file, index)=>{
-                submitData.append(`documents`, file);
-            });
-            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post("https://rahmah-exchange-backend-production.up.railway.app/api/zakatApplicants", submitData, {
+            console.log("Documents being submitted:", formData.documents.length);
+            for(let i = 0; i < formData.documents.length; i++){
+                const file = formData.documents[i];
+                if (file && file instanceof File) {
+                    console.log(`Appending document ${i + 1}:`, file.name, file.size, file.type);
+                    submitData.append("documents", file);
+                } else {
+                    console.warn(`Skipping invalid document at index ${i}:`, file);
+                }
+            }
+            console.log("Submitting zakatResourceSource:", formData);
+            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post(API_URL, submitData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
             });
-            if (response) {
-                console.log("[v0] Application submitted successfully:", response.data);
+            if (response.status === 201 || response.data.applicant) {
+                console.log("Application submitted successfully:", response.data);
                 showToast("Application submitted successfully!", "success");
                 setIsSubmitted(true);
-                setIsSubmitting(false);
-                return; // Exit function early on success
+                return;
             }
         } catch (error) {
-            const errorMessage = error.response?.data?.message || "Something went wrong submitting your application. Please try again.";
-            console.error("[v0] Error submitting application:", error);
+            const errorMessage = error.response?.data?.error || error.response?.data?.message || "Something went wrong submitting your application. Please try again.";
+            console.error("Error submitting application:", error, errorMessage);
             showToast(errorMessage, "error");
+        } finally{
             setIsSubmitting(false);
         }
     };
     const isStepCompleted = (step)=>step < currentStep;
     if (isSubmitted) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "min-h-screen bg-gradient-to-b from-teal-50 to-blue-50",
+            className: "min-h-screen bg-linear-to-b from-teal-50 to-blue-50",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
                     className: "flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-white",
@@ -1245,19 +511,19 @@ function ApplyPage() {
                                 className: "w-5 h-5"
                             }, void 0, false, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1256,
+                                lineNumber: 475,
                                 columnNumber: 13
                             }, this),
                             "Back to Home"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/form/page.tsx",
-                        lineNumber: 1255,
+                        lineNumber: 474,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/form/page.tsx",
-                    lineNumber: 1254,
+                    lineNumber: 473,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1267,10 +533,10 @@ function ApplyPage() {
                             className: "mb-8 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__["CheckCircle2"], {
-                                    className: "w-6 h-6 text-green-600 flex-shrink-0"
+                                    className: "w-6 h-6 text-green-600 shrink-0"
                                 }, void 0, false, {
                                     fileName: "[project]/app/form/page.tsx",
-                                    lineNumber: 1264,
+                                    lineNumber: 482,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1278,229 +544,37 @@ function ApplyPage() {
                                     children: "Application submitted successfully!"
                                 }, void 0, false, {
                                     fileName: "[project]/app/form/page.tsx",
-                                    lineNumber: 1265,
+                                    lineNumber: 483,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/form/page.tsx",
-                            lineNumber: 1263,
+                            lineNumber: 481,
                             columnNumber: 11
                         }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "bg-white rounded-2xl p-8 shadow-sm",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                    className: "text-3xl font-bold text-gray-900 mb-8",
-                                    children: "Application Status"
-                                }, void 0, false, {
-                                    fileName: "[project]/app/form/page.tsx",
-                                    lineNumber: 1270,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "mb-8 pb-8 border-b border-gray-200",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            className: "text-gray-600 text-sm font-medium mb-2",
-                                            children: "Current Status"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/form/page.tsx",
-                                            lineNumber: 1274,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "w-2 h-2 bg-blue-600 rounded-full"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/app/form/page.tsx",
-                                                    lineNumber: 1276,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "text-blue-700 font-semibold text-sm",
-                                                    children: "Submitted"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/app/form/page.tsx",
-                                                    lineNumber: 1277,
-                                                    columnNumber: 17
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/app/form/page.tsx",
-                                            lineNumber: 1275,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/app/form/page.tsx",
-                                    lineNumber: 1273,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "mb-8",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                            className: "text-xl font-semibold text-gray-900 mb-6",
-                                            children: "Application Details"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/form/page.tsx",
-                                            lineNumber: 1283,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "grid grid-cols-1 md:grid-cols-2 gap-6",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-gray-600 text-sm mb-1",
-                                                            children: "Application ID"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1286,
-                                                            columnNumber: 19
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-gray-900 font-semibold",
-                                                            children: "b6b368b5"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1287,
-                                                            columnNumber: 19
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/app/form/page.tsx",
-                                                    lineNumber: 1285,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-gray-600 text-sm mb-1",
-                                                            children: "Submitted Date"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1290,
-                                                            columnNumber: 19
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-gray-900 font-semibold",
-                                                            children: "03/11/2025"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1291,
-                                                            columnNumber: 19
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/app/form/page.tsx",
-                                                    lineNumber: 1289,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-gray-600 text-sm mb-1",
-                                                            children: "Applicant Name"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1294,
-                                                            columnNumber: 19
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-gray-900 font-semibold",
-                                                            children: [
-                                                                formData.firstName,
-                                                                " ",
-                                                                formData.lastName
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1295,
-                                                            columnNumber: 19
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/app/form/page.tsx",
-                                                    lineNumber: 1293,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-gray-600 text-sm mb-1",
-                                                            children: "Request Type"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1300,
-                                                            columnNumber: 19
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-gray-900 font-semibold",
-                                                            children: formData.requestType
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1301,
-                                                            columnNumber: 19
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/app/form/page.tsx",
-                                                    lineNumber: 1299,
-                                                    columnNumber: 17
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/app/form/page.tsx",
-                                            lineNumber: 1284,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/app/form/page.tsx",
-                                    lineNumber: 1282,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "p-4 bg-blue-50 border border-blue-200 rounded-lg",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-blue-900 text-sm",
-                                        children: "Your application has been received and is pending review."
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1308,
-                                        columnNumber: 15
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/app/form/page.tsx",
-                                    lineNumber: 1307,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ApplicationStatus, {
+                            email: formData.email
+                        }, void 0, false, {
                             fileName: "[project]/app/form/page.tsx",
-                            lineNumber: 1269,
+                            lineNumber: 486,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/form/page.tsx",
-                    lineNumber: 1261,
+                    lineNumber: 480,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/form/page.tsx",
-            lineNumber: 1253,
+            lineNumber: 472,
             columnNumber: 7
         }, this);
     }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "min-h-screen bg-gradient-to-b from-teal-50 to-blue-50",
+        className: "min-h-screen bg-linear-to-b from-teal-50 to-blue-50",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Toast, {
                 message: toast.message,
@@ -1508,28 +582,36 @@ function ApplyPage() {
                 isVisible: toast.isVisible
             }, void 0, false, {
                 fileName: "[project]/app/form/page.tsx",
-                lineNumber: 1318,
+                lineNumber: 494,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
                 className: "flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-white",
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                        href: "/",
-                        className: "flex items-center gap-2 text-gray-900 hover:text-teal-600 transition font-medium",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__["ChevronLeft"], {
-                                className: "w-5 h-5"
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex items-center gap-3",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                            href: "/",
+                            className: "flex items-center gap-2",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                src: "/logo1.svg",
+                                alt: "Rahmah Exchange Logo",
+                                width: 170,
+                                height: 170,
+                                priority: true
                             }, void 0, false, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1323,
-                                columnNumber: 11
-                            }, this),
-                            "Back to Home"
-                        ]
-                    }, void 0, true, {
+                                lineNumber: 498,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/app/form/page.tsx",
+                            lineNumber: 497,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
                         fileName: "[project]/app/form/page.tsx",
-                        lineNumber: 1322,
+                        lineNumber: 496,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1537,13 +619,13 @@ function ApplyPage() {
                         children: "Save Progress"
                     }, void 0, false, {
                         fileName: "[project]/app/form/page.tsx",
-                        lineNumber: 1326,
+                        lineNumber: 501,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/form/page.tsx",
-                lineNumber: 1321,
+                lineNumber: 495,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1557,7 +639,7 @@ function ApplyPage() {
                                 children: "Assistance Application"
                             }, void 0, false, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1335,
+                                lineNumber: 508,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1565,13 +647,13 @@ function ApplyPage() {
                                 children: "Complete all steps to submit your application for verified support"
                             }, void 0, false, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1336,
+                                lineNumber: 509,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/form/page.tsx",
-                        lineNumber: 1334,
+                        lineNumber: 507,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1587,7 +669,7 @@ function ApplyPage() {
                                                 children: isStepCompleted(step.number) ? "✓" : step.number
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1344,
+                                                lineNumber: 516,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1595,18 +677,18 @@ function ApplyPage() {
                                                 children: step.label
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1355,
+                                                lineNumber: 527,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, step.number, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1343,
+                                        lineNumber: 515,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1341,
+                                lineNumber: 513,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1618,18 +700,18 @@ function ApplyPage() {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/app/form/page.tsx",
-                                    lineNumber: 1362,
+                                    lineNumber: 533,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1361,
+                                lineNumber: 532,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/form/page.tsx",
-                        lineNumber: 1340,
+                        lineNumber: 512,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1642,8 +724,56 @@ function ApplyPage() {
                                         children: "Personal Information"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1373,
+                                        lineNumber: 543,
                                         columnNumber: 15
+                                    }, this),
+                                    emailExists && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Alert, {
+                                        className: "mb-6 bg-red-50 border-red-200",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                className: "h-4 w-4 text-red-600"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 547,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AlertDescription, {
+                                                className: "text-red-800",
+                                                children: "You are already registered"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 548,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/form/page.tsx",
+                                        lineNumber: 546,
+                                        columnNumber: 17
+                                    }, this),
+                                    checkingEmail && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Alert, {
+                                        className: "mb-6 bg-blue-50 border-blue-200",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                className: "h-4 w-4 text-blue-600"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 554,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AlertDescription, {
+                                                className: "text-blue-800",
+                                                children: "Checking email..."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 555,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/form/page.tsx",
+                                        lineNumber: 553,
+                                        columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "grid grid-cols-1 md:grid-cols-2 gap-6 mb-6",
@@ -1659,13 +789,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1379,
+                                                                lineNumber: 562,
                                                                 columnNumber: 32
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1378,
+                                                        lineNumber: 561,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1673,17 +803,34 @@ function ApplyPage() {
                                                         name: "firstName",
                                                         value: formData.firstName,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.firstName ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                        placeholder: "Enter your first name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1381,
+                                                        lineNumber: 564,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.firstName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 576,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.firstName
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 575,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1377,
+                                                lineNumber: 560,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1697,13 +844,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1394,
+                                                                lineNumber: 584,
                                                                 columnNumber: 31
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1393,
+                                                        lineNumber: 583,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1711,23 +858,40 @@ function ApplyPage() {
                                                         name: "lastName",
                                                         value: formData.lastName,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.lastName ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                        placeholder: "Enter your last name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1396,
+                                                        lineNumber: 586,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.lastName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 598,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.lastName
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 597,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1392,
+                                                lineNumber: 582,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1375,
+                                        lineNumber: 559,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1735,10 +899,20 @@ function ApplyPage() {
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                children: "Street Address"
-                                            }, void 0, false, {
+                                                children: [
+                                                    "Street Address ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-red-500",
+                                                        children: "*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 607,
+                                                        columnNumber: 34
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1409,
+                                                lineNumber: 606,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1746,17 +920,34 @@ function ApplyPage() {
                                                 name: "streetAddress",
                                                 value: formData.streetAddress,
                                                 onChange: handleChange,
-                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                placeholder: ""
+                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.streetAddress ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                placeholder: "Enter your street address"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1410,
+                                                lineNumber: 609,
                                                 columnNumber: 17
+                                            }, this),
+                                            errors.streetAddress && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 621,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    errors.streetAddress
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 620,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1408,
+                                        lineNumber: 605,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1766,10 +957,20 @@ function ApplyPage() {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "City"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "City ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 630,
+                                                                columnNumber: 26
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1423,
+                                                        lineNumber: 629,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1777,27 +978,54 @@ function ApplyPage() {
                                                         name: "city",
                                                         value: formData.city,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.city ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                        placeholder: "Enter your city"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1424,
+                                                        lineNumber: 632,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.city && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 644,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.city
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 643,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1422,
+                                                lineNumber: 628,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "State"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "State ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 652,
+                                                                columnNumber: 27
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1436,
+                                                        lineNumber: 651,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1805,23 +1033,40 @@ function ApplyPage() {
                                                         name: "state",
                                                         value: formData.state,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.state ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                        placeholder: "Enter your state"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1437,
+                                                        lineNumber: 654,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.state && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 666,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.state
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 665,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1435,
+                                                lineNumber: 650,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1420,
+                                        lineNumber: 627,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1831,10 +1076,20 @@ function ApplyPage() {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "ZIP Code"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "ZIP Code ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 676,
+                                                                columnNumber: 30
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1451,
+                                                        lineNumber: 675,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1842,41 +1097,68 @@ function ApplyPage() {
                                                         name: "zipCode",
                                                         value: formData.zipCode,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.zipCode ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                        placeholder: "Enter your ZIP code"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1452,
+                                                        lineNumber: 678,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.zipCode && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 690,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.zipCode
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 689,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1450,
+                                                lineNumber: 674,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "Gender"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "Gender ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 698,
+                                                                columnNumber: 28
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1464,
+                                                        lineNumber: 697,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                                                         name: "gender",
                                                         value: formData.gender,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-gray-600",
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-gray-600 ${errors.gender ? "border-red-500 bg-red-50" : "border-gray-300"}`,
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                                 value: "",
                                                                 children: "Select gender"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1471,
+                                                                lineNumber: 708,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1884,7 +1166,7 @@ function ApplyPage() {
                                                                 children: "Male"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1472,
+                                                                lineNumber: 709,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1892,7 +1174,7 @@ function ApplyPage() {
                                                                 children: "Female"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1473,
+                                                                lineNumber: 710,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1900,7 +1182,7 @@ function ApplyPage() {
                                                                 children: "Other"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1474,
+                                                                lineNumber: 711,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1908,25 +1190,42 @@ function ApplyPage() {
                                                                 children: "Prefer not to say"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1475,
+                                                                lineNumber: 712,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1465,
+                                                        lineNumber: 700,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.gender && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 716,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.gender
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 715,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1463,
+                                                lineNumber: 696,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1448,
+                                        lineNumber: 673,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1936,10 +1235,20 @@ function ApplyPage() {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "Date of Birth"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "Date of Birth ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 726,
+                                                                columnNumber: 35
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1483,
+                                                        lineNumber: 725,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1947,16 +1256,35 @@ function ApplyPage() {
                                                         name: "dateOfBirth",
                                                         value: formData.dateOfBirth,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                        max: new Date().toISOString().split("T")[0],
+                                                        min: "1900-01-01",
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.dateOfBirth ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1484,
+                                                        lineNumber: 728,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.dateOfBirth && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 741,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.dateOfBirth
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 740,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1482,
+                                                lineNumber: 724,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1970,13 +1298,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1496,
+                                                                lineNumber: 749,
                                                                 columnNumber: 34
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1495,
+                                                        lineNumber: 748,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1984,23 +1312,40 @@ function ApplyPage() {
                                                         name: "mobilePhone",
                                                         value: formData.mobilePhone,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.mobilePhone ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                        placeholder: "000-0000000"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1498,
+                                                        lineNumber: 751,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.mobilePhone && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 763,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.mobilePhone
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 762,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1494,
+                                                lineNumber: 747,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1480,
+                                        lineNumber: 723,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2013,7 +1358,7 @@ function ApplyPage() {
                                                         children: "Home Phone"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1512,
+                                                        lineNumber: 772,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2022,26 +1367,36 @@ function ApplyPage() {
                                                         value: formData.homePhone,
                                                         onChange: handleChange,
                                                         className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        placeholder: "Optional"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1513,
+                                                        lineNumber: 773,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1511,
+                                                lineNumber: 771,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "Email"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "Email ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 785,
+                                                                columnNumber: 27
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1525,
+                                                        lineNumber: 784,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2049,23 +1404,40 @@ function ApplyPage() {
                                                         name: "email",
                                                         value: formData.email,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.email ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                        placeholder: "example@email.com"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1526,
+                                                        lineNumber: 787,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.email && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 799,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.email
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 798,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1524,
+                                                lineNumber: 783,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1509,
+                                        lineNumber: 770,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2075,24 +1447,34 @@ function ApplyPage() {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "Legal Status"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "Legal Status ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 809,
+                                                                columnNumber: 34
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1540,
+                                                        lineNumber: 808,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                                                         name: "legalStatus",
                                                         value: formData.legalStatus,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-gray-600",
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-gray-600 ${errors.legalStatus ? "border-red-500 bg-red-50" : "border-gray-300"}`,
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                                 value: "",
                                                                 children: "Select status"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1547,
+                                                                lineNumber: 819,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2100,7 +1482,7 @@ function ApplyPage() {
                                                                 children: "Citizen"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1548,
+                                                                lineNumber: 820,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2108,7 +1490,7 @@ function ApplyPage() {
                                                                 children: "Resident"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1549,
+                                                                lineNumber: 821,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2116,29 +1498,56 @@ function ApplyPage() {
                                                                 children: "Other"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1550,
+                                                                lineNumber: 822,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1541,
+                                                        lineNumber: 811,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.legalStatus && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 826,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.legalStatus
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 825,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1539,
+                                                lineNumber: 807,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "Referred By"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "Referred By ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 834,
+                                                                columnNumber: 33
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1556,
+                                                        lineNumber: 833,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2146,23 +1555,40 @@ function ApplyPage() {
                                                         name: "referredBy",
                                                         value: formData.referredBy,
                                                         onChange: handleChange,
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                        placeholder: ""
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.referredBy ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                        placeholder: "Who referred you to us?"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1557,
+                                                        lineNumber: 836,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.referredBy && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 848,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.referredBy
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 847,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1555,
+                                                lineNumber: 832,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1537,
+                                        lineNumber: 806,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2173,7 +1599,7 @@ function ApplyPage() {
                                                 children: "Referrer Phone"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1570,
+                                                lineNumber: 856,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2182,22 +1608,22 @@ function ApplyPage() {
                                                 value: formData.referrerPhone,
                                                 onChange: handleChange,
                                                 className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
-                                                placeholder: ""
+                                                placeholder: "Optional"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1571,
+                                                lineNumber: 857,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1568,
+                                        lineNumber: 855,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1372,
+                                lineNumber: 542,
                                 columnNumber: 13
                             }, this),
                             currentStep === 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2207,7 +1633,7 @@ function ApplyPage() {
                                         children: "Employment Information"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1585,
+                                        lineNumber: 871,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2215,24 +1641,34 @@ function ApplyPage() {
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                children: "Employment Status"
-                                            }, void 0, false, {
+                                                children: [
+                                                    "Employment Status ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-red-500",
+                                                        children: "*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 874,
+                                                        columnNumber: 37
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1587,
+                                                lineNumber: 873,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                                                 name: "employmentStatus",
                                                 value: formData.employmentStatus,
                                                 onChange: handleChange,
-                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-gray-600 ${errors.employmentStatus ? "border-red-500 bg-red-50" : "border-gray-300"}`,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                         value: "",
-                                                        children: "Select status"
+                                                        children: "Select employment status"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1594,
+                                                        lineNumber: 884,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2240,7 +1676,7 @@ function ApplyPage() {
                                                         children: "Employed"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1595,
+                                                        lineNumber: 885,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2248,7 +1684,7 @@ function ApplyPage() {
                                                         children: "Self-Employed"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1596,
+                                                        lineNumber: 886,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2256,7 +1692,7 @@ function ApplyPage() {
                                                         children: "Unemployed"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1597,
+                                                        lineNumber: 887,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2264,7 +1700,7 @@ function ApplyPage() {
                                                         children: "Retired"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1598,
+                                                        lineNumber: 888,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2272,7 +1708,7 @@ function ApplyPage() {
                                                         children: "Student"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1599,
+                                                        lineNumber: 889,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2280,25 +1716,42 @@ function ApplyPage() {
                                                         children: "Other"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1600,
+                                                        lineNumber: 890,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1588,
+                                                lineNumber: 876,
                                                 columnNumber: 17
+                                            }, this),
+                                            errors.employmentStatus && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 894,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    errors.employmentStatus
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 893,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1586,
+                                        lineNumber: 872,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1584,
+                                lineNumber: 870,
                                 columnNumber: 13
                             }, this),
                             currentStep === 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2308,7 +1761,7 @@ function ApplyPage() {
                                         children: "Family Information"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1608,
+                                        lineNumber: 904,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2316,10 +1769,20 @@ function ApplyPage() {
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                                 className: "text-lg font-semibold text-gray-900 mb-4",
-                                                children: "Dependents Information"
-                                            }, void 0, false, {
+                                                children: [
+                                                    "Dependents Information ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-red-500",
+                                                        children: "*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 907,
+                                                        columnNumber: 42
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1610,
+                                                lineNumber: 906,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2327,30 +1790,47 @@ function ApplyPage() {
                                                 value: formData.dependentsInfo,
                                                 onChange: handleChange,
                                                 placeholder: "List your dependents with their names, ages, and relationship. Example: - John Smith, 8 years old, Son - Mary Smith, 5 years old, Daughter - Mother-in-law, 65 years old, lives with us",
-                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-48"
+                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-48 ${errors.dependentsInfo ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1611,
+                                                lineNumber: 909,
                                                 columnNumber: 17
+                                            }, this),
+                                            errors.dependentsInfo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 920,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    errors.dependentsInfo
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 919,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "text-sm text-gray-500 mt-2",
                                                 children: "Please list all people who depend on you financially"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1618,
+                                                lineNumber: 924,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1609,
+                                        lineNumber: 905,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1607,
+                                lineNumber: 903,
                                 columnNumber: 13
                             }, this),
                             currentStep === 4 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2360,7 +1840,7 @@ function ApplyPage() {
                                         children: "Financial Information"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1625,
+                                        lineNumber: 931,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2371,7 +1851,7 @@ function ApplyPage() {
                                                 children: "Monthly Income"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1628,
+                                                lineNumber: 934,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2379,10 +1859,20 @@ function ApplyPage() {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "Total Monthly Income"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "Total Monthly Income ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 937,
+                                                                columnNumber: 42
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1630,
+                                                        lineNumber: 936,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2391,26 +1881,53 @@ function ApplyPage() {
                                                         value: formData.totalMonthlyIncome,
                                                         onChange: handleChange,
                                                         placeholder: "0.00",
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.totalMonthlyIncome ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1631,
+                                                        lineNumber: 939,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.totalMonthlyIncome && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 951,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.totalMonthlyIncome
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 950,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1629,
+                                                lineNumber: 935,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "Income Sources"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "Income Sources ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 958,
+                                                                columnNumber: 36
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1641,
+                                                        lineNumber: 957,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2418,22 +1935,39 @@ function ApplyPage() {
                                                         value: formData.incomeSources,
                                                         onChange: handleChange,
                                                         placeholder: "List all income sources: salary, spouse salary, social security, unemployment, child support, etc.",
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32"
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32 ${errors.incomeSources ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1642,
+                                                        lineNumber: 960,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.incomeSources && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 971,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.incomeSources
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 970,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1640,
+                                                lineNumber: 956,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1627,
+                                        lineNumber: 933,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2443,7 +1977,7 @@ function ApplyPage() {
                                                 children: "Monthly Expenses"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1653,
+                                                lineNumber: 979,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2453,10 +1987,20 @@ function ApplyPage() {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                                children: "Rent/Mortgage"
-                                                            }, void 0, false, {
+                                                                children: [
+                                                                    "Rent/Mortgage ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "text-red-500",
+                                                                        children: "*"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 983,
+                                                                        columnNumber: 37
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1656,
+                                                                lineNumber: 982,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2465,26 +2009,53 @@ function ApplyPage() {
                                                                 value: formData.rentMortgage,
                                                                 onChange: handleChange,
                                                                 placeholder: "0.00",
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.rentMortgage ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1657,
+                                                                lineNumber: 985,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors.rentMortgage && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 997,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors.rentMortgage
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 996,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1655,
+                                                        lineNumber: 981,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                                children: "Utilities (Electric, Gas, Water)"
-                                                            }, void 0, false, {
+                                                                children: [
+                                                                    "Utilities (Electric, Gas, Water) ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "text-red-500",
+                                                                        children: "*"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1004,
+                                                                        columnNumber: 56
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1667,
+                                                                lineNumber: 1003,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2493,22 +2064,39 @@ function ApplyPage() {
                                                                 value: formData.utilities,
                                                                 onChange: handleChange,
                                                                 placeholder: "0.00",
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.utilities ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1670,
+                                                                lineNumber: 1006,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors.utilities && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1018,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors.utilities
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1017,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1666,
+                                                        lineNumber: 1002,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1654,
+                                                lineNumber: 980,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2518,10 +2106,20 @@ function ApplyPage() {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                                children: "Food"
-                                                            }, void 0, false, {
+                                                                children: [
+                                                                    "Food ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "text-red-500",
+                                                                        children: "*"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1027,
+                                                                        columnNumber: 28
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1682,
+                                                                lineNumber: 1026,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2530,26 +2128,53 @@ function ApplyPage() {
                                                                 value: formData.food,
                                                                 onChange: handleChange,
                                                                 placeholder: "0.00",
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.food ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1683,
+                                                                lineNumber: 1029,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors.food && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1041,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors.food
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1040,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1681,
+                                                        lineNumber: 1025,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                                children: "Other Expenses"
-                                                            }, void 0, false, {
+                                                                children: [
+                                                                    "Other Expenses ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "text-red-500",
+                                                                        children: "*"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1048,
+                                                                        columnNumber: 38
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1693,
+                                                                lineNumber: 1047,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2558,32 +2183,59 @@ function ApplyPage() {
                                                                 value: formData.otherExpenses,
                                                                 onChange: handleChange,
                                                                 placeholder: "Transportation, medical, school, etc.",
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.otherExpenses ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1694,
+                                                                lineNumber: 1050,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors.otherExpenses && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1062,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors.otherExpenses
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1061,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1692,
+                                                        lineNumber: 1046,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1680,
+                                                lineNumber: 1024,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                        children: "Total Debts"
-                                                    }, void 0, false, {
+                                                        children: [
+                                                            "Total Debts ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-red-500",
+                                                                children: "*"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1070,
+                                                                columnNumber: 33
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1705,
+                                                        lineNumber: 1069,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2592,28 +2244,45 @@ function ApplyPage() {
                                                         value: formData.totalDebts,
                                                         onChange: handleChange,
                                                         placeholder: "0.00",
-                                                        className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                        className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.totalDebts ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1706,
+                                                        lineNumber: 1072,
                                                         columnNumber: 19
+                                                    }, this),
+                                                    errors.totalDebts && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                className: "w-4 h-4"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1084,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            errors.totalDebts
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1083,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1704,
+                                                lineNumber: 1068,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1652,
+                                        lineNumber: 978,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1624,
+                                lineNumber: 930,
                                 columnNumber: 13
                             }, this),
                             currentStep === 5 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2623,7 +2292,7 @@ function ApplyPage() {
                                         children: "Application Request"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1721,
+                                        lineNumber: 1095,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2634,7 +2303,7 @@ function ApplyPage() {
                                                 children: "Request Type"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1724,
+                                                lineNumber: 1098,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2648,7 +2317,7 @@ function ApplyPage() {
                                                         children: "Zakat"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1731,
+                                                        lineNumber: 1105,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2656,7 +2325,7 @@ function ApplyPage() {
                                                         children: "Sadaqah"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1732,
+                                                        lineNumber: 1106,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2664,19 +2333,19 @@ function ApplyPage() {
                                                         children: "Other"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1733,
+                                                        lineNumber: 1107,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1725,
+                                                lineNumber: 1099,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1723,
+                                        lineNumber: 1097,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2684,10 +2353,20 @@ function ApplyPage() {
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                children: "Amount Requested"
-                                            }, void 0, false, {
+                                                children: [
+                                                    "Amount Requested ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-red-500",
+                                                        children: "*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1113,
+                                                        columnNumber: 36
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1738,
+                                                lineNumber: 1112,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2696,16 +2375,33 @@ function ApplyPage() {
                                                 value: formData.amountRequested,
                                                 onChange: handleChange,
                                                 placeholder: "0.00",
-                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.amountRequested ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1739,
+                                                lineNumber: 1115,
                                                 columnNumber: 17
+                                            }, this),
+                                            errors.amountRequested && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1127,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    errors.amountRequested
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1126,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1737,
+                                        lineNumber: 1111,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2716,11 +2412,19 @@ function ApplyPage() {
                                                 children: [
                                                     "Why Are You Applying for ",
                                                     formData.requestType,
-                                                    "?"
+                                                    "? ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-red-500",
+                                                        children: "*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1135,
+                                                        columnNumber: 68
+                                                    }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1750,
+                                                lineNumber: 1134,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2728,16 +2432,33 @@ function ApplyPage() {
                                                 value: formData.whyApplying,
                                                 onChange: handleChange,
                                                 placeholder: "Please provide detailed information about your situation and why you need assistance...",
-                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32"
+                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32 ${errors.whyApplying ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1753,
+                                                lineNumber: 1137,
                                                 columnNumber: 17
+                                            }, this),
+                                            errors.whyApplying && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1148,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    errors.whyApplying
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1147,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1749,
+                                        lineNumber: 1133,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2745,10 +2466,20 @@ function ApplyPage() {
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                children: "Explain Your Circumstances"
-                                            }, void 0, false, {
+                                                children: [
+                                                    "Explain Your Circumstances ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-red-500",
+                                                        children: "*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1156,
+                                                        columnNumber: 46
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1763,
+                                                lineNumber: 1155,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2756,16 +2487,33 @@ function ApplyPage() {
                                                 value: formData.circumstances,
                                                 onChange: handleChange,
                                                 placeholder: "Explain your circumstances and how the assistance will help",
-                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32"
+                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32 ${errors.circumstances ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1764,
+                                                lineNumber: 1158,
                                                 columnNumber: 17
+                                            }, this),
+                                            errors.circumstances && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1169,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    errors.circumstances
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1168,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1762,
+                                        lineNumber: 1154,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2775,25 +2523,34 @@ function ApplyPage() {
                                                 children: [
                                                     "Have you received ",
                                                     formData.requestType,
-                                                    "/Sadaqa in the past 12 months?"
+                                                    "/Sadaqa in the past 12 months?",
+                                                    " ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-red-500",
+                                                        children: "*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1178,
+                                                        columnNumber: 19
+                                                    }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1774,
+                                                lineNumber: 1176,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                                                 name: "previousZakat",
                                                 value: formData.previousZakat,
                                                 onChange: handleChange,
-                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 text-gray-600 ${errors.previousZakat ? "border-red-500 bg-red-50" : "border-gray-300"}`,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                         value: "",
                                                         children: "Select"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1783,
+                                                        lineNumber: 1188,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2801,7 +2558,7 @@ function ApplyPage() {
                                                         children: "Yes"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1784,
+                                                        lineNumber: 1189,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2809,25 +2566,97 @@ function ApplyPage() {
                                                         children: "No"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1785,
+                                                        lineNumber: 1190,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1777,
+                                                lineNumber: 1180,
                                                 columnNumber: 17
+                                            }, this),
+                                            errors.previousZakat && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1194,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    errors.previousZakat
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1193,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1773,
+                                        lineNumber: 1175,
                                         columnNumber: 15
+                                    }, this),
+                                    formData.previousZakat === "yes" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "mt-6",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                className: "block text-sm font-semibold text-gray-900 mb-2",
+                                                children: [
+                                                    "Where did you receive the Zakat? ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-red-500",
+                                                        children: "*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1204,
+                                                        columnNumber: 54
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1203,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                                name: "zakatResourceSource",
+                                                value: formData.zakatResourceSource,
+                                                onChange: handleChange,
+                                                placeholder: "Please specify the organization, individual, or source from which you received Zakat assistance...",
+                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32 ${errors.zakatResourceSource ? "border-red-500 bg-red-50" : "border-gray-300"}`
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1206,
+                                                columnNumber: 19
+                                            }, this),
+                                            errors.zakatResourceSource && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/form/page.tsx",
+                                                        lineNumber: 1217,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    errors.zakatResourceSource
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1216,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/form/page.tsx",
+                                        lineNumber: 1202,
+                                        columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1720,
+                                lineNumber: 1094,
                                 columnNumber: 13
                             }, this),
                             currentStep === 6 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2837,7 +2666,7 @@ function ApplyPage() {
                                         children: "References (2 Required)"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1793,
+                                        lineNumber: 1228,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2845,7 +2674,7 @@ function ApplyPage() {
                                         children: "Please provide two references who can vouch for you"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1794,
+                                        lineNumber: 1229,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2858,7 +2687,7 @@ function ApplyPage() {
                                                         className: "w-1 h-8 bg-teal-600 rounded"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1799,
+                                                        lineNumber: 1234,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -2866,13 +2695,13 @@ function ApplyPage() {
                                                         children: "Reference 1"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1800,
+                                                        lineNumber: 1235,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1798,
+                                                lineNumber: 1233,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2889,29 +2718,47 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1805,
+                                                                        lineNumber: 1240,
                                                                         columnNumber: 33
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1804,
+                                                                lineNumber: 1239,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "text",
                                                                 value: formData.reference1.fullName,
                                                                 onChange: (e)=>handleReferenceChange(1, "fullName", e.target.value),
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors["reference1.fullName"] ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                                placeholder: "Enter full name"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1807,
+                                                                lineNumber: 1242,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors["reference1.fullName"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1253,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors["reference1.fullName"]
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1252,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1803,
+                                                        lineNumber: 1238,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2925,35 +2772,53 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1816,
+                                                                        lineNumber: 1260,
                                                                         columnNumber: 36
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1815,
+                                                                lineNumber: 1259,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "tel",
                                                                 value: formData.reference1.phoneNumber,
                                                                 onChange: (e)=>handleReferenceChange(1, "phoneNumber", e.target.value),
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors["reference1.phoneNumber"] ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                                placeholder: "00-0000000"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1818,
+                                                                lineNumber: 1262,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors["reference1.phoneNumber"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1273,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors["reference1.phoneNumber"]
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1272,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1814,
+                                                        lineNumber: 1258,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1802,
+                                                lineNumber: 1237,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2966,62 +2831,90 @@ function ApplyPage() {
                                                                 children: "Email"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1828,
+                                                                lineNumber: 1281,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "email",
                                                                 value: formData.reference1.email,
                                                                 onChange: (e)=>handleReferenceChange(1, "email", e.target.value),
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                                                                placeholder: "Optional"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1829,
+                                                                lineNumber: 1282,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1827,
+                                                        lineNumber: 1280,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                                children: "How do you know this person?"
-                                                            }, void 0, false, {
+                                                                children: [
+                                                                    "How do you know this person? ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "text-red-500",
+                                                                        children: "*"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1292,
+                                                                        columnNumber: 52
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1837,
+                                                                lineNumber: 1291,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "text",
                                                                 value: formData.reference1.relationship,
                                                                 onChange: (e)=>handleReferenceChange(1, "relationship", e.target.value),
-                                                                placeholder: "e.g., Friend from Masjid, Neighbor",
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                placeholder: "e.g., Friend from Masjid",
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors["reference1.relationship"] ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1840,
+                                                                lineNumber: 1294,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors["reference1.relationship"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1305,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors["reference1.relationship"]
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1304,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1836,
+                                                        lineNumber: 1290,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1826,
+                                                lineNumber: 1279,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1797,
+                                        lineNumber: 1232,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3033,7 +2926,7 @@ function ApplyPage() {
                                                         className: "w-1 h-8 bg-blue-500 rounded"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1854,
+                                                        lineNumber: 1316,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3041,13 +2934,13 @@ function ApplyPage() {
                                                         children: "Reference 2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1855,
+                                                        lineNumber: 1317,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1853,
+                                                lineNumber: 1315,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3064,29 +2957,47 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1860,
+                                                                        lineNumber: 1322,
                                                                         columnNumber: 33
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1859,
+                                                                lineNumber: 1321,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "text",
                                                                 value: formData.reference2.fullName,
                                                                 onChange: (e)=>handleReferenceChange(2, "fullName", e.target.value),
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors["reference2.fullName"] ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                                placeholder: "Enter full name"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1862,
+                                                                lineNumber: 1324,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors["reference2.fullName"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1335,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors["reference2.fullName"]
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1334,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1858,
+                                                        lineNumber: 1320,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3100,35 +3011,53 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1871,
+                                                                        lineNumber: 1342,
                                                                         columnNumber: 36
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1870,
+                                                                lineNumber: 1341,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "tel",
                                                                 value: formData.reference2.phoneNumber,
                                                                 onChange: (e)=>handleReferenceChange(2, "phoneNumber", e.target.value),
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors["reference2.phoneNumber"] ? "border-red-500 bg-red-50" : "border-gray-300"}`,
+                                                                placeholder: "00-0000000"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1873,
+                                                                lineNumber: 1344,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors["reference2.phoneNumber"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1355,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors["reference2.phoneNumber"]
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1354,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1869,
+                                                        lineNumber: 1340,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1857,
+                                                lineNumber: 1319,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3141,68 +3070,96 @@ function ApplyPage() {
                                                                 children: "Email"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1883,
+                                                                lineNumber: 1363,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "email",
                                                                 value: formData.reference2.email,
                                                                 onChange: (e)=>handleReferenceChange(2, "email", e.target.value),
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                                                                placeholder: "Optional"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1884,
+                                                                lineNumber: 1364,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1882,
+                                                        lineNumber: 1362,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                                 className: "block text-sm font-semibold text-gray-900 mb-2",
-                                                                children: "How do you know this person?"
-                                                            }, void 0, false, {
+                                                                children: [
+                                                                    "How do you know this person? ",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "text-red-500",
+                                                                        children: "*"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1374,
+                                                                        columnNumber: 52
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1892,
+                                                                lineNumber: 1373,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "text",
                                                                 value: formData.reference2.relationship,
                                                                 onChange: (e)=>handleReferenceChange(2, "relationship", e.target.value),
-                                                                placeholder: "e.g., Family friend, Colleague",
-                                                                className: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                                                                placeholder: "e.g., Family friend",
+                                                                className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors["reference2.relationship"] ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1895,
+                                                                lineNumber: 1376,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            errors["reference2.relationship"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-red-600 text-sm mt-1 flex items-center gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                                        className: "w-4 h-4"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/form/page.tsx",
+                                                                        lineNumber: 1387,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    errors["reference2.relationship"]
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1386,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1891,
+                                                        lineNumber: 1372,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1881,
+                                                lineNumber: 1361,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1852,
+                                        lineNumber: 1314,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1792,
+                                lineNumber: 1227,
                                 columnNumber: 13
                             }, this),
                             currentStep === 7 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3212,7 +3169,7 @@ function ApplyPage() {
                                         children: "Supporting Documents"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1910,
+                                        lineNumber: 1399,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3220,8 +3177,32 @@ function ApplyPage() {
                                         children: "Please upload supporting documents such as: ID, bills, pay stubs, bank statements, etc."
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1911,
+                                        lineNumber: 1400,
                                         columnNumber: 15
+                                    }, this),
+                                    errors.documents && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Alert, {
+                                        className: "mb-6 bg-red-50 border-red-200",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                                className: "h-4 w-4 text-red-600"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1406,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AlertDescription, {
+                                                className: "text-red-800",
+                                                children: errors.documents
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/form/page.tsx",
+                                                lineNumber: 1407,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/form/page.tsx",
+                                        lineNumber: 1405,
+                                        columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "mb-6",
@@ -3235,7 +3216,7 @@ function ApplyPage() {
                                                 className: "hidden"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1916,
+                                                lineNumber: 1412,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -3246,7 +3227,7 @@ function ApplyPage() {
                                                         className: "w-16 h-16 text-gray-400 mx-auto mb-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1928,
+                                                        lineNumber: 1424,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3254,7 +3235,7 @@ function ApplyPage() {
                                                         children: "Click to upload documents"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1929,
+                                                        lineNumber: 1425,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3262,19 +3243,19 @@ function ApplyPage() {
                                                         children: "PDF, JPG, PNG up to 10MB"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1930,
+                                                        lineNumber: 1426,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1924,
+                                                lineNumber: 1420,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1915,
+                                        lineNumber: 1411,
                                         columnNumber: 15
                                     }, this),
                                     formData.documents.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3289,7 +3270,7 @@ function ApplyPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1936,
+                                                lineNumber: 1432,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3301,10 +3282,10 @@ function ApplyPage() {
                                                                 className: "flex items-center gap-2",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2d$big$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle$3e$__["CheckCircle"], {
-                                                                        className: "w-5 h-5 text-green-600 flex-shrink-0"
+                                                                        className: "w-5 h-5 text-green-600 shrink-0"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1946,
+                                                                        lineNumber: 1442,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3312,7 +3293,7 @@ function ApplyPage() {
                                                                         children: doc.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1947,
+                                                                        lineNumber: 1443,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3324,13 +3305,13 @@ function ApplyPage() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1948,
+                                                                        lineNumber: 1444,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1945,
+                                                                lineNumber: 1441,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3339,30 +3320,30 @@ function ApplyPage() {
                                                                 children: "Remove"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1950,
+                                                                lineNumber: 1446,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, index, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1941,
+                                                        lineNumber: 1437,
                                                         columnNumber: 23
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1939,
+                                                lineNumber: 1435,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1935,
+                                        lineNumber: 1431,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1909,
+                                lineNumber: 1398,
                                 columnNumber: 13
                             }, this),
                             currentStep === 8 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3372,7 +3353,7 @@ function ApplyPage() {
                                         children: "Review Your Application"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1966,
+                                        lineNumber: 1462,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3386,7 +3367,7 @@ function ApplyPage() {
                                                         children: "Personal Information"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1971,
+                                                        lineNumber: 1466,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3400,33 +3381,33 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1973,
+                                                                lineNumber: 1468,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: formData.email
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1976,
+                                                                lineNumber: 1471,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: formData.mobilePhone
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1977,
+                                                                lineNumber: 1472,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1972,
+                                                        lineNumber: 1467,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1970,
+                                                lineNumber: 1465,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3437,7 +3418,7 @@ function ApplyPage() {
                                                         children: "Employment"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1983,
+                                                        lineNumber: 1477,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3449,18 +3430,18 @@ function ApplyPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1985,
+                                                            lineNumber: 1479,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1984,
+                                                        lineNumber: 1478,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1982,
+                                                lineNumber: 1476,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3471,7 +3452,7 @@ function ApplyPage() {
                                                         children: "Financial Summary"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1991,
+                                                        lineNumber: 1484,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3484,7 +3465,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1993,
+                                                                lineNumber: 1486,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3494,7 +3475,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1994,
+                                                                lineNumber: 1487,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3504,19 +3485,19 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1995,
+                                                                lineNumber: 1488,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1992,
+                                                        lineNumber: 1485,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1990,
+                                                lineNumber: 1483,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3527,7 +3508,7 @@ function ApplyPage() {
                                                         children: "Request Details"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 2001,
+                                                        lineNumber: 1493,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3540,7 +3521,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 2003,
+                                                                lineNumber: 1495,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3550,7 +3531,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 2004,
+                                                                lineNumber: 1496,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3560,19 +3541,29 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 2005,
+                                                                lineNumber: 1497,
                                                                 columnNumber: 21
+                                                            }, this),
+                                                            formData.previousZakat === "yes" && formData.zakatResourceSource && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                children: [
+                                                                    "Previous Zakat Resource: ",
+                                                                    formData.zakatResourceSource
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/form/page.tsx",
+                                                                lineNumber: 1500,
+                                                                columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 2002,
+                                                        lineNumber: 1494,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 2000,
+                                                lineNumber: 1492,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3583,7 +3574,7 @@ function ApplyPage() {
                                                         children: "References"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 2011,
+                                                        lineNumber: 1506,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3596,7 +3587,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 2013,
+                                                                lineNumber: 1508,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3606,19 +3597,19 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 2014,
+                                                                lineNumber: 1509,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 2012,
+                                                        lineNumber: 1507,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 2010,
+                                                lineNumber: 1505,
                                                 columnNumber: 17
                                             }, this),
                                             formData.documents.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3629,7 +3620,7 @@ function ApplyPage() {
                                                         children: "Uploaded Documents"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 2020,
+                                                        lineNumber: 1515,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3642,18 +3633,18 @@ function ApplyPage() {
                                                                 ]
                                                             }, index, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 2023,
+                                                                lineNumber: 1518,
                                                                 columnNumber: 25
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 2021,
+                                                        lineNumber: 1516,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 2019,
+                                                lineNumber: 1514,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3666,7 +3657,7 @@ function ApplyPage() {
                                                             children: "Declaration:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 2034,
+                                                            lineNumber: 1528,
                                                             columnNumber: 21
                                                         }, this),
                                                         " I testify that the information provided in this application is true and accurate to the best of my knowledge. I authorize the verification of this information to determine my eligibility for ",
@@ -3675,24 +3666,24 @@ function ApplyPage() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/form/page.tsx",
-                                                    lineNumber: 2033,
+                                                    lineNumber: 1527,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 2032,
+                                                lineNumber: 1526,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1968,
+                                        lineNumber: 1464,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1965,
+                                lineNumber: 1461,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3705,7 +3696,7 @@ function ApplyPage() {
                                         children: "← Back"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 2045,
+                                        lineNumber: 1539,
                                         columnNumber: 13
                                     }, this),
                                     currentStep === STEPS.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3715,7 +3706,7 @@ function ApplyPage() {
                                         children: isSubmitting ? "Submitting..." : "Submit Application"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 2053,
+                                        lineNumber: 1547,
                                         columnNumber: 15
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                         onClick: handleNext,
@@ -3726,41 +3717,41 @@ function ApplyPage() {
                                                 children: "→"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 2066,
+                                                lineNumber: 1560,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 2061,
+                                        lineNumber: 1555,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 2044,
+                                lineNumber: 1538,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/form/page.tsx",
-                        lineNumber: 1370,
+                        lineNumber: 540,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/form/page.tsx",
-                lineNumber: 1332,
+                lineNumber: 506,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/form/page.tsx",
-        lineNumber: 1317,
+        lineNumber: 493,
         columnNumber: 5
     }, this);
 }
-_s(ApplyPage, "e0ZOyeGtfa2GX/DjjHCp0PqV0SI=");
+_s(ApplyPage, "qTxP9TjZANRYy1ND8Q06UCX6MT8=");
 _c1 = ApplyPage;
 var _c, _c1;
 __turbopack_context__.k.register(_c, "Toast");

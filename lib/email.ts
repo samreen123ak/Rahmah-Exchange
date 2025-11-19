@@ -58,5 +58,3 @@ export async function sendEmail(params: SendEmailParams) {
 export function getAdminEmail(): string | undefined {
 	return process.env.ADMIN_EMAIL
 }
-
-

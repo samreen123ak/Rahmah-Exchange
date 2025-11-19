@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/db"
 import Grant from "@/lib/models/Grant"
 import { authenticateRequest } from "@/lib/auth-middleware"
 import { sendEmail } from "@/lib/email"
+import { getTreasurerEmails, getCaseworkerEmails } from "@/lib/internal-email"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
