@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import { Mail, Send, Paperclip, AlertCircle, CheckCircle2, Archive, Check, CheckCheck } from 'lucide-react'
 import Link from "next/link"
 import { authenticatedFetch, getAuthToken } from "@/lib/auth-utils"
+import { jwtDecode } from "jwt-decode"
 import Image from "next/image"
 
 interface Conversation {
@@ -57,6 +58,7 @@ export default function MessagesPage() {
   const [sending, setSending] = useState(false)
   const [newMessage, setNewMessage] = useState("")
   const [showArchived, setShowArchived] = useState(false)
+  const [currentUser, setCurrentUser] = useState<{ id: string; email: string; name: string; role: string } | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [toast, setToast] = useState<{ message: string; type: "success" | "error"; isVisible: boolean }>({
     message: "",
@@ -65,7 +67,6 @@ export default function MessagesPage() {
   })
 
   const ADMIN_EMAIL = "staff@gmail.com"
-  const currentUserEmail = ADMIN_EMAIL
 
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type, isVisible: true })
@@ -80,18 +81,158 @@ export default function MessagesPage() {
     scrollToBottom()
   }, [messages])
 
+  // Get current user from token
+  useEffect(() => {
+    const token = getAuthToken()
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token)
+        setCurrentUser({
+          id: decoded.id || decoded._id || "",
+          email: decoded.email || ADMIN_EMAIL,
+          name: decoded.name || "Staff",
+          role: decoded.role || "caseworker",
+        })
+      } catch (err) {
+        console.error("Failed to decode token:", err)
+        setCurrentUser({
+          id: "",
+          email: ADMIN_EMAIL,
+          name: "Staff",
+          role: "caseworker",
+        })
+      }
+    } else {
+      setCurrentUser({
+        id: "",
+        email: ADMIN_EMAIL,
+        name: "Staff",
+        role: "caseworker",
+      })
+    }
+  }, [])
+
   // Fetch conversations
   useEffect(() => {
     fetchConversations()
   }, [showArchived])
 
-  const fetchConversations = async () => {
+  // Get caseId from URL params if present - create/open conversation
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const caseIdParam = urlParams.get("caseId")
+    const applicantIdParam = urlParams.get("applicantId")
+    
+    if (caseIdParam && applicantIdParam && conversations.length >= 0) {
+      // Find existing conversation or create new one
+      handleOpenOrCreateConversation(caseIdParam, applicantIdParam)
+    }
+  }, [conversations])
+
+  const handleOpenOrCreateConversation = async (caseId: string, applicantId: string) => {
+    // First, check if conversation already exists
+    const existingConv = conversations.find(
+      conv => conv.caseId?.caseId === caseId
+    )
+    
+    if (existingConv) {
+      // Open existing conversation
+      handleSelectConversation(existingConv)
+      // Clear URL params
+      window.history.replaceState({}, '', '/messages')
+      return
+    }
+
+    // Create new conversation
+    try {
+      const token = getAuthToken()
+      const response = await fetch("/api/messages/conversations/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          "x-admin-email": ADMIN_EMAIL,
+        },
+        body: JSON.stringify({
+          caseId: applicantId, // Send MongoDB ObjectId (applicantId) as caseId
+          participantIds: [],
+        }),
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.conversation) {
+          // Refresh conversations to get the new one
+          await fetchConversations()
+          
+          // Wait a bit for state to update, then find and select
+          setTimeout(() => {
+            setConversations(prev => {
+              const newConv = prev.find(conv => conv.caseId?.caseId === caseId)
+              if (newConv) {
+                handleSelectConversation(newConv)
+              } else {
+                // Create conversation object from API response
+                const convObj: Conversation = {
+                  _id: data.conversation._id,
+                  conversationId: data.conversation.conversationId,
+                  title: data.conversation.title || "",
+                  lastMessage: "",
+                  lastMessageAt: new Date().toISOString(),
+                  messageCount: 0,
+                  unreadCount: 0,
+                  caseId: {
+                    caseId: caseId,
+                    firstName: data.conversation.caseId?.firstName || "Unknown",
+                    lastName: data.conversation.caseId?.lastName || "",
+                  },
+                }
+                handleSelectConversation(convObj)
+              }
+              return prev
+            })
+          }, 100)
+          
+          // Clear URL params
+          window.history.replaceState({}, '', '/messages')
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({}))
+        showToast(errorData.message || "Failed to create conversation", "error")
+      }
+    } catch (error) {
+      console.error("Error creating conversation:", error)
+      showToast("Failed to create conversation", "error")
+    }
+  }
+
+  const fetchConversations = async (preserveUnreadCountFor?: string) => {
     try {
       setLoading(true)
       const response = await authenticatedFetch(`/api/messages/conversations?archived=${showArchived}`)
       if (!response.ok) throw new Error("Failed to load conversations")
       const data = await response.json()
-      setConversations(data.conversations)
+      const serverConversations = data.conversations || []
+      
+      // If we're preserving unread count for a specific conversation (optimistic update)
+      if (preserveUnreadCountFor) {
+        setConversations(prev => {
+          const preservedConv = prev.find(c => c._id === preserveUnreadCountFor || c.conversationId === preserveUnreadCountFor)
+          const serverConv = serverConversations.find((c: any) => c._id === preserveUnreadCountFor || c.conversationId === preserveUnreadCountFor)
+          
+          if (preservedConv && preservedConv.unreadCount === 0 && serverConv) {
+            // Merge server data but keep unreadCount as 0
+            return serverConversations.map((c: any) => 
+              (c._id === preserveUnreadCountFor || c.conversationId === preserveUnreadCountFor)
+                ? { ...c, unreadCount: 0 }
+                : c
+            )
+          }
+          return serverConversations
+        })
+      } else {
+        setConversations(serverConversations)
+      }
     } catch (error: any) {
       console.error("Error fetching conversations:", error)
       showToast("Failed to load conversations", "error")
@@ -101,26 +242,54 @@ export default function MessagesPage() {
   }
 
   // Fetch messages for selected conversation
-  const fetchMessages = async (conversationId: string) => {
+  const fetchMessages = async (conversationId: string, markAsRead: boolean = true) => {
     try {
-      setLoadingMessages(true)
+      // Remove loading delay - fetch immediately
       const response = await authenticatedFetch(`/api/messages/conversations/${conversationId}`)
       if (!response.ok) throw new Error("Failed to load messages")
       const data = await response.json()
-      setMessages(data.messages)
+      
+      // Normalize messages - ensure senderId is a string for comparison
+      const normalizedMessages = (data.messages || []).map((msg: any) => ({
+        ...msg,
+        senderId: msg.senderId?._id?.toString() || msg.senderId?.toString() || msg.senderId,
+      }))
+      
+      setMessages(normalizedMessages)
+      
+      // Mark as read and refresh conversations to update unread count
+      if (markAsRead) {
+        markConversationAsRead(conversationId)
+        // Delay slightly to ensure server has updated, and preserve unreadCount: 0 for this conversation
+        setTimeout(() => {
+          // Get current conversation ID to preserve
+          setConversations(prev => {
+            const currentConv = prev.find(c => c.conversationId === conversationId)
+            const convIdToPreserve = currentConv?._id || conversationId
+            // Fetch and merge, preserving unreadCount: 0
+            fetchConversations(convIdToPreserve).catch(console.error)
+            return prev // Keep current state until server responds
+          })
+        }, 500) // Delay to ensure server has updated lastReadAt
+      }
     } catch (error: any) {
       console.error("Error fetching messages:", error)
       showToast("Failed to load messages", "error")
-    } finally {
-      setLoadingMessages(false)
     }
   }
 
   const handleSelectConversation = (conversation: Conversation) => {
+    // Immediately update unread count in local state
+    setConversations(prev => 
+      prev.map(conv => 
+        conv._id === conversation._id 
+          ? { ...conv, unreadCount: 0 }
+          : conv
+      )
+    )
     setSelectedConversation(conversation)
-    fetchMessages(conversation.conversationId)
-    
-    markConversationAsRead(conversation.conversationId)
+    // Fetch messages immediately without loading delay
+    fetchMessages(conversation.conversationId, true)
   }
 
   const markConversationAsRead = async (conversationId: string) => {
@@ -175,17 +344,17 @@ export default function MessagesPage() {
 
       const result = await response.json()
       
+      // Use actual user data from token or API response
       const newMsg: Message = {
         _id: result._id || Date.now().toString(),
         body: messageText,
-        senderName: "You",
-        senderEmail: ADMIN_EMAIL,
-        senderRole: "caseworker",
-        createdAt: new Date().toISOString(),
-        attachments: [],
-        readBy: [],
-        senderId: undefined
- // Assuming senderId is not provided by the API response
+        senderName: result.senderName || currentUser?.name || "You",
+        senderEmail: result.senderEmail || currentUser?.email || ADMIN_EMAIL,
+        senderRole: result.senderRole || currentUser?.role || "caseworker",
+        createdAt: result.createdAt || new Date().toISOString(),
+        attachments: result.attachments || [],
+        readBy: result.readBy || [],
+        senderId: result.senderId || currentUser?.id || undefined
       }
       
       setMessages(prev => [...prev, newMsg])
@@ -221,12 +390,32 @@ export default function MessagesPage() {
   }
 
   const isOwnMessage = (msg: Message) => {
-    return msg.senderEmail === currentUserEmail
+    if (!currentUser || !currentUser.id) return false
+    
+    // Normalize senderId - handle both string and object formats
+    let senderIdStr = ""
+    if (msg.senderId) {
+      if (typeof msg.senderId === "object" && (msg.senderId as any)?._id) {
+        senderIdStr = (msg.senderId as any)._id.toString()
+      } else {
+        senderIdStr = msg.senderId.toString()
+      }
+    }
+    
+    // Check by senderId first (most reliable)
+    if (senderIdStr && currentUser.id) {
+      return senderIdStr === currentUser.id
+    }
+    
+    // Fallback to email comparison
+    const msgEmail = (msg.senderEmail || "").toLowerCase()
+    const userEmail = (currentUser.email || "").toLowerCase()
+    return msgEmail === userEmail || msgEmail === ADMIN_EMAIL.toLowerCase()
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-teal-50 to-blue-50 flex items-center justify-center">
+      <div className="h-screen bg-gray-50 flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading messages...</p>
@@ -236,53 +425,65 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-teal-50 to-blue-50">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       <Toast message={toast.message} type={toast.type} isVisible={toast.isVisible} />
 
-      <header className="flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-white">
-        <div className="flex items-center gap-3">
-          <Link href="/">
-            <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={170} height={170} priority />
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setShowArchived(!showArchived)}
-            className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition flex items-center gap-2"
-          >
-            <Archive className="w-5 h-5" />
-            {showArchived ? "Active" : "Archived"}
-          </button>
-          <Link href="/staff/dashboard" className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition">
-            Back to Home
-          </Link>
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 px-8 py-4 shadow-sm flex-shrink-0">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/">
+              <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={120} height={120} priority />
+            </Link>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">Messages</h1>
+              <p className="text-sm text-gray-500">Communicate with staff</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowArchived(!showArchived)}
+              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition font-medium flex items-center gap-2"
+            >
+              <Archive className="w-4 h-4" />
+              {showArchived ? "Active" : "Archived"}
+            </button>
+            <Link href="/staff/dashboard" className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition font-medium">
+              Back to Home
+            </Link>
+          </div>
         </div>
       </header>
 
-      <div className="px-8 py-8 max-w-6xl mx-auto h-[calc(100vh-140px)]">
-        <div className="flex gap-4 h-full">
-          {/* Conversation List */}
-          <div className="w-80 bg-white rounded-2xl shadow-sm flex flex-col border border-gray-200">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <Mail className="w-5 h-5 text-teal-600" />
-                Messages
-              </h2>
-              <p className="text-xs text-gray-500 mt-1">{conversations.length} conversation(s)</p>
-            </div>
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar - Conversation List */}
+        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+          <div className="p-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <Mail className="w-5 h-5 text-teal-600" />
+              Messages
+            </h2>
+            <p className="text-xs text-gray-500 mt-1">{conversations.length} conversation(s)</p>
+          </div>
 
-            <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
               {conversations.length === 0 ? (
                 <div className="p-6 text-center text-gray-500">
                   <p className="text-sm">No {showArchived ? "archived" : "active"} conversations</p>
                 </div>
               ) : (
                 conversations.map((conv) => (
-                  <button
+                  <div
                     key={conv._id}
-                    onClick={() => handleSelectConversation(conv)}
-                    className={`w-full text-left p-3 border-b border-gray-100 hover:bg-gray-50 transition ${
-                      selectedConversation?._id === conv._id ? "bg-teal-50 border-l-4 border-l-teal-600" : ""
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleSelectConversation(conv)
+                    }}
+                    className={`p-3 border-b border-gray-200 cursor-pointer transition ${
+                      selectedConversation?._id === conv._id
+                        ? "bg-teal-50 border-l-4 border-l-teal-600"
+                        : "bg-white hover:bg-gray-50"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -290,11 +491,11 @@ export default function MessagesPage() {
                         <h3 className="font-semibold text-gray-900 text-sm truncate">
                           {conv.caseId?.firstName || "Unknown"} {conv.caseId?.lastName || ""}
                         </h3>
-                        <p className="text-xs text-gray-500">{conv.caseId?.caseId || "N/A"}</p>
+                        <p className="text-xs text-gray-500 truncate">{conv.caseId?.caseId || "N/A"}</p>
                         <p className="text-xs text-gray-600 mt-1 line-clamp-1 truncate">{conv.lastMessage}</p>
                       </div>
                       {conv.unreadCount > 0 && (
-                        <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-teal-600 rounded-full shrink-0">
+                        <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-teal-600 rounded-full shrink-0">
                           {conv.unreadCount}
                         </span>
                       )}
@@ -302,146 +503,126 @@ export default function MessagesPage() {
                     <p className="text-xs text-gray-400 mt-2">
                       {new Date(conv.lastMessageAt).toLocaleDateString()}
                     </p>
-                  </button>
+                  </div>
                 ))
               )}
             </div>
           </div>
 
-          {/* Chat Area */}
-          <div className="flex-1 bg-white rounded-2xl shadow-sm flex flex-col border border-gray-200 overflow-hidden">
-            {selectedConversation ? (
-              <>
-                {/* Chat Header */}
-                <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-teal-50 to-cyan-50">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    {selectedConversation.caseId?.firstName || "Unknown"} {selectedConversation.caseId?.lastName || ""}
-                  </h2>
-                  <p className="text-sm text-gray-500">
-                    {selectedConversation.caseId?.caseId || "N/A"} • {selectedConversation.messageCount} messages
-                  </p>
-                </div>
-
-                {/* Messages Container */}
-                {loadingMessages ? (
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+        {/* Main Chat Area */}
+        <div className="flex-1 flex flex-col">
+          {selectedConversation ? (
+            <>
+              {/* Chat Header */}
+              <div className="bg-white border-b border-gray-200 p-4 flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
+                    <span className="text-teal-600 font-semibold">
+                      {((selectedConversation.caseId?.firstName || "U") + " " + (selectedConversation.caseId?.lastName || "")).charAt(0).toUpperCase()}
+                    </span>
                   </div>
-                ) : (
-                  <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white">
-                    {messages.length === 0 ? (
-                      <div className="text-center text-gray-500 mt-8">
-                        <p className="text-sm">No messages yet. Start the conversation!</p>
-                      </div>
-                    ) : (
-                      messages.map((msg) => {
+                  <div>
+                    <p className="font-medium text-gray-900">
+                      {selectedConversation.caseId?.firstName || "Unknown"} {selectedConversation.caseId?.lastName || ""}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {selectedConversation.caseId?.caseId || "N/A"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Messages Container */}
+              <div className="flex-1 overflow-y-auto p-6 bg-gray-50 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                  {messages.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      <Mail className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                      <p>No messages yet. Start the conversation!</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {messages.map((msg) => {
                         const isOwn = isOwnMessage(msg)
-                        const isRead = isMessageRead(msg)
                         
                         return (
-                          <div key={msg._id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} gap-2`}>
-                            <div className={`flex flex-col max-w-xs ${isOwn ? 'items-end' : 'items-start'}`}>
-                              {/* Message Bubble */}
-                              <div
-                                className={`rounded-2xl px-4 py-2 relative ${
-                                  isOwn
-                                    ? 'bg-teal-600 text-white rounded-br-none'
-                                    : 'bg-gray-100 text-gray-900 rounded-bl-none'
-                                }`}
-                              >
-                                {!isOwn && !isRead && (
-                                  <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">
-                                    unread
-                                  </span>
-                                )}
-                                
-                                {!isOwn && (
-                                  <p className="text-xs font-semibold mb-1 opacity-70">
-                                    {msg.senderName}
-                                  </p>
-                                )}
-                                <p className="text-sm break-words">{msg.body}</p>
-                                
-                                {msg.attachments && msg.attachments.length > 0 && (
-                                  <div className="mt-2 flex flex-wrap gap-2">
-                                    {msg.attachments.map((att, idx) => (
-                                      <a
-                                        key={idx}
-                                        href={att.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`text-xs underline flex items-center gap-1 ${
-                                          isOwn ? 'text-teal-100' : 'text-teal-600'
-                                        }`}
-                                      >
-                                        <Paperclip className="w-3 h-3" />
-                                        {att.originalname}
-                                      </a>
-                                    ))}
-                                  </div>
-                                )}
+                          <div
+                            key={msg._id}
+                            className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
+                          >
+                            <div
+                              className={`max-w-md px-4 py-2 rounded-lg ${
+                                isOwn
+                                  ? "bg-teal-600 text-white"
+                                  : "bg-white text-gray-900 border border-gray-200"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-semibold text-sm">{msg.senderName}</span>
+                                <span className={`text-xs ${isOwn ? "text-teal-100" : "text-gray-500"}`}>
+                                  {new Date(msg.createdAt).toLocaleTimeString([], {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
                               </div>
+                              <p className="text-sm whitespace-pre-wrap">{msg.body}</p>
                               
-                              {/* Timestamp and Read Status */}
-                              <div className="flex items-center gap-1 mt-1 px-2">
-                                <p className="text-xs text-gray-500">
-                                  {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </p>
-                                {isOwn && (
-                                  isRead ? (
-                                    <CheckCheck className="w-4 h-4 text-teal-600" />
-                                  ) : (
-                                    <Check className="w-4 h-4 text-gray-400" />
-                                  )
-                                )}
-                                {!isOwn && isRead && (
-                                  <span className="text-xs text-teal-600 font-semibold">read</span>
-                                )}
-                              </div>
+                              {msg.attachments && msg.attachments.length > 0 && (
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                  {msg.attachments.map((att, idx) => (
+                                    <a
+                                      key={idx}
+                                      href={att.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={`text-xs underline flex items-center gap-1 ${
+                                        isOwn ? 'text-teal-100' : 'text-teal-600'
+                                      }`}
+                                    >
+                                      <Paperclip className="w-3 h-3" />
+                                      {att.originalname}
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           </div>
                         )
-                      })
-                    )}
-                    <div ref={messagesEndRef} />
-                  </div>
-                )}
-
-                {/* Input Area */}
-                <div className="p-4 border-t border-gray-200 bg-gray-50">
-                  <form onSubmit={handleSendMessage} className="flex gap-2">
-                    <textarea
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault()
-                          handleSendMessage(e as any)
-                        }
-                      }}
-                      placeholder="Type your message... (Shift+Enter for new line)"
-                      rows={1}
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-600 resize-none"
-                    />
-                    <button
-                      type="submit"
-                      disabled={sending || !newMessage.trim()}
-                      className="px-4 py-3 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center h-11 w-11"
-                    >
-                      <Send className="w-5 h-5" />
-                    </button>
-                  </form>
-                </div>
-              </>
-            ) : (
-              <div className="flex-1 flex items-center justify-center text-center text-gray-500">
-                <div>
-                  <Mail className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                  <p>Select a conversation to start messaging</p>
-                </div>
+                      })}
+                      <div ref={messagesEndRef} />
+                    </div>
+                  )}
               </div>
-            )}
-          </div>
+
+              {/* Input Area */}
+              <div className="bg-white border-t border-gray-200 p-4 flex-shrink-0">
+                <form onSubmit={handleSendMessage} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!newMessage.trim() || sending}
+                    className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    <Send className="w-4 h-4" />
+                    Send
+                  </button>
+                </form>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center bg-gray-50">
+              <div className="text-center">
+                <Mail className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                <p className="text-gray-500">Select a conversation to start messaging</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

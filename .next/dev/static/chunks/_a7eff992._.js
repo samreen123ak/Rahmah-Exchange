@@ -1639,22 +1639,6 @@ function ApplyPage() {
                                                                 fileName: "[project]/app/form/page.tsx",
                                                                 lineNumber: 710,
                                                                 columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                                value: "other",
-                                                                children: "Other"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 711,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                                value: "prefer-not",
-                                                                children: "Prefer not to say"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 712,
-                                                                columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
@@ -1669,14 +1653,14 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 716,
+                                                                lineNumber: 714,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.gender
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 715,
+                                                        lineNumber: 713,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
@@ -1705,13 +1689,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 726,
+                                                                lineNumber: 724,
                                                                 columnNumber: 35
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 725,
+                                                        lineNumber: 723,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1724,7 +1708,7 @@ function ApplyPage() {
                                                         className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.dateOfBirth ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 728,
+                                                        lineNumber: 726,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.dateOfBirth && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1734,20 +1718,20 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 741,
+                                                                lineNumber: 739,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.dateOfBirth
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 740,
+                                                        lineNumber: 738,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 724,
+                                                lineNumber: 722,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1761,13 +1745,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 749,
+                                                                lineNumber: 747,
                                                                 columnNumber: 34
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 748,
+                                                        lineNumber: 746,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1779,7 +1763,7 @@ function ApplyPage() {
                                                         placeholder: "000-0000000"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 751,
+                                                        lineNumber: 749,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.mobilePhone && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1789,26 +1773,26 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 763,
+                                                                lineNumber: 761,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.mobilePhone
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 762,
+                                                        lineNumber: 760,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 747,
+                                                lineNumber: 745,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 723,
+                                        lineNumber: 721,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1821,7 +1805,7 @@ function ApplyPage() {
                                                         children: "Home Phone"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 772,
+                                                        lineNumber: 770,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1833,13 +1817,13 @@ function ApplyPage() {
                                                         placeholder: "Optional"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 773,
+                                                        lineNumber: 771,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 771,
+                                                lineNumber: 769,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1853,13 +1837,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 785,
+                                                                lineNumber: 783,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 784,
+                                                        lineNumber: 782,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1871,7 +1855,7 @@ function ApplyPage() {
                                                         placeholder: "example@email.com"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 787,
+                                                        lineNumber: 785,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.email && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1881,26 +1865,26 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 799,
+                                                                lineNumber: 797,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.email
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 798,
+                                                        lineNumber: 796,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 783,
+                                                lineNumber: 781,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 770,
+                                        lineNumber: 768,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1917,13 +1901,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 809,
+                                                                lineNumber: 807,
                                                                 columnNumber: 34
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 808,
+                                                        lineNumber: 806,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1937,7 +1921,7 @@ function ApplyPage() {
                                                                 children: "Select status"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 819,
+                                                                lineNumber: 817,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1945,7 +1929,7 @@ function ApplyPage() {
                                                                 children: "Citizen"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 820,
+                                                                lineNumber: 818,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1953,7 +1937,7 @@ function ApplyPage() {
                                                                 children: "Resident"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 821,
+                                                                lineNumber: 819,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1961,13 +1945,13 @@ function ApplyPage() {
                                                                 children: "Other"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 822,
+                                                                lineNumber: 820,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 811,
+                                                        lineNumber: 809,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.legalStatus && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1977,20 +1961,20 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 826,
+                                                                lineNumber: 824,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.legalStatus
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 825,
+                                                        lineNumber: 823,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 807,
+                                                lineNumber: 805,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2004,13 +1988,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 834,
+                                                                lineNumber: 832,
                                                                 columnNumber: 33
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 833,
+                                                        lineNumber: 831,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2022,7 +2006,7 @@ function ApplyPage() {
                                                         placeholder: "Who referred you to us?"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 836,
+                                                        lineNumber: 834,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.referredBy && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2032,26 +2016,26 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 848,
+                                                                lineNumber: 846,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.referredBy
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 847,
+                                                        lineNumber: 845,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 832,
+                                                lineNumber: 830,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 806,
+                                        lineNumber: 804,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2062,7 +2046,7 @@ function ApplyPage() {
                                                 children: "Referrer Phone"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 856,
+                                                lineNumber: 854,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2074,13 +2058,13 @@ function ApplyPage() {
                                                 placeholder: "Optional"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 857,
+                                                lineNumber: 855,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 855,
+                                        lineNumber: 853,
                                         columnNumber: 15
                                     }, this)
                                 ]
@@ -2096,7 +2080,7 @@ function ApplyPage() {
                                         children: "Employment Information"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 871,
+                                        lineNumber: 869,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2111,13 +2095,13 @@ function ApplyPage() {
                                                         children: "*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 874,
+                                                        lineNumber: 872,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 873,
+                                                lineNumber: 871,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2131,7 +2115,7 @@ function ApplyPage() {
                                                         children: "Select employment status"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 884,
+                                                        lineNumber: 882,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2139,7 +2123,7 @@ function ApplyPage() {
                                                         children: "Employed"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 885,
+                                                        lineNumber: 883,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2147,7 +2131,7 @@ function ApplyPage() {
                                                         children: "Self-Employed"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 886,
+                                                        lineNumber: 884,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2155,7 +2139,7 @@ function ApplyPage() {
                                                         children: "Unemployed"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 887,
+                                                        lineNumber: 885,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2163,7 +2147,7 @@ function ApplyPage() {
                                                         children: "Retired"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 888,
+                                                        lineNumber: 886,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2171,7 +2155,7 @@ function ApplyPage() {
                                                         children: "Student"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 889,
+                                                        lineNumber: 887,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2179,13 +2163,13 @@ function ApplyPage() {
                                                         children: "Other"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 890,
+                                                        lineNumber: 888,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 876,
+                                                lineNumber: 874,
                                                 columnNumber: 17
                                             }, this),
                                             errors.employmentStatus && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2195,26 +2179,26 @@ function ApplyPage() {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 894,
+                                                        lineNumber: 892,
                                                         columnNumber: 21
                                                     }, this),
                                                     errors.employmentStatus
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 893,
+                                                lineNumber: 891,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 872,
+                                        lineNumber: 870,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 870,
+                                lineNumber: 868,
                                 columnNumber: 13
                             }, this),
                             currentStep === 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2224,7 +2208,7 @@ function ApplyPage() {
                                         children: "Family Information"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 904,
+                                        lineNumber: 902,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2239,13 +2223,13 @@ function ApplyPage() {
                                                         children: "*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 907,
+                                                        lineNumber: 905,
                                                         columnNumber: 42
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 906,
+                                                lineNumber: 904,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2256,7 +2240,7 @@ function ApplyPage() {
                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-48 ${errors.dependentsInfo ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 909,
+                                                lineNumber: 907,
                                                 columnNumber: 17
                                             }, this),
                                             errors.dependentsInfo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2266,14 +2250,14 @@ function ApplyPage() {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 920,
+                                                        lineNumber: 918,
                                                         columnNumber: 21
                                                     }, this),
                                                     errors.dependentsInfo
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 919,
+                                                lineNumber: 917,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2281,19 +2265,19 @@ function ApplyPage() {
                                                 children: "Please list all people who depend on you financially"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 924,
+                                                lineNumber: 922,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 905,
+                                        lineNumber: 903,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 903,
+                                lineNumber: 901,
                                 columnNumber: 13
                             }, this),
                             currentStep === 4 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2303,7 +2287,7 @@ function ApplyPage() {
                                         children: "Financial Information"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 931,
+                                        lineNumber: 929,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2314,7 +2298,7 @@ function ApplyPage() {
                                                 children: "Monthly Income"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 934,
+                                                lineNumber: 932,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2329,13 +2313,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 937,
+                                                                lineNumber: 935,
                                                                 columnNumber: 42
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 936,
+                                                        lineNumber: 934,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2347,7 +2331,7 @@ function ApplyPage() {
                                                         className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.totalMonthlyIncome ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 939,
+                                                        lineNumber: 937,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.totalMonthlyIncome && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2357,20 +2341,20 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 951,
+                                                                lineNumber: 949,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.totalMonthlyIncome
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 950,
+                                                        lineNumber: 948,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 935,
+                                                lineNumber: 933,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2384,13 +2368,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 958,
+                                                                lineNumber: 956,
                                                                 columnNumber: 36
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 957,
+                                                        lineNumber: 955,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2401,7 +2385,7 @@ function ApplyPage() {
                                                         className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32 ${errors.incomeSources ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 960,
+                                                        lineNumber: 958,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.incomeSources && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2411,26 +2395,26 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 971,
+                                                                lineNumber: 969,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.incomeSources
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 970,
+                                                        lineNumber: 968,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 956,
+                                                lineNumber: 954,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 933,
+                                        lineNumber: 931,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2440,7 +2424,7 @@ function ApplyPage() {
                                                 children: "Monthly Expenses"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 979,
+                                                lineNumber: 977,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2457,13 +2441,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 983,
+                                                                        lineNumber: 981,
                                                                         columnNumber: 37
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 982,
+                                                                lineNumber: 980,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2475,7 +2459,7 @@ function ApplyPage() {
                                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.rentMortgage ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 985,
+                                                                lineNumber: 983,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors.rentMortgage && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2485,20 +2469,20 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 997,
+                                                                        lineNumber: 995,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors.rentMortgage
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 996,
+                                                                lineNumber: 994,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 981,
+                                                        lineNumber: 979,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2512,13 +2496,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1004,
+                                                                        lineNumber: 1002,
                                                                         columnNumber: 56
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1003,
+                                                                lineNumber: 1001,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2530,7 +2514,7 @@ function ApplyPage() {
                                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.utilities ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1006,
+                                                                lineNumber: 1004,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors.utilities && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2540,26 +2524,26 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1018,
+                                                                        lineNumber: 1016,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors.utilities
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1017,
+                                                                lineNumber: 1015,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1002,
+                                                        lineNumber: 1000,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 980,
+                                                lineNumber: 978,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2576,13 +2560,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1027,
+                                                                        lineNumber: 1025,
                                                                         columnNumber: 28
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1026,
+                                                                lineNumber: 1024,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2594,7 +2578,7 @@ function ApplyPage() {
                                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.food ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1029,
+                                                                lineNumber: 1027,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors.food && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2604,20 +2588,20 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1041,
+                                                                        lineNumber: 1039,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors.food
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1040,
+                                                                lineNumber: 1038,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1025,
+                                                        lineNumber: 1023,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2631,13 +2615,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1048,
+                                                                        lineNumber: 1046,
                                                                         columnNumber: 38
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1047,
+                                                                lineNumber: 1045,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2649,7 +2633,7 @@ function ApplyPage() {
                                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.otherExpenses ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1050,
+                                                                lineNumber: 1048,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors.otherExpenses && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2659,26 +2643,26 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1062,
+                                                                        lineNumber: 1060,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors.otherExpenses
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1061,
+                                                                lineNumber: 1059,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1046,
+                                                        lineNumber: 1044,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1024,
+                                                lineNumber: 1022,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2692,13 +2676,13 @@ function ApplyPage() {
                                                                 children: "*"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1070,
+                                                                lineNumber: 1068,
                                                                 columnNumber: 33
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1069,
+                                                        lineNumber: 1067,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2710,7 +2694,7 @@ function ApplyPage() {
                                                         className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.totalDebts ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1072,
+                                                        lineNumber: 1070,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.totalDebts && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2720,32 +2704,32 @@ function ApplyPage() {
                                                                 className: "w-4 h-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1084,
+                                                                lineNumber: 1082,
                                                                 columnNumber: 23
                                                             }, this),
                                                             errors.totalDebts
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1083,
+                                                        lineNumber: 1081,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1068,
+                                                lineNumber: 1066,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 978,
+                                        lineNumber: 976,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 930,
+                                lineNumber: 928,
                                 columnNumber: 13
                             }, this),
                             currentStep === 5 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2755,7 +2739,7 @@ function ApplyPage() {
                                         children: "Application Request"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1095,
+                                        lineNumber: 1093,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2766,7 +2750,7 @@ function ApplyPage() {
                                                 children: "Request Type"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1098,
+                                                lineNumber: 1096,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2780,7 +2764,7 @@ function ApplyPage() {
                                                         children: "Zakat"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1105,
+                                                        lineNumber: 1103,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2788,7 +2772,7 @@ function ApplyPage() {
                                                         children: "Sadaqah"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1106,
+                                                        lineNumber: 1104,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2796,19 +2780,19 @@ function ApplyPage() {
                                                         children: "Other"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1107,
+                                                        lineNumber: 1105,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1099,
+                                                lineNumber: 1097,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1097,
+                                        lineNumber: 1095,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2823,13 +2807,13 @@ function ApplyPage() {
                                                         children: "*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1113,
+                                                        lineNumber: 1111,
                                                         columnNumber: 36
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1112,
+                                                lineNumber: 1110,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2841,7 +2825,7 @@ function ApplyPage() {
                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors.amountRequested ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1115,
+                                                lineNumber: 1113,
                                                 columnNumber: 17
                                             }, this),
                                             errors.amountRequested && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2851,20 +2835,20 @@ function ApplyPage() {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1127,
+                                                        lineNumber: 1125,
                                                         columnNumber: 21
                                                     }, this),
                                                     errors.amountRequested
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1126,
+                                                lineNumber: 1124,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1111,
+                                        lineNumber: 1109,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2881,13 +2865,13 @@ function ApplyPage() {
                                                         children: "*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1135,
+                                                        lineNumber: 1133,
                                                         columnNumber: 68
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1134,
+                                                lineNumber: 1132,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2898,7 +2882,7 @@ function ApplyPage() {
                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32 ${errors.whyApplying ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1137,
+                                                lineNumber: 1135,
                                                 columnNumber: 17
                                             }, this),
                                             errors.whyApplying && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2908,20 +2892,20 @@ function ApplyPage() {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1148,
+                                                        lineNumber: 1146,
                                                         columnNumber: 21
                                                     }, this),
                                                     errors.whyApplying
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1147,
+                                                lineNumber: 1145,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1133,
+                                        lineNumber: 1131,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2936,13 +2920,13 @@ function ApplyPage() {
                                                         children: "*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1156,
+                                                        lineNumber: 1154,
                                                         columnNumber: 46
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1155,
+                                                lineNumber: 1153,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2953,7 +2937,7 @@ function ApplyPage() {
                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32 ${errors.circumstances ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1158,
+                                                lineNumber: 1156,
                                                 columnNumber: 17
                                             }, this),
                                             errors.circumstances && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2963,20 +2947,20 @@ function ApplyPage() {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1169,
+                                                        lineNumber: 1167,
                                                         columnNumber: 21
                                                     }, this),
                                                     errors.circumstances
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1168,
+                                                lineNumber: 1166,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1154,
+                                        lineNumber: 1152,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2993,13 +2977,13 @@ function ApplyPage() {
                                                         children: "*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1178,
+                                                        lineNumber: 1176,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1176,
+                                                lineNumber: 1174,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -3013,7 +2997,7 @@ function ApplyPage() {
                                                         children: "Select"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1188,
+                                                        lineNumber: 1186,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -3021,7 +3005,7 @@ function ApplyPage() {
                                                         children: "Yes"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1189,
+                                                        lineNumber: 1187,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -3029,13 +3013,13 @@ function ApplyPage() {
                                                         children: "No"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1190,
+                                                        lineNumber: 1188,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1180,
+                                                lineNumber: 1178,
                                                 columnNumber: 17
                                             }, this),
                                             errors.previousZakat && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3045,20 +3029,20 @@ function ApplyPage() {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1194,
+                                                        lineNumber: 1192,
                                                         columnNumber: 21
                                                     }, this),
                                                     errors.previousZakat
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1193,
+                                                lineNumber: 1191,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1175,
+                                        lineNumber: 1173,
                                         columnNumber: 15
                                     }, this),
                                     formData.previousZakat === "yes" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3073,13 +3057,13 @@ function ApplyPage() {
                                                         children: "*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1204,
+                                                        lineNumber: 1202,
                                                         columnNumber: 54
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1203,
+                                                lineNumber: 1201,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -3090,7 +3074,7 @@ function ApplyPage() {
                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 min-h-32 ${errors.zakatResourceSource ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1206,
+                                                lineNumber: 1204,
                                                 columnNumber: 19
                                             }, this),
                                             errors.zakatResourceSource && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3100,26 +3084,26 @@ function ApplyPage() {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1217,
+                                                        lineNumber: 1215,
                                                         columnNumber: 23
                                                     }, this),
                                                     errors.zakatResourceSource
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1216,
+                                                lineNumber: 1214,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1202,
+                                        lineNumber: 1200,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1094,
+                                lineNumber: 1092,
                                 columnNumber: 13
                             }, this),
                             currentStep === 6 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3129,7 +3113,7 @@ function ApplyPage() {
                                         children: "References (2 Required)"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1228,
+                                        lineNumber: 1226,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3137,7 +3121,7 @@ function ApplyPage() {
                                         children: "Please provide two references who can vouch for you"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1229,
+                                        lineNumber: 1227,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3150,7 +3134,7 @@ function ApplyPage() {
                                                         className: "w-1 h-8 bg-teal-600 rounded"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1234,
+                                                        lineNumber: 1232,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3158,13 +3142,13 @@ function ApplyPage() {
                                                         children: "Reference 1"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1235,
+                                                        lineNumber: 1233,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1233,
+                                                lineNumber: 1231,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3181,13 +3165,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1240,
+                                                                        lineNumber: 1238,
                                                                         columnNumber: 33
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1239,
+                                                                lineNumber: 1237,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3198,7 +3182,7 @@ function ApplyPage() {
                                                                 placeholder: "Enter full name"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1242,
+                                                                lineNumber: 1240,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors["reference1.fullName"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3208,20 +3192,20 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1253,
+                                                                        lineNumber: 1251,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors["reference1.fullName"]
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1252,
+                                                                lineNumber: 1250,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1238,
+                                                        lineNumber: 1236,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3235,13 +3219,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1260,
+                                                                        lineNumber: 1258,
                                                                         columnNumber: 36
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1259,
+                                                                lineNumber: 1257,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3252,7 +3236,7 @@ function ApplyPage() {
                                                                 placeholder: "00-0000000"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1262,
+                                                                lineNumber: 1260,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors["reference1.phoneNumber"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3262,26 +3246,26 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1273,
+                                                                        lineNumber: 1271,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors["reference1.phoneNumber"]
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1272,
+                                                                lineNumber: 1270,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1258,
+                                                        lineNumber: 1256,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1237,
+                                                lineNumber: 1235,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3294,7 +3278,7 @@ function ApplyPage() {
                                                                 children: "Email"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1281,
+                                                                lineNumber: 1279,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3305,13 +3289,13 @@ function ApplyPage() {
                                                                 placeholder: "Optional"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1282,
+                                                                lineNumber: 1280,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1280,
+                                                        lineNumber: 1278,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3325,13 +3309,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1292,
+                                                                        lineNumber: 1290,
                                                                         columnNumber: 52
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1291,
+                                                                lineNumber: 1289,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3342,7 +3326,7 @@ function ApplyPage() {
                                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors["reference1.relationship"] ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1294,
+                                                                lineNumber: 1292,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors["reference1.relationship"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3352,32 +3336,32 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1305,
+                                                                        lineNumber: 1303,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors["reference1.relationship"]
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1304,
+                                                                lineNumber: 1302,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1290,
+                                                        lineNumber: 1288,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1279,
+                                                lineNumber: 1277,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1232,
+                                        lineNumber: 1230,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3389,7 +3373,7 @@ function ApplyPage() {
                                                         className: "w-1 h-8 bg-blue-500 rounded"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1316,
+                                                        lineNumber: 1314,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3397,13 +3381,13 @@ function ApplyPage() {
                                                         children: "Reference 2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1317,
+                                                        lineNumber: 1315,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1315,
+                                                lineNumber: 1313,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3420,13 +3404,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1322,
+                                                                        lineNumber: 1320,
                                                                         columnNumber: 33
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1321,
+                                                                lineNumber: 1319,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3437,7 +3421,7 @@ function ApplyPage() {
                                                                 placeholder: "Enter full name"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1324,
+                                                                lineNumber: 1322,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors["reference2.fullName"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3447,20 +3431,20 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1335,
+                                                                        lineNumber: 1333,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors["reference2.fullName"]
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1334,
+                                                                lineNumber: 1332,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1320,
+                                                        lineNumber: 1318,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3474,13 +3458,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1342,
+                                                                        lineNumber: 1340,
                                                                         columnNumber: 36
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1341,
+                                                                lineNumber: 1339,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3491,7 +3475,7 @@ function ApplyPage() {
                                                                 placeholder: "00-0000000"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1344,
+                                                                lineNumber: 1342,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors["reference2.phoneNumber"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3501,26 +3485,26 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1355,
+                                                                        lineNumber: 1353,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors["reference2.phoneNumber"]
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1354,
+                                                                lineNumber: 1352,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1340,
+                                                        lineNumber: 1338,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1319,
+                                                lineNumber: 1317,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3533,7 +3517,7 @@ function ApplyPage() {
                                                                 children: "Email"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1363,
+                                                                lineNumber: 1361,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3544,13 +3528,13 @@ function ApplyPage() {
                                                                 placeholder: "Optional"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1364,
+                                                                lineNumber: 1362,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1362,
+                                                        lineNumber: 1360,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3564,13 +3548,13 @@ function ApplyPage() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1374,
+                                                                        lineNumber: 1372,
                                                                         columnNumber: 52
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1373,
+                                                                lineNumber: 1371,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3581,7 +3565,7 @@ function ApplyPage() {
                                                                 className: `w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${errors["reference2.relationship"] ? "border-red-500 bg-red-50" : "border-gray-300"}`
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1376,
+                                                                lineNumber: 1374,
                                                                 columnNumber: 21
                                                             }, this),
                                                             errors["reference2.relationship"] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3591,38 +3575,38 @@ function ApplyPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1387,
+                                                                        lineNumber: 1385,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     errors["reference2.relationship"]
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1386,
+                                                                lineNumber: 1384,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1372,
+                                                        lineNumber: 1370,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1361,
+                                                lineNumber: 1359,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1314,
+                                        lineNumber: 1312,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1227,
+                                lineNumber: 1225,
                                 columnNumber: 13
                             }, this),
                             currentStep === 7 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3632,7 +3616,7 @@ function ApplyPage() {
                                         children: "Supporting Documents"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1399,
+                                        lineNumber: 1397,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3640,7 +3624,7 @@ function ApplyPage() {
                                         children: "Please upload supporting documents such as: ID, bills, pay stubs, bank statements, etc."
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1400,
+                                        lineNumber: 1398,
                                         columnNumber: 15
                                     }, this),
                                     errors.documents && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$alert$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Alert"], {
@@ -3650,7 +3634,7 @@ function ApplyPage() {
                                                 className: "h-4 w-4 text-red-600"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1406,
+                                                lineNumber: 1404,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$alert$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDescription"], {
@@ -3658,13 +3642,13 @@ function ApplyPage() {
                                                 children: errors.documents
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1407,
+                                                lineNumber: 1405,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1405,
+                                        lineNumber: 1403,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3679,7 +3663,7 @@ function ApplyPage() {
                                                 className: "hidden"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1412,
+                                                lineNumber: 1410,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -3690,7 +3674,7 @@ function ApplyPage() {
                                                         className: "w-16 h-16 text-gray-400 mx-auto mb-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1424,
+                                                        lineNumber: 1422,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3698,7 +3682,7 @@ function ApplyPage() {
                                                         children: "Click to upload documents"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1425,
+                                                        lineNumber: 1423,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3706,19 +3690,19 @@ function ApplyPage() {
                                                         children: "PDF, JPG, PNG up to 10MB"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1426,
+                                                        lineNumber: 1424,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1420,
+                                                lineNumber: 1418,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1411,
+                                        lineNumber: 1409,
                                         columnNumber: 15
                                     }, this),
                                     formData.documents.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3733,7 +3717,7 @@ function ApplyPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1432,
+                                                lineNumber: 1430,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3748,7 +3732,7 @@ function ApplyPage() {
                                                                         className: "w-5 h-5 text-green-600 shrink-0"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1442,
+                                                                        lineNumber: 1440,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3756,7 +3740,7 @@ function ApplyPage() {
                                                                         children: doc.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1443,
+                                                                        lineNumber: 1441,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3768,13 +3752,13 @@ function ApplyPage() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/form/page.tsx",
-                                                                        lineNumber: 1444,
+                                                                        lineNumber: 1442,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1441,
+                                                                lineNumber: 1439,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3783,30 +3767,30 @@ function ApplyPage() {
                                                                 children: "Remove"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1446,
+                                                                lineNumber: 1444,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, index, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1437,
+                                                        lineNumber: 1435,
                                                         columnNumber: 23
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1435,
+                                                lineNumber: 1433,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1431,
+                                        lineNumber: 1429,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1398,
+                                lineNumber: 1396,
                                 columnNumber: 13
                             }, this),
                             currentStep === 8 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3816,7 +3800,7 @@ function ApplyPage() {
                                         children: "Review Your Application"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1462,
+                                        lineNumber: 1460,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3830,7 +3814,7 @@ function ApplyPage() {
                                                         children: "Personal Information"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1466,
+                                                        lineNumber: 1464,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3844,33 +3828,33 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1468,
+                                                                lineNumber: 1466,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: formData.email
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1471,
+                                                                lineNumber: 1469,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 children: formData.mobilePhone
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1472,
+                                                                lineNumber: 1470,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1467,
+                                                        lineNumber: 1465,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1465,
+                                                lineNumber: 1463,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3881,7 +3865,7 @@ function ApplyPage() {
                                                         children: "Employment"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1477,
+                                                        lineNumber: 1475,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3893,18 +3877,18 @@ function ApplyPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1479,
+                                                            lineNumber: 1477,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1478,
+                                                        lineNumber: 1476,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1476,
+                                                lineNumber: 1474,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3915,7 +3899,7 @@ function ApplyPage() {
                                                         children: "Financial Summary"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1484,
+                                                        lineNumber: 1482,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3928,7 +3912,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1486,
+                                                                lineNumber: 1484,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3938,7 +3922,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1487,
+                                                                lineNumber: 1485,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3948,19 +3932,19 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1488,
+                                                                lineNumber: 1486,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1485,
+                                                        lineNumber: 1483,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1483,
+                                                lineNumber: 1481,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3971,7 +3955,7 @@ function ApplyPage() {
                                                         children: "Request Details"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1493,
+                                                        lineNumber: 1491,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3984,7 +3968,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1495,
+                                                                lineNumber: 1493,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3994,7 +3978,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1496,
+                                                                lineNumber: 1494,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4004,7 +3988,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1497,
+                                                                lineNumber: 1495,
                                                                 columnNumber: 21
                                                             }, this),
                                                             formData.previousZakat === "yes" && formData.zakatResourceSource && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4014,19 +3998,19 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1500,
+                                                                lineNumber: 1498,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1494,
+                                                        lineNumber: 1492,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1492,
+                                                lineNumber: 1490,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4037,7 +4021,7 @@ function ApplyPage() {
                                                         children: "References"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1506,
+                                                        lineNumber: 1504,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4050,7 +4034,7 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1508,
+                                                                lineNumber: 1506,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4060,19 +4044,19 @@ function ApplyPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1509,
+                                                                lineNumber: 1507,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1507,
+                                                        lineNumber: 1505,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1505,
+                                                lineNumber: 1503,
                                                 columnNumber: 17
                                             }, this),
                                             formData.documents.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4083,7 +4067,7 @@ function ApplyPage() {
                                                         children: "Uploaded Documents"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1515,
+                                                        lineNumber: 1513,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4096,18 +4080,18 @@ function ApplyPage() {
                                                                 ]
                                                             }, index, true, {
                                                                 fileName: "[project]/app/form/page.tsx",
-                                                                lineNumber: 1518,
+                                                                lineNumber: 1516,
                                                                 columnNumber: 25
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/form/page.tsx",
-                                                        lineNumber: 1516,
+                                                        lineNumber: 1514,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1514,
+                                                lineNumber: 1512,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4120,7 +4104,7 @@ function ApplyPage() {
                                                             children: "Declaration:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/form/page.tsx",
-                                                            lineNumber: 1528,
+                                                            lineNumber: 1526,
                                                             columnNumber: 21
                                                         }, this),
                                                         " I testify that the information provided in this application is true and accurate to the best of my knowledge. I authorize the verification of this information to determine my eligibility for ",
@@ -4129,24 +4113,24 @@ function ApplyPage() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/form/page.tsx",
-                                                    lineNumber: 1527,
+                                                    lineNumber: 1525,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1526,
+                                                lineNumber: 1524,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1464,
+                                        lineNumber: 1462,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1461,
+                                lineNumber: 1459,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4159,7 +4143,7 @@ function ApplyPage() {
                                         children: "← Back"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1539,
+                                        lineNumber: 1537,
                                         columnNumber: 13
                                     }, this),
                                     currentStep === STEPS.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4169,7 +4153,7 @@ function ApplyPage() {
                                         children: isSubmitting ? "Submitting..." : "Submit Application"
                                     }, void 0, false, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1547,
+                                        lineNumber: 1545,
                                         columnNumber: 15
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                         onClick: handleNext,
@@ -4180,19 +4164,19 @@ function ApplyPage() {
                                                 children: "→"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/form/page.tsx",
-                                                lineNumber: 1560,
+                                                lineNumber: 1558,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/form/page.tsx",
-                                        lineNumber: 1555,
+                                        lineNumber: 1553,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/form/page.tsx",
-                                lineNumber: 1538,
+                                lineNumber: 1536,
                                 columnNumber: 11
                             }, this)
                         ]

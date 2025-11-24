@@ -370,6 +370,7 @@ export default function AddCasePage() {
       submitData.append("zakatResourceSource", formData.zakatResourceSource)
       submitData.append("reference1", JSON.stringify(formData.reference1))
       submitData.append("reference2", JSON.stringify(formData.reference2))
+      submitData.append("skipEmail", "false") // New cases send emails
 
       for (let i = 0; i < formData.documents.length; i++) {
         const file = formData.documents[i]
@@ -640,8 +641,6 @@ export default function AddCasePage() {
                     <option value="">Select gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-                    <option value="other">Other</option>
-                    <option value="prefer-not">Prefer not to say</option>
                   </select>
                   {errors.gender && (
                     <p className="text-red-600 text-sm mt-1 flex items-center gap-1">

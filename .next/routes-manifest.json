@@ -70,6 +70,23 @@
       "namedRegex": "^/api/grants/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/grants/[id]/payment-documents",
+      "regex": "^/api/grants/([^/]+?)/payment\\-documents(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/grants/(?<nxtPid>[^/]+?)/payment\\-documents(?:/)?$"
+    },
+    {
+      "page": "/api/grants/[id]/payment-documents/[documentId]",
+      "regex": "^/api/grants/([^/]+?)/payment\\-documents/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid",
+        "nxtPdocumentId": "nxtPdocumentId"
+      },
+      "namedRegex": "^/api/grants/(?<nxtPid>[^/]+?)/payment\\-documents/(?<nxtPdocumentId>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/messages/conversations/[conversationId]",
       "regex": "^/api/messages/conversations/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -84,6 +101,14 @@
         "nxtPconversationId": "nxtPconversationId"
       },
       "namedRegex": "^/api/messages/conversations/(?<nxtPconversationId>[^/]+?)/mark\\-read(?:/)?$"
+    },
+    {
+      "page": "/api/staff/messages/conversations/[conversationId]",
+      "regex": "^/api/staff/messages/conversations/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPconversationId": "nxtPconversationId"
+      },
+      "namedRegex": "^/api/staff/messages/conversations/(?<nxtPconversationId>[^/]+?)(?:/)?$"
     },
     {
       "page": "/api/users/[userId]",
@@ -257,6 +282,24 @@
       "namedRegex": "^/api/payments(?:/)?$"
     },
     {
+      "page": "/api/staff/messages/conversations",
+      "regex": "^/api/staff/messages/conversations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/staff/messages/conversations(?:/)?$"
+    },
+    {
+      "page": "/api/staff/messages/send",
+      "regex": "^/api/staff/messages/send(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/staff/messages/send(?:/)?$"
+    },
+    {
+      "page": "/api/staff/users",
+      "regex": "^/api/staff/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/staff/users(?:/)?$"
+    },
+    {
       "page": "/api/users",
       "regex": "^/api/users(?:/)?$",
       "routeKeys": {},
@@ -305,6 +348,12 @@
       "namedRegex": "^/staff/cases/add(?:/)?$"
     },
     {
+      "page": "/staff/cases/add-old",
+      "regex": "^/staff/cases/add\\-old(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff/cases/add\\-old(?:/)?$"
+    },
+    {
       "page": "/staff/dashboard",
       "regex": "^/staff/dashboard(?:/)?$",
       "routeKeys": {},
@@ -317,10 +366,22 @@
       "namedRegex": "^/staff/login(?:/)?$"
     },
     {
+      "page": "/staff/messages",
+      "regex": "^/staff/messages(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff/messages(?:/)?$"
+    },
+    {
       "page": "/staff/signup",
       "regex": "^/staff/signup(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/staff/signup(?:/)?$"
+    },
+    {
+      "page": "/staff/users",
+      "regex": "^/staff/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff/users(?:/)?$"
     }
   ],
   "dataRoutes": [],

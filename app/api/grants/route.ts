@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: error }, { status: 401 })
     }
 
-    const { applicantId, grantedAmount, amountGranted, status, remarks, notes } = await request.json()
+    const { applicantId, grantedAmount, amountGranted, status, remarks, notes, numberOfMonths, skipEmail } = await request.json()
 
     if (!mongoose.Types.ObjectId.isValid(applicantId)) {
       return NextResponse.json({ message: "Invalid applicantId" }, { status: 400 })
@@ -27,6 +27,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Applicant not found" }, { status: 404 })
     }
 
+    // Check if this is an old case - if skipEmail is not provided, check applicant's isOldCase field
+    const shouldSkipEmail = skipEmail === true || (applicant as any).isOldCase === true
+
     // Support both field names for backwards compatibility
     // Handle both undefined and null cases, but allow 0 as a valid value
     const amount = grantedAmount !== undefined && grantedAmount !== null 
@@ -35,8 +38,9 @@ export async function POST(request: NextRequest) {
         ? amountGranted 
         : null
 
-    if (amount === null || amount === undefined) {
-      return NextResponse.json({ message: "grantedAmount is required" }, { status: 400 })
+    // Either grantedAmount or numberOfMonths must be provided
+    if ((amount === null || amount === undefined) && (numberOfMonths === null || numberOfMonths === undefined)) {
+      return NextResponse.json({ message: "Either grantedAmount or numberOfMonths is required" }, { status: 400 })
     }
 
     const grantRemarks = remarks || notes || ""
@@ -47,16 +51,27 @@ export async function POST(request: NextRequest) {
       ? status.trim() 
       : "Pending"
     
+    // Check if grant already exists for this applicant
+    const existingGrant = await Grant.findOne({ applicantId })
+    
     // Create grant with ONLY the new field names - never include amountGranted
     const grantData: any = {
       applicantId,
-      grantedAmount: Number(amount),
       status: grantStatus,
     }
     
-    console.log("Creating grant:", {
+    if (amount !== null && amount !== undefined) {
+      grantData.grantedAmount = Number(amount)
+    }
+    
+    if (numberOfMonths !== null && numberOfMonths !== undefined) {
+      grantData.numberOfMonths = Number(numberOfMonths)
+    }
+    
+    console.log("Creating/updating grant:", {
       applicantId,
-      grantedAmount: grantData.grantedAmount,
+      grantedAmount: grantData.grantedAmount || "not set",
+      numberOfMonths: grantData.numberOfMonths || "not set",
       status: grantData.status,
       remarks: grantRemarks || "none"
     })
@@ -64,12 +79,20 @@ export async function POST(request: NextRequest) {
     if (grantRemarks) {
       grantData.remarks = grantRemarks
     }
+    
+    let grant
+    if (existingGrant) {
+      // Update existing grant
+      Object.assign(existingGrant, grantData)
+      grant = existingGrant
+    } else {
+      // Create new grant
+      grant = new Grant(grantData)
+    }
 
     // Explicitly ensure amountGranted is not in the data
     delete grantData.amountGranted
     delete grantData.notes
-
-    const grant = new Grant(grantData)
     
     // Double-check that amountGranted is not set on the document
     if ('amountGranted' in grant.toObject()) {
@@ -77,7 +100,9 @@ export async function POST(request: NextRequest) {
     }
     
     // Unmark amountGranted as modified to prevent validation
-    grant.markModified('grantedAmount')
+    if (grantData.grantedAmount !== undefined) {
+      grant.markModified('grantedAmount')
+    }
     grant.unmarkModified('amountGranted')
 
     // Save with validation, but catch any validation errors
@@ -127,11 +152,12 @@ export async function POST(request: NextRequest) {
     delete grantObj.amountGranted
     delete grantObj.notes
 
-    // Send email to applicant (fire-and-forget, don't block response)
-    ;(async () => {
-      try {
-        const applicant = grantObj.applicantId as any
-        if (applicant && applicant.email) {
+    // Send email to applicant (fire-and-forget, don't block response) - skip if shouldSkipEmail is true
+    if (!shouldSkipEmail) {
+      ;(async () => {
+        try {
+          const applicant = grantObj.applicantId as any
+          if (applicant && applicant.email) {
           const baseUrl = new URL(request.url).origin
           const statusPageUrl = `${baseUrl}/`
 
@@ -195,7 +221,10 @@ JazakAllahu Khairan.
         console.error("[grant] Failed to send email:", emailError)
         // Don't throw - email failure shouldn't block the grant creation
       }
-    })()
+      })()
+    } else {
+      console.log("[grant] Skipping email notification (old case or skipEmail flag set)")
+    }
 
     return NextResponse.json(grantObj, { status: 201 })
   } catch (error: any) {

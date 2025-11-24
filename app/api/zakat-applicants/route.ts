@@ -116,6 +116,9 @@ export async function POST(request: NextRequest) {
       ? formData.get("zakatResourceSource")!.toString()
       : undefined
 
+    // Check if this is an old case (skipEmail flag)
+    const skipEmail = formData.get("skipEmail")?.toString() === "true"
+
     const applicantData: any = {
       firstName: formData.get("firstName"),
       lastName: formData.get("lastName"),
@@ -150,6 +153,7 @@ export async function POST(request: NextRequest) {
       reference2,
       documents: documentMetadata,
       caseId: await generateUniqueCaseId(),
+      isOldCase: skipEmail, // Store flag to indicate this is an old case
     }
 
     const applicant = new ZakatApplicant(applicantData)
@@ -158,17 +162,18 @@ export async function POST(request: NextRequest) {
     console.log(" Applicant saved with", applicant.documents.length, "documents")
     console.log("Saved zakatResourceSource:", applicant.zakatResourceSource)
 
-    // Fire-and-forget emails (do not block success)
-    ;(async () => {
-      try {
-        const baseUrl = new URL(request.url).origin
-        const adminEmail = getAdminEmail()
-        const magicLink = generateMagicLink(applicant._id.toString(), baseUrl)
-        
-        console.log(`Generated magic link for applicant ${applicant._id.toString()}: ${magicLink}`)
+    // Fire-and-forget emails (do not block success) - skip if skipEmail is true
+    if (!skipEmail) {
+      ;(async () => {
+        try {
+          const baseUrl = new URL(request.url).origin
+          const adminEmail = getAdminEmail()
+          const magicLink = generateMagicLink(applicant._id.toString(), baseUrl)
+          
+          console.log(`Generated magic link for applicant ${applicant._id.toString()}: ${magicLink}`)
 
-        // Email to applicant (if email provided)
-        if (applicant.email) {
+          // Email to applicant (if email provided)
+          if (applicant.email) {
           await sendEmail({
             to: applicant.email,
             subject: `We received your application (Case ID: ${applicant.caseId})`,
@@ -232,7 +237,10 @@ We will review your application and get back to you. JazakAllahu Khairan.
       } catch (e) {
         console.error("Background email send failed:", e)
       }
-    })().catch(() => {})
+      })().catch(() => {})
+    } else {
+      console.log("Skipping email notifications (old case)")
+    }
 
     return NextResponse.json({ message: "Application saved successfully", applicant }, { status: 201 })
   } catch (error: any) {

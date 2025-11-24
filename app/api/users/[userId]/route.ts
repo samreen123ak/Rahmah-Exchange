@@ -3,19 +3,21 @@ import { dbConnect } from "@/lib/db"
 import User from "@/lib/models/User"
 import { requireRole } from "@/lib/role-middleware"
 import { ensureInternalEmail } from "@/lib/internal-email"
+import bcrypt from "bcryptjs"
 
 /**
  * GET /api/users/[userId] - Get user details
  */
-export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   const roleCheck = await requireRole(request, ["admin", "caseworker", "approver", "treasurer"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
   }
 
   try {
+    const { userId } = await params
     await dbConnect()
-    const user = await User.findById(params.userId, "-password").lean()
+    const user = await User.findById(userId, "-password").lean()
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 })
     }
@@ -28,24 +30,35 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
 /**
  * PATCH /api/users/[userId] - Update user (admin only)
  */
-export async function PATCH(request: NextRequest, { params }: { params: { userId: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   const roleCheck = await requireRole(request, ["admin"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
   }
 
   try {
-    const { name, role, isActive } = await request.json()
+    const { userId } = await params
+    const { name, email, password, role, isActive } = await request.json()
     await dbConnect()
 
-    const user = await User.findById(params.userId)
+    const user = await User.findById(userId)
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 })
+    }
+
+    // Check if email is being changed and if it's already taken by another user
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ email: email.toLowerCase(), _id: { $ne: userId } })
+      if (existingUser) {
+        return NextResponse.json({ message: "Email already in use by another user" }, { status: 400 })
+      }
+      user.email = email.toLowerCase()
     }
 
     if (name) {
       user.name = name
     }
+    
     if (role) {
       const validRoles = ["admin", "caseworker", "approver", "treasurer", "applicant"]
       if (!validRoles.includes(role)) {
@@ -53,14 +66,21 @@ export async function PATCH(request: NextRequest, { params }: { params: { userId
       }
       user.role = role
     }
+    
     if (isActive !== undefined) {
       user.isActive = isActive
     }
 
+    // Update password if provided
+    if (password && password.trim() !== "") {
+      const salt = await bcrypt.genSalt(10)
+      user.password = await bcrypt.hash(password, salt)
+    }
+
     await user.save()
 
-    // Ensure internal email is updated if role changed
-    if (role) {
+    // Ensure internal email is updated if role or name changed
+    if (role || name) {
       await ensureInternalEmail(user._id.toString())
     }
 

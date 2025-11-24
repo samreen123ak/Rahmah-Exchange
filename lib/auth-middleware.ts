@@ -40,7 +40,23 @@ export async function authenticateRequest(request: NextRequest) {
     }
 
     // Ensure role exists
-    if (!user.role) user.role = "user"
+    // Special case: if user is staff@gmail.com and has no role, set to admin
+    // This handles legacy users that were created before role field was added
+    if (!user.role) {
+      if (user.email?.toLowerCase() === "staff@gmail.com") {
+        // Update the user in database to have admin role
+        try {
+          await User.findByIdAndUpdate(decoded.id, { role: "admin" })
+          user.role = "admin"
+          console.log("✅ Auto-updated staff@gmail.com to admin role")
+        } catch (err) {
+          console.error("Failed to update user role:", err)
+          user.role = "admin" // Set locally anyway
+        }
+      } else {
+        user.role = "user"
+      }
+    }
 
     return { user, error: null }
   } catch (error) {

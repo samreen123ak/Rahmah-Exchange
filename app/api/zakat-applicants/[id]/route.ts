@@ -64,6 +64,9 @@ import DocumentAudit from "@/lib/models/DocumentAudit"
 import { authenticateRequest } from "@/lib/auth-middleware"
 import { verifyApplicantToken } from "@/lib/applicant-token-utils"
 import { sendEmail } from "@/lib/email"
+import User from "@/lib/models/User"
+import CaseAssignment from "@/lib/models/CaseAssignment"
+import CaseNote from "@/lib/models/CaseNote"
 
 // GET by ID – supports both public access and applicant portal access with token
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -95,12 +98,19 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-// PUT – requires auth
+// PUT – requires auth (only caseworker and admin can edit applicant data)
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
-    const { error } = await authenticateRequest(request)
-    if (error) return NextResponse.json({ message: error }, { status: 401 })
+    const { user, error } = await authenticateRequest(request)
+    if (error || !user) return NextResponse.json({ message: error || "Unauthorized" }, { status: 401 })
+
+    // Restrict editing to only caseworker and admin
+    if (user.role !== "caseworker" && user.role !== "admin") {
+      return NextResponse.json({ 
+        message: "Only caseworkers and admins can edit applicant data" 
+      }, { status: 403 })
+    }
 
     const body = await request.json()
     await dbConnect()
@@ -117,6 +127,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
     
     const statusChanged = currentApplicant && body.status && currentApplicant.status !== body.status
+    const previousStatus = currentApplicant.status
+    const newStatus = body.status
 
     // Don't overwrite documents if they're not provided in the body
     // Documents should be managed separately via the documents API
@@ -131,16 +143,271 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const updated = await ZakatApplicant.findByIdAndUpdate(id, updateBody, { new: true, runValidators: true })
     if (!updated) return NextResponse.json({ error: "Applicant not found" }, { status: 404 })
 
-    if (statusChanged && updated.email && (body.status === "Approved" || body.status === "Rejected")) {
-      const isApproved = body.status === "Approved"
-      const subject = isApproved ? "Your Rahmah Application - Approved" : "Your Rahmah Application - Update"
-      const htmlContent = generateStatusEmailTemplate(updated, isApproved)
+    // Send emails based on status changes
+    if (statusChanged) {
+      // Email to applicant if approved or rejected
+      if (updated.email && (newStatus === "Approved" || newStatus === "Rejected")) {
+        const isApproved = newStatus === "Approved"
+        const subject = isApproved ? "Your Rahmah Application - Approved" : "Your Rahmah Application - Update"
+        
+        // Get approval amount from approval notes if approved
+        let approvalAmount: number | null = null
+        if (isApproved) {
+          try {
+            const latestApprovalNote = await CaseNote.findOne({
+              caseId: updated.caseId || id,
+              noteType: "approval_note",
+              authorRole: "approver",
+              approvalAmount: { $exists: true, $ne: null }
+            }).sort({ createdAt: -1 }).lean()
+            
+            if (latestApprovalNote && (latestApprovalNote as any).approvalAmount) {
+              approvalAmount = (latestApprovalNote as any).approvalAmount
+            }
+          } catch (err) {
+            console.error("[email] Failed to fetch approval amount:", err)
+          }
+        }
+        
+        const htmlContent = generateStatusEmailTemplate(updated, isApproved, approvalAmount)
 
-      await sendEmail({
-        to: updated.email,
-        subject,
-        html: htmlContent,
-      })
+        await sendEmail({
+          to: updated.email,
+          subject,
+          html: htmlContent,
+        }).catch((err) => console.error("[email] Failed to send to applicant:", err))
+      }
+
+      // If approver approved → email treasurer
+      if (user.role === "approver" && newStatus === "Approved") {
+        try {
+          const treasurers = await User.find({ role: "treasurer", isActive: true }).lean()
+          
+          if (treasurers.length > 0) {
+            const baseUrl = new URL(request.url).origin
+            const caseUrl = `${baseUrl}/staff/cases/${id}`
+            
+            // Get latest approval note with approval amount
+            const latestApprovalNote = await CaseNote.findOne({
+              caseId: updated.caseId || id,
+              noteType: "approval_note",
+              authorRole: "approver",
+              approvalAmount: { $exists: true, $ne: null }
+            }).sort({ createdAt: -1 }).lean()
+
+            // Get all approval notes for display
+            const approvalNotes = await CaseNote.find({
+              caseId: updated.caseId || id,
+              noteType: "approval_note",
+              authorRole: "approver"
+            }).sort({ createdAt: -1 }).limit(5).lean()
+
+            // Get approval amount from latest note
+            const approvalAmount = latestApprovalNote && (latestApprovalNote as any).approvalAmount 
+              ? (latestApprovalNote as any).approvalAmount 
+              : null
+
+            // Approval amount display - prominently shown
+            const approvalAmountHtml = approvalAmount
+              ? `<div style="background-color: #ecfdf5; border: 2px solid #10b981; border-radius: 8px; padding: 20px; margin: 15px 0; text-align: center;">
+                  <p style="margin: 0; font-weight: bold; color: #065f46; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px;">Approved Amount</p>
+                  <p style="margin: 10px 0 0 0; font-size: 32px; font-weight: bold; color: #10b981;">$${approvalAmount.toLocaleString()}</p>
+                </div>`
+              : ''
+
+            const notesHtml = approvalNotes.length > 0
+              ? `<div style="background-color: #f0f9ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                  <h3 style="margin-top: 0; color: #0d9488;">Approval Notes:</h3>
+                  ${approvalNotes.map((note: any) => `
+                    <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e0e7ff;">
+                      ${note.approvalAmount ? `<p style="margin: 0; font-weight: bold; color: #0d9488;">Approval Amount: $${note.approvalAmount.toLocaleString()}</p>` : ''}
+                      <p style="margin: 5px 0 0 0;">${note.content || ''}</p>
+                      <p style="margin: 5px 0 0 0; font-size: 12px; color: #6b7280;">By ${note.authorName || 'Approver'} on ${new Date(note.createdAt).toLocaleDateString()}</p>
+                    </div>
+                  `).join('')}
+                </div>`
+              : ''
+
+            for (const treasurer of treasurers) {
+              const treasurerEmail = (treasurer as any).internalEmail || (treasurer as any).email
+              if (treasurerEmail) {
+                await sendEmail({
+                  to: treasurerEmail,
+                  subject: `Case Approved - Payment Approval Required: ${updated.caseId || id}`,
+                  html: `
+                    <!DOCTYPE html>
+                    <html>
+                      <head>
+                        <meta charset="UTF-8">
+                        <style>
+                          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                          .header { background: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
+                          .content { background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-radius: 0 0 8px 8px; }
+                          .button { display: inline-block; background: #0d9488; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 15px 0; }
+                          .footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
+                          strong { color: #0d9488; }
+                        </style>
+                      </head>
+                      <body>
+                        <div class="container">
+                          <div class="header">
+                            <h1>Case Approved - Payment Approval Required</h1>
+                          </div>
+                          <div class="content">
+                            <p>Dear ${(treasurer as any).name || 'Treasurer'},</p>
+                            <p>A case has been <strong>approved</strong> by an approver and requires your review for payment approval.</p>
+                            
+                            <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #0d9488;">
+                              <p><strong>Case Details:</strong></p>
+                              <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li><strong>Case ID:</strong> ${updated.caseId || id}</li>
+                                <li><strong>Applicant:</strong> ${updated.firstName || ''} ${updated.lastName || ''}</li>
+                                <li><strong>Email:</strong> ${updated.email || 'N/A'}</li>
+                                <li><strong>Amount Requested:</strong> $${updated.amountRequested || 'N/A'}</li>
+                              </ul>
+                            </div>
+
+                            ${approvalAmountHtml}
+
+                            ${notesHtml}
+
+                            <p>Please review the case and approve the payment when ready.</p>
+                            <p><a href="${caseUrl}" class="button">Review Case</a></p>
+                            
+                            <p>Thank you for your attention.</p>
+                            <p>Warm regards,<br><strong>Rahmah Exchange System</strong></p>
+                            <div class="footer">
+                              <p>© 2025 Rahmah Exchange. All rights reserved.</p>
+                              <p>This is an automated message. Please do not reply to this email.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </body>
+                    </html>
+                  `,
+                }).catch((err) => console.error(`[email] Failed to send to treasurer ${treasurerEmail}:`, err))
+              }
+            }
+          }
+        } catch (err) {
+          console.error("[email] Failed to send treasurer notification:", err)
+        }
+      }
+
+      // If case is rejected → email caseworker(s) with notes
+      if (newStatus === "Rejected") {
+        try {
+          // Find caseworkers assigned to this case
+          const assignments = await CaseAssignment.find({
+            applicantId: id,
+            status: { $in: ["pending", "accepted", "active"] }
+          }).populate("assignedTo", "name email internalEmail").lean()
+
+          // Get rejection notes
+          const rejectionNotes = await CaseNote.find({
+            caseId: updated.caseId || id,
+            noteType: { $in: ["decision", "internal_note", "approval_note"] },
+            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } // Notes from last 24 hours
+          }).sort({ createdAt: -1 }).limit(10).lean()
+
+          const notesHtml = rejectionNotes.length > 0
+            ? `<div style="background-color: #fef2f2; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ef4444;">
+                <h3 style="margin-top: 0; color: #dc2626;">Rejection Notes:</h3>
+                ${rejectionNotes.map((note: any) => `
+                  <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #fecaca;">
+                    <p style="margin: 0; font-weight: bold;">${note.title || 'Note'}</p>
+                    <p style="margin: 5px 0 0 0;">${note.content || ''}</p>
+                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #6b7280;">By ${note.authorName || note.authorRole || 'Staff'} on ${new Date(note.createdAt).toLocaleDateString()}</p>
+                  </div>
+                `).join('')}
+              </div>`
+            : '<p style="color: #6b7280; font-style: italic;">No notes available for this rejection.</p>'
+
+          // Send to assigned caseworkers
+          const caseworkerEmails = new Set<string>()
+          for (const assignment of assignments) {
+            const caseworker = (assignment as any).assignedTo
+            if (caseworker) {
+              const email = caseworker.internalEmail || caseworker.email
+              if (email) caseworkerEmails.add(email)
+            }
+          }
+
+          // If no assigned caseworkers, send to all active caseworkers
+          if (caseworkerEmails.size === 0) {
+            const allCaseworkers = await User.find({ role: "caseworker", isActive: true }).lean()
+            for (const cw of allCaseworkers) {
+              const email = (cw as any).internalEmail || (cw as any).email
+              if (email) caseworkerEmails.add(email)
+            }
+          }
+
+          const baseUrl = new URL(request.url).origin
+          const caseUrl = `${baseUrl}/staff/cases/${id}`
+
+          for (const email of caseworkerEmails) {
+            await sendEmail({
+              to: email,
+              subject: `Case Rejected: ${updated.caseId || id} - ${updated.firstName || ''} ${updated.lastName || ''}`,
+              html: `
+                <!DOCTYPE html>
+                <html>
+                  <head>
+                    <meta charset="UTF-8">
+                    <style>
+                      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                      .header { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
+                      .content { background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-radius: 0 0 8px 8px; }
+                      .button { display: inline-block; background: #dc2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 15px 0; }
+                      .footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
+                      strong { color: #dc2626; }
+                    </style>
+                  </head>
+                  <body>
+                    <div class="container">
+                      <div class="header">
+                        <h1>Case Rejected</h1>
+                      </div>
+                      <div class="content">
+                        <p>Dear Caseworker,</p>
+                        <p>A case you are assigned to has been <strong>rejected</strong>.</p>
+                        
+                        <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #dc2626;">
+                          <p><strong>Case Details:</strong></p>
+                          <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li><strong>Case ID:</strong> ${updated.caseId || id}</li>
+                            <li><strong>Applicant:</strong> ${updated.firstName || ''} ${updated.lastName || ''}</li>
+                            <li><strong>Email:</strong> ${updated.email || 'N/A'}</li>
+                            <li><strong>Amount Requested:</strong> $${updated.amountRequested || 'N/A'}</li>
+                            <li><strong>Previous Status:</strong> ${previousStatus || 'N/A'}</li>
+                            <li><strong>New Status:</strong> <strong style="color: #dc2626;">Rejected</strong></li>
+                          </ul>
+                        </div>
+
+                        ${notesHtml}
+
+                        <p>Please review the case and notes for more information.</p>
+                        <p><a href="${caseUrl}" class="button">View Case</a></p>
+                        
+                        <p>Thank you for your attention.</p>
+                        <p>Warm regards,<br><strong>Rahmah Exchange System</strong></p>
+                        <div class="footer">
+                          <p>© 2025 Rahmah Exchange. All rights reserved.</p>
+                          <p>This is an automated message. Please do not reply to this email.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </body>
+                </html>
+              `,
+            }).catch((err) => console.error(`[email] Failed to send to caseworker ${email}:`, err))
+          }
+        } catch (err) {
+          console.error("[email] Failed to send caseworker notification:", err)
+        }
+      }
     }
 
     return NextResponse.json({ message: "Applicant updated successfully", applicant: updated })
@@ -166,7 +433,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
   }
 }
 
-function generateStatusEmailTemplate(applicant: any, isApproved: boolean): string {
+function generateStatusEmailTemplate(applicant: any, isApproved: boolean, approvalAmount: number | null = null): string {
   const firstName = applicant.firstName || "Applicant"
   const caseId = applicant.caseId || "N/A"
   const amountRequested = applicant.amountRequested || "N/A"
@@ -183,6 +450,8 @@ function generateStatusEmailTemplate(applicant: any, isApproved: boolean): strin
             .header { background: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
             .content { background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-radius: 0 0 8px 8px; }
             .success-badge { display: inline-block; background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin: 10px 0; }
+            .amount-box { background: #ecfdf5; border: 2px solid #10b981; border-radius: 8px; padding: 15px; margin: 15px 0; text-align: center; }
+            .amount-value { font-size: 24px; font-weight: bold; color: #10b981; margin: 10px 0; }
             .footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
             strong { color: #0d9488; }
           </style>
@@ -201,7 +470,14 @@ function generateStatusEmailTemplate(applicant: any, isApproved: boolean): strin
                 <li><strong>Case ID:</strong> ${caseId}</li>
                 <li><strong>Amount Requested:</strong> $${amountRequested}</li>
               </ul>
-              <p>Our team will be in touch with you shortly with next steps regarding your grant. If you have any questions, please don't hesitate to reach out.</p>
+              ${approvalAmount ? `
+                <div class="amount-box">
+                  <p style="margin: 0; font-weight: bold; color: #065f46;">Approved Amount:</p>
+                  <div class="amount-value">$${approvalAmount.toLocaleString()}</div>
+                </div>
+              ` : ''}
+              <p><strong>Great news!</strong> Your case has been approved and payment will be released to you soon. Our team will be in touch with you shortly with next steps regarding your grant.</p>
+              <p>If you have any questions, please don't hesitate to reach out.</p>
               <p>Thank you for choosing Rahmah Exchange.</p>
               <p>Warm regards,<br><strong>Rahmah Support Team</strong></p>
               <div class="footer">

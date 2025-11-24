@@ -33,9 +33,19 @@ export async function DELETE(request: NextRequest, context: any) {
       actionBy = "caseworker"
       deletedBy = roleCheck.user?.email || "caseworker"
     } else {
-      // Applicant deleting their own document - DISABLED
-      // Applicants can no longer delete documents
-      return NextResponse.json({ error: "Unauthorized: Applicants cannot delete documents" }, { status: 403 })
+      // Applicant deleting their own document - verify token and ownership
+      const token = new URL(request.url).searchParams.get("token") || ""
+      if (!token) {
+        return NextResponse.json({ error: "Unauthorized: Token required" }, { status: 401 })
+      }
+
+      const decoded = verifyApplicantToken(token)
+      if (!decoded || decoded.applicantId !== applicantId) {
+        return NextResponse.json({ error: "Unauthorized: Invalid token or not your document" }, { status: 403 })
+      }
+
+      actionBy = "applicant"
+      deletedBy = applicantId
     }
 
     await dbConnect()

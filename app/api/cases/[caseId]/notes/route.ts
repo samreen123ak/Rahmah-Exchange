@@ -8,7 +8,7 @@ import { requireRole } from "@/lib/role-middleware"
  * GET /api/cases/[caseId]/notes - Get all notes for a case
  */
 export async function GET(request: NextRequest, { params }: { params: { caseId: string } }) {
-  const roleCheck = await requireRole(request, ["admin", "caseworker", "approver"])
+  const roleCheck = await requireRole(request, ["admin", "caseworker", "approver", "treasurer"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
   }
@@ -39,13 +39,13 @@ export async function GET(request: NextRequest, { params }: { params: { caseId: 
  * POST /api/cases/[caseId]/notes - Create a new case note
  */
 export async function POST(request: NextRequest, { params }: { params: { caseId: string } }) {
-  const roleCheck = await requireRole(request, ["admin", "caseworker", "approver"])
+  const roleCheck = await requireRole(request, ["admin", "caseworker", "approver", "treasurer"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
   }
 
   try {
-    const { title, content, noteType = "internal_note", isInternal = true, priority = "medium" } = await request.json()
+    const { title, content, noteType = "internal_note", isInternal = true, priority = "medium", approvalAmount } = await request.json()
 
     if (!content) {
       return NextResponse.json({ message: "Content is required" }, { status: 400 })
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest, { params }: { params: { caseId:
       return NextResponse.json({ message: "Case not found" }, { status: 404 })
     }
 
-    const note = await CaseNote.create({
+    const noteData: any = {
       applicantId: applicant._id,
       caseId,
       authorId: roleCheck.user?._id,
@@ -72,7 +72,13 @@ export async function POST(request: NextRequest, { params }: { params: { caseId:
       noteType,
       isInternal,
       priority,
-    })
+    }
+
+    if (approvalAmount !== undefined && approvalAmount !== null) {
+      noteData.approvalAmount = Number(approvalAmount)
+    }
+
+    const note = await CaseNote.create(noteData)
 
     await note.populate("authorId", "name email")
 

@@ -6,7 +6,7 @@ const messageSchema = new mongoose.Schema(
     caseId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ZakatApplicant",
-      required: true,
+      required: false, // Made optional for staff conversations
       index: true,
     },
     conversationId: {

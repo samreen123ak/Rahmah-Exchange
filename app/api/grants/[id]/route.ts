@@ -54,7 +54,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const { id } = await params
-    const { grantedAmount, amountGranted, status, remarks, notes } = await request.json()
+    const { grantedAmount, amountGranted, status, remarks, notes, numberOfMonths } = await request.json()
 
     await dbConnect()
 
@@ -68,6 +68,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
     if (remarks !== undefined || notes !== undefined) {
       updateData.remarks = remarks || notes || ""
+    }
+    if (numberOfMonths !== undefined) {
+      updateData.numberOfMonths = numberOfMonths
     }
 
     const updated = await Grant.findByIdAndUpdate(id, updateData, { new: true }).populate("applicantId")

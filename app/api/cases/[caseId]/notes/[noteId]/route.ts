@@ -11,13 +11,13 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { caseId: string; noteId: string } }
 ) {
-  const roleCheck = await requireRole(request, ["admin", "caseworker", "approver"])
+  const roleCheck = await requireRole(request, ["admin", "caseworker", "approver", "treasurer"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
   }
 
   try {
-    const { title, content, priority, isResolved } = await request.json()
+    const { title, content, priority, isResolved, approvalAmount } = await request.json()
     await dbConnect()
 
     const noteId = (await params).noteId
@@ -30,6 +30,9 @@ export async function PATCH(
     if (title) updateData.title = title
     if (content) updateData.content = content
     if (priority) updateData.priority = priority
+    if (approvalAmount !== undefined) {
+      updateData.approvalAmount = approvalAmount !== null && approvalAmount !== "" ? Number(approvalAmount) : undefined
+    }
     if (isResolved !== undefined) {
       updateData.isResolved = isResolved
       if (isResolved) {
@@ -54,13 +57,13 @@ export async function PATCH(
 }
 
 /**
- * DELETE /api/cases/[caseId]/notes/[noteId] - Delete case note (admin only)
+ * DELETE /api/cases/[caseId]/notes/[noteId] - Delete case note (admin and approver only)
  */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { caseId: string; noteId: string } }
 ) {
-  const roleCheck = await requireRole(request, ["admin"])
+  const roleCheck = await requireRole(request, ["admin", "approver", "caseworker", "treasurer"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
   }

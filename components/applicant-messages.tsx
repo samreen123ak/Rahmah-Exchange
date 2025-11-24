@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Send, Paperclip, AlertCircle, CheckCircle2, Image as ImageIcon, X, Download } from "lucide-react"
+import { Send, Paperclip, AlertCircle, CheckCircle2, Image as ImageIcon, X, Download, FileText } from "lucide-react"
 
 interface Message {
   _id: string
@@ -126,16 +126,25 @@ export default function ApplicantMessages({
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"))
+    // Accept both images and PDFs
+    const validFiles = files.filter((file) => 
+      file.type.startsWith("image/") || file.type === "application/pdf"
+    )
     
-    if (imageFiles.length > 0) {
-      setSelectedImages((prev) => [...prev, ...imageFiles])
-      imageFiles.forEach((file) => {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          setImagePreviews((prev) => [...prev, e.target?.result as string])
+    if (validFiles.length > 0) {
+      setSelectedImages((prev) => [...prev, ...validFiles])
+      // Only create previews for images, not PDFs
+      validFiles.forEach((file) => {
+        if (file.type.startsWith("image/")) {
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            setImagePreviews((prev) => [...prev, e.target?.result as string])
+          }
+          reader.readAsDataURL(file)
+        } else {
+          // For PDFs, add a placeholder
+          setImagePreviews((prev) => [...prev, "pdf-placeholder"])
         }
-        reader.readAsDataURL(file)
       })
     }
   }
@@ -216,7 +225,7 @@ export default function ApplicantMessages({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-3 bg-[#e5ddd5]">
+      <div className="flex-1 overflow-y-auto px-4 py-3 bg-gray-50 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {loading ? (
           <div className="flex justify-center pt-10">
             <div className="animate-spin h-8 w-8 border-b-2 border-teal-600 rounded-full"></div>
@@ -228,25 +237,37 @@ export default function ApplicantMessages({
             const isMine = msg.senderRole === "applicant"
 
             return (
-              <div key={msg._id} className={`w-full flex mb-3 ${isMine ? "justify-end" : "justify-start"}`}>
-                <div className={`flex items-end gap-2 max-w-[75%]`}>
-                  
+              <div key={msg._id} className={`flex ${isMine ? "justify-end" : "justify-start"} mb-4`}>
+                <div className="flex items-start gap-2">
                   {/* Avatar for team messages */}
                   {!isMine && (
-                    <div className="w-8 h-8 rounded-full bg-gray-400 text-white text-xs font-bold flex items-center justify-center">
-                      {getInitials(msg.senderName)}
+                    <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-teal-600 font-semibold text-sm">
+                        {getInitials(msg.senderName)}
+                      </span>
                     </div>
                   )}
 
                   {/* Bubble */}
                   <div
-                    className={`px-4 py-2 rounded-2xl shadow text-sm whitespace-pre-wrap break-words ${
+                    className={`max-w-md px-4 py-2 rounded-lg ${
                       isMine
-                        ? "bg-teal-600 text-white rounded-br-none"
-                        : "bg-white text-gray-800 rounded-bl-none"
+                        ? "bg-teal-600 text-white"
+                        : "bg-white text-gray-900 border border-gray-200"
                     }`}
                   >
-                    {msg.body}
+                    {!isMine && (
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold text-sm">{msg.senderName}</span>
+                        <span className="text-xs text-gray-500">
+                          {new Date(msg.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      </div>
+                    )}
+                    <p className="text-sm whitespace-pre-wrap">{msg.body}</p>
 
                     {/* Attachments - Images and Files */}
                     {msg.attachments?.length > 0 && (
@@ -288,8 +309,8 @@ export default function ApplicantMessages({
                       </div>
                     )}
 
-                    {/* Time */}
-                    <p className={`text-[10px] mt-1 ${isMine ? "text-teal-100" : "text-gray-500"}`}>
+                    {/* Time - Single timestamp */}
+                    <p className={`text-xs mt-1 ${isMine ? "text-teal-100" : "text-gray-500"}`}>
                       {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </p>
                   </div>
@@ -302,25 +323,42 @@ export default function ApplicantMessages({
         <div ref={msgEndRef}></div>
       </div>
 
-      {/* Image Previews */}
+      {/* Image/File Previews */}
       {imagePreviews.length > 0 && (
         <div className="px-3 pt-3 border-t border-gray-300 bg-white">
           <div className="flex gap-2 flex-wrap">
-            {imagePreviews.map((preview, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={preview}
-                  alt={`Preview ${index + 1}`}
-                  className="w-20 h-20 object-cover rounded-lg"
-                />
-                <button
-                  onClick={() => removeImage(index)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            ))}
+            {imagePreviews.map((preview, index) => {
+              const file = selectedImages[index]
+              const isPDF = file?.type === "application/pdf"
+              
+              return (
+                <div key={index} className="relative">
+                  {isPDF || preview === "pdf-placeholder" ? (
+                    <div className="w-20 h-20 bg-red-50 border-2 border-red-200 rounded-lg flex flex-col items-center justify-center">
+                      <FileText className="w-8 h-8 text-red-600" />
+                      <span className="text-xs text-red-600 mt-1 font-medium">PDF</span>
+                    </div>
+                  ) : (
+                    <img
+                      src={preview}
+                      alt={`Preview ${index + 1}`}
+                      className="w-20 h-20 object-cover rounded-lg"
+                    />
+                  )}
+                  <button
+                    onClick={() => removeImage(index)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                  {file && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 rounded-b-lg truncate">
+                      {file.name}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
@@ -331,28 +369,31 @@ export default function ApplicantMessages({
           <input
             type="file"
             ref={fileInputRef}
-            accept="image/*"
+            accept="image/*,application/pdf"
             multiple
             onChange={handleImageSelect}
             className="hidden"
-            id="image-upload"
+            id="file-upload"
           />
           <label
-            htmlFor="image-upload"
+            htmlFor="file-upload"
             className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 cursor-pointer flex items-center transition"
-            title="Upload images"
+            title="Upload images or PDFs"
           >
-            <ImageIcon className="w-5 h-5" />
+            <Paperclip className="w-5 h-5" />
           </label>
           <div className="flex-1 flex flex-col gap-2">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type your message to staff here..."
+              placeholder={selectedImages.length > 0 ? "Add a message (optional)..." : "Type your message to staff here..."}
               className="w-full px-4 py-2 text-sm border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-600 focus:border-teal-600"
             />
-            {participants.length === 0 && (
+            {selectedImages.length > 0 && (
+              <p className="text-xs text-gray-500">Text is optional when sharing files</p>
+            )}
+            {participants.length === 0 && selectedImages.length === 0 && (
               <p className="text-xs text-gray-500">Loading staff members...</p>
             )}
           </div>

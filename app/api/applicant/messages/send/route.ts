@@ -35,15 +35,27 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData()
     const conversationId = formData.get("conversationId")?.toString()
-    const body = formData.get("body")?.toString()
+    const body = formData.get("body")?.toString() || ""
     const messageType = formData.get("messageType")?.toString() || "text"
     
     // Extract and validate recipientIds - filter out empty/null values
     const recipientIds = (formData.getAll("recipientIds") as string[]).filter(Boolean)
 
-    if (!conversationId || !body) {
+    // Check for attachments
+    const uploadedFiles = formData.getAll("attachments") as any[]
+    const hasAttachments = uploadedFiles.some(f => f && typeof f === "object" && typeof f.arrayBuffer === "function")
+
+    if (!conversationId) {
       return NextResponse.json(
-        { error: "Missing required fields: conversationId and body are required" },
+        { error: "Missing required field: conversationId is required" },
+        { status: 400 }
+      )
+    }
+
+    // Require either body text or attachments
+    if (!body.trim() && !hasAttachments) {
+      return NextResponse.json(
+        { error: "Message must contain either text or attachments" },
         { status: 400 }
       )
     }
@@ -152,8 +164,7 @@ const adminUsers = await User.find({ name: "Admin" })
       return NextResponse.json({ error: "Access denied" }, { status: 403 })
     }
 
-    // Handle file attachments
-    const uploadedFiles = formData.getAll("attachments") as any[]
+    // Handle file attachments (already checked above, but process here)
     const attachments: any[] = []
 
     for (const f of uploadedFiles) {
@@ -192,15 +203,18 @@ const adminUsers = await User.find({ name: "Admin" })
     const senderName = `${applicant.firstName || ""} ${applicant.lastName || ""}`.trim() || "Applicant"
 
     // Create message with proper ObjectId references
+    // Use a default message if body is empty but attachments exist
+    const messageBody = body.trim() || (attachments.length > 0 ? "📎 Shared file(s)" : "")
+    
     const messageData: any = {
       caseId: applicant._id,
+      body: messageBody,
       conversationId,
       applicantId: applicant._id,
       senderEmail,
       senderId: null,
       senderRole: "applicant",
       senderName,
-      body,
       messageType,
       attachments,
       readBy: [
@@ -273,40 +287,54 @@ const adminUsers = await User.find({ name: "Admin" })
 
     // Update conversation
     try {
+      const lastMessageText = messageBody.length > 0 
+        ? messageBody.substring(0, 100)
+        : attachments.length > 0 
+          ? `📎 Shared ${attachments.length} file(s)`
+          : "New message"
+      
       await Conversation.updateOne(
         { conversationId },
         {
           messageCount: (conversation.messageCount || 0) + 1,
           lastMessageAt: new Date(),
-          lastMessage: body.substring(0, 100),
+          lastMessage: lastMessageText,
         }
       )
     } catch (updateError: any) {
       console.error("Failed to update conversation", updateError, updateError?.stack)
     }
 
-    // Send email notifications to staff/admin participants
+    // Send email notifications ONLY to caseworker and admin participants (NOT to applicant)
     const staffParticipants = conversation.participants.filter(
-      (p: any) => p.role !== "applicant"
+      (p: any) => p.role !== "applicant" && (p.role === "caseworker" || p.role === "admin")
     )
+
+    // Also exclude applicant email if somehow included
+    const applicantEmail = applicant?.email?.toLowerCase()
 
     if (Array.isArray(staffParticipants) && staffParticipants.length > 0) {
       for (const participant of staffParticipants) {
-        if (participant.email) {
-          const notificationHtml = generateMessageEmailTemplate(
-            applicant?.firstName || "Applicant",
-            conversation.title || "Your case",
-            body,
-            message._id.toString()
-          )
+        // Skip if this is the applicant's email
+        if (participant.email && participant.email.toLowerCase() !== applicantEmail) {
+          // Double-check role is caseworker or admin
+          if (participant.role === "caseworker" || participant.role === "admin") {
+            const emailBody = messageBody || (attachments.length > 0 ? `Shared ${attachments.length} file(s)` : "New message")
+            const notificationHtml = generateMessageEmailTemplate(
+              applicant?.firstName || "Applicant",
+              conversation.title || "Your case",
+              emailBody,
+              message._id.toString()
+            )
 
-          await sendEmail({
-            to: participant.email,
-            subject: `New message from ${applicant?.firstName || "Applicant"} - ${conversation.title}`,
-            html: notificationHtml,
-          }).catch((err) => {
-            console.error(`Failed to send email to ${participant.email}:`, err)
-          })
+            await sendEmail({
+              to: participant.email,
+              subject: `New message from ${applicant?.firstName || "Applicant"} - ${conversation.title}`,
+              html: notificationHtml,
+            }).catch((err) => {
+              console.error(`Failed to send email to ${participant.email}:`, err)
+            })
+          }
         }
       }
     }

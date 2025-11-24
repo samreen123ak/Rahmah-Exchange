@@ -2,20 +2,20 @@ import mongoose from "mongoose"
 
 const conversationSchema = new mongoose.Schema(
   {
-    // Case reference
+    // Case reference (optional for staff conversations)
     caseId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ZakatApplicant",
-      required: true,
+      required: false, // Made optional for staff conversations
       index: true,
-      unique: true,
+      sparse: true, // Allows multiple null values
     },
     conversationId: {
       type: String,
       required: true,
       unique: true,
       index: true,
-      // Format: "case_[caseObjectId]"
+      // Format: "case_[caseObjectId]" or "staff_[objectId]" for staff conversations
     },
 
     // Participants

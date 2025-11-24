@@ -20,7 +20,7 @@ const caseNoteSchema = new mongoose.Schema(
     },
     authorRole: {
       type: String,
-      enum: ["caseworker", "approver", "admin"],
+      enum: ["caseworker", "approver", "admin", "treasurer"],
       required: true,
     },
     authorEmail: {
@@ -36,8 +36,13 @@ const caseNoteSchema = new mongoose.Schema(
     },
     noteType: {
       type: String,
-      enum: ["internal_note", "status_update", "requirement", "decision"],
+      enum: ["internal_note", "status_update", "requirement", "decision", "approval_note"],
       default: "internal_note",
+    },
+    // Approval-specific fields
+    approvalAmount: {
+      type: Number,
+      required: false,
     },
     // Visibility
     isInternal: {

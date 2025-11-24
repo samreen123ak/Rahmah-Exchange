@@ -8,7 +8,7 @@ const zakatApplicantSchema = new mongoose.Schema(
     city: String,
     state: String,
     zipCode: String,
-    gender: String,
+    gender: { type: String, enum: ["male", "female"] },
     dateOfBirth: Date,
     mobilePhone: { type: String, required: true },
     homePhone: String,
@@ -55,6 +55,7 @@ const zakatApplicantSchema = new mongoose.Schema(
     ],
     status: { type: String, default: "Pending", enum: ["Pending", "Approved", "Rejected","Ready for Approval","Need Info","In Review"] },
     caseId: { type: String, unique: true, index: true },
+    isOldCase: { type: Boolean, default: false }, // Flag to indicate this is an old/historical case (no emails sent)
   },
   { timestamps: true }
 )

@@ -19,20 +19,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Invalid email or password" }, { status: 400 })
     }
 
+    // Check if user account is active
+    if (user.isActive === false) {
+      return NextResponse.json(
+        { message: "Your profile is currently inactive. Please contact an administrator." },
+        { status: 403 }
+      )
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
       return NextResponse.json({ message: "Invalid email or password" }, { status: 400 })
     }
 
+    const token = generateToken({
+      id: user._id.toString(),
+      role: user.role,
+      name: user.name,
+      email: user.email,
+    })
+
     return NextResponse.json(
       {
         message: "Login successful",
-        token: generateToken({
-          id: user._id.toString(),
-          role: user.role,
-          name: user.name,
-          email: user.email,
-        }),
+        token,
         user: {
           id: user._id,
           name: user.name,
@@ -43,7 +53,18 @@ export async function POST(request: NextRequest) {
       { status: 200 },
     )
   } catch (error: any) {
-    console.error("Login error:", error)
-    return NextResponse.json({ message: "Server error. Please try again." }, { status: 500 })
+    console.error("Login error:", {
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack?.split("\n").slice(0, 5).join("\n"),
+      cause: error?.cause,
+    })
+    return NextResponse.json(
+      {
+        message: "Server error. Please try again.",
+        error: process.env.NODE_ENV === "development" ? error?.message : undefined,
+      },
+      { status: 500 }
+    )
   }
 }

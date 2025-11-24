@@ -27,8 +27,16 @@ export async function POST(request: NextRequest) {
 
     await dbConnect()
 
-    // Get the case
-    const zakatCase = await ZakatApplicant.findById(caseId)
+    // Get the case - caseId can be either MongoDB ObjectId or caseId string
+    let zakatCase = null
+    if (caseId.match(/^[0-9a-fA-F]{24}$/)) {
+      // It's a MongoDB ObjectId
+      zakatCase = await ZakatApplicant.findById(caseId)
+    } else {
+      // It's a caseId string, find by caseId field
+      zakatCase = await ZakatApplicant.findOne({ caseId: caseId })
+    }
+    
     if (!zakatCase) {
       return NextResponse.json(
         { error: "Case not found" },
@@ -36,7 +44,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const conversationId = generateConversationId(caseId)
+    // Use the actual caseId string for conversation ID generation
+    const actualCaseId = zakatCase.caseId || zakatCase._id.toString()
+    const conversationId = generateConversationId(actualCaseId)
 
     // Check if conversation already exists
     let conversation = await Conversation.findOne({ conversationId })
@@ -50,16 +60,49 @@ export async function POST(request: NextRequest) {
 
     // Create new conversation
     // Always include: applicant (case creator), current user, and specified participants
-    const participantsSet = new Set([userId, ...(participantIds || [])])
+    const participants = [
+      // Add applicant as participant
+      {
+        userId: zakatCase._id,
+        email: zakatCase.email,
+        internalEmail: zakatCase.email,
+        name: `${zakatCase.firstName} ${zakatCase.lastName}`,
+        role: "applicant",
+        joinedAt: new Date(),
+        lastReadAt: new Date(),
+        isActive: true,
+      },
+    ]
 
-    const participants = []
+    // Add current staff user
+    if (userId) {
+      const currentUser = await User.findById(userId)
+      if (currentUser) {
+        participants.push({
+          userId: userId,
+          email: currentUser.email,
+          internalEmail: currentUser.internalEmail || currentUser.email,
+          name: currentUser.name,
+          role: currentUser.role,
+          joinedAt: new Date(),
+          lastReadAt: new Date(),
+          isActive: true,
+        })
+      }
+    }
+
+    // Add any additional participants
+    const participantsSet = new Set([...(participantIds || [])])
     for (const participantId of participantsSet) {
+      // Skip if already added (current user)
+      if (participantId === userId) continue
+      
       const participant = await User.findById(participantId)
       if (participant) {
         participants.push({
           userId: participantId,
           email: participant.email,
-          internalEmail: participant.internalEmail,
+          internalEmail: participant.internalEmail || participant.email,
           name: participant.name,
           role: participant.role,
           joinedAt: new Date(),
@@ -72,7 +115,7 @@ export async function POST(request: NextRequest) {
     const title = `Zakat Application - ${zakatCase.firstName} ${zakatCase.lastName} (${zakatCase.caseId})`
 
     conversation = new Conversation({
-      caseId,
+      caseId: zakatCase._id, // Store MongoDB ObjectId reference
       conversationId,
       participants,
       title,

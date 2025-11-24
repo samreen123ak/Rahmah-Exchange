@@ -22,6 +22,21 @@ const grantSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    numberOfMonths: {
+      type: Number,
+      required: false,
+      min: [1, "Number of months must be at least 1"],
+    },
+    // Payment documents (checks, digital payment receipts, etc.)
+    paymentDocuments: [{
+      filename: String,
+      originalname: String,
+      url: String,
+      mimeType: String,
+      size: Number,
+      uploadedAt: Date,
+      uploadedBy: String, // User ID who uploaded
+    }],
     // Legacy fields - explicitly optional, never required
     // These are for backward compatibility with existing data only
     amountGranted: {

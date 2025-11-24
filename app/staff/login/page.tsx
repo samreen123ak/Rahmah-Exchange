@@ -38,7 +38,12 @@ export default function StaffLoginPage() {
       console.log("Login response data:", data)
 
       if (!res.ok) {
-        setError(data.message || "Invalid credentials")
+        // Show specific error message for inactive accounts
+        if (res.status === 403) {
+          setError(data.message || "Your profile is currently inactive. Please contact an administrator.")
+        } else {
+          setError(data.message || "Invalid credentials")
+        }
         setLoading(false)
         return
       }
