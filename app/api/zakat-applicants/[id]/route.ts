@@ -105,6 +105,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const { user, error } = await authenticateRequest(request)
     if (error || !user) return NextResponse.json({ message: error || "Unauthorized" }, { status: 401 })
 
+    // Parse body first to check what fields are being updated
+    const body = await request.json()
+    await dbConnect()
+
     // Restrict editing to only caseworker and admin
     // BUT allow approvers to update ONLY the status field (needed for grant approvals)
     const bodyKeys = Object.keys(body)
@@ -120,9 +124,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         }, { status: 403 })
       }
     }
-
-    const body = await request.json()
-    await dbConnect()
 
     // Prevent duplicate email
     if (body.email) {
