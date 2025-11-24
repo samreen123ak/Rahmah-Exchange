@@ -589,7 +589,7 @@ function RoleBasedStatusSection({
       case "caseworker":
         return [...baseStatuses, "Ready for Approval"]
       case "approver":
-        return ["Ready for Approval", "Approved", "Rejected"]
+        return ["Ready for Approval", "Approved", "Rejected", "Pending", "In Review"] // Approvers can set status when adding amount
       case "treasurer":
         return ["Approved"] // Treasurer can only confirm approved status
       default:
@@ -1639,37 +1639,35 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       }
 
       // Update or create grant based on user role and available data
-      // Caseworkers can update/create grants with status, numberOfMonths, and remarks
+      // Caseworkers can update/create grants with status, numberOfMonths, and remarks (NOT amount)
       // Approvers can update/create grants with status, grantedAmount, and remarks
+      // Admin can update/create grants with all fields
       const shouldUpdateGrant = 
-        (userRole === "approver" && (grantedAmount !== "" && grantedAmount !== null)) ||
-        (userRole === "caseworker" && (numberOfMonths !== "" && numberOfMonths !== null || grantData)) ||
-        (userRole === "admin" && (grantedAmount !== "" && grantedAmount !== null || numberOfMonths !== "" && numberOfMonths !== null || grantData))
+        (userRole === "approver" && (updateStatus || grantedAmount !== "" && grantedAmount !== null || remarks)) ||
+        (userRole === "caseworker" && (updateStatus || numberOfMonths !== "" && numberOfMonths !== null || remarks || grantData)) ||
+        (userRole === "admin" && (updateStatus || grantedAmount !== "" && grantedAmount !== null || numberOfMonths !== "" && numberOfMonths !== null || remarks || grantData))
       
       if (shouldUpdateGrant) {
         const grantPayload: any = {
           applicantId: id,
-          status: updateStatus,
         }
         
-        // Only approvers can set grantedAmount
-        if (userRole === "approver" && grantedAmount !== "" && grantedAmount !== null) {
+        // All roles can update status
+        if (updateStatus) {
+          grantPayload.status = updateStatus
+        }
+        
+        // Only approvers and admin can set grantedAmount (caseworkers cannot)
+        if ((userRole === "approver" || userRole === "admin") && grantedAmount !== "" && grantedAmount !== null) {
           grantPayload.grantedAmount = Number(grantedAmount)
         }
-        // Caseworkers can set numberOfMonths
-        if (userRole === "caseworker" && numberOfMonths !== "" && numberOfMonths !== null) {
+        
+        // Caseworkers and admin can set numberOfMonths (approvers cannot)
+        if ((userRole === "caseworker" || userRole === "admin") && numberOfMonths !== "" && numberOfMonths !== null) {
           grantPayload.numberOfMonths = Number(numberOfMonths)
         }
-        // Admin can set both
-        if (userRole === "admin") {
-          if (grantedAmount !== "" && grantedAmount !== null) {
-            grantPayload.grantedAmount = Number(grantedAmount)
-          }
-          if (numberOfMonths !== "" && numberOfMonths !== null) {
-            grantPayload.numberOfMonths = Number(numberOfMonths)
-          }
-        }
-        // Caseworkers and approvers can set remarks
+        
+        // Caseworkers, approvers, and admin can set remarks
         if (remarks && (userRole === "caseworker" || userRole === "approver" || userRole === "admin")) {
           grantPayload.remarks = remarks
         }
