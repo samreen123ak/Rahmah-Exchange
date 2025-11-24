@@ -81,35 +81,25 @@ export async function POST(request: NextRequest, context: any) {
 
     // Upload each file to Vercel Blob
     for (const f of uploadedFiles) {
-      // Check if it's a valid File object
+      // Check if it's a valid file object
       if (!f) {
         uploadErrors.push("Empty file entry")
         continue
       }
 
-      // Handle both File objects and Blob objects
-      let file: File | Blob | null = null
-      let originalName = ""
-      
-      if (f instanceof File) {
-        file = f
-        originalName = f.name
-      } else if (f && typeof f === "object" && "name" in f && "arrayBuffer" in f) {
-        // Handle File-like objects
-        file = f as any
-        originalName = (f as any).name || `upload-${Date.now()}.${(f as any).type?.split('/')[1] || 'bin'}`
-      } else {
-        uploadErrors.push("Invalid file format")
+      // In serverless environments, FormData files might not be true File instances
+      // Check for arrayBuffer method (works for both File and Blob-like objects)
+      if (typeof f !== "object" || typeof (f as any).arrayBuffer !== "function") {
+        uploadErrors.push("Invalid file object - missing arrayBuffer method")
         continue
       }
 
-      if (!file || typeof (file as any).arrayBuffer !== "function") {
-        uploadErrors.push(`Invalid file object: ${originalName || "unknown"}`)
-        continue
-      }
+      // Get file name - handle both File objects and File-like objects
+      const fileObj = f as any
+      const originalName = fileObj.name || fileObj.filename || `upload-${Date.now()}.${fileObj.type?.split('/')[1] || 'bin'}`
       
       try {
-        const buffer = Buffer.from(await (file as any).arrayBuffer())
+        const buffer = Buffer.from(await fileObj.arrayBuffer())
         
         // Validate file size (e.g., max 10MB)
         const maxSize = 10 * 1024 * 1024 // 10MB
@@ -128,7 +118,7 @@ export async function POST(request: NextRequest, context: any) {
         const docMetadata = {
           filename: blob.pathname,
           originalname: originalName,
-          mimeType: (file as any).type || "application/octet-stream",
+          mimeType: fileObj.type || "application/octet-stream",
           size: buffer.length,
           url: blob.url,
           uploadedAt: new Date(),
@@ -145,22 +135,35 @@ export async function POST(request: NextRequest, context: any) {
           uploadedBy,
           originalFilename: originalName,
           fileSize: buffer.length,
-          mimeType: (file as any).type || "application/octet-stream",
+          mimeType: fileObj.type || "application/octet-stream",
         })
         await audit.save()
 
         console.log(`Document uploaded: ${blob.pathname} by ${uploadedBy}`)
       } catch (err: any) {
         console.error(`File upload error for ${originalName}:`, err)
-        uploadErrors.push(`${originalName}: ${err.message || "Upload failed"}`)
+        const errorMessage = err.message || "Upload failed"
+        // Include more details in error message for debugging
+        const detailedError = err.stack ? `${errorMessage} (${err.stack.split('\n')[0]})` : errorMessage
+        uploadErrors.push(`${originalName}: ${detailedError}`)
       }
     }
 
     if (documentMetadata.length === 0) {
+      console.error("All file uploads failed:", {
+        totalFiles: uploadedFiles.length,
+        errors: uploadErrors,
+        applicantId
+      })
       return NextResponse.json(
         { 
           error: "Failed to upload documents", 
-          details: uploadErrors.length > 0 ? uploadErrors : ["No valid files were provided"]
+          details: uploadErrors.length > 0 ? uploadErrors : ["No valid files were provided"],
+          debug: {
+            filesReceived: uploadedFiles.length,
+            filesProcessed: documentMetadata.length,
+            errors: uploadErrors
+          }
         },
         { status: 400 }
       )
