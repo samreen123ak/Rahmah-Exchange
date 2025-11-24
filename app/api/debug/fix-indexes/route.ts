@@ -35,12 +35,28 @@ export async function POST(request: Request) {
     console.log("[v0] Existing indexes:", existingIndexes.map((i) => i.name))
 
     // Drop problematic compound indexes on array fields
-    const indexesToDrop = [
+    // Check for any index that includes both recipientIds and readBy
+    const indexesToDrop: string[] = []
+    
+    for (const idx of existingIndexes) {
+      const key = idx.key as any
+      // Check if index has both recipientIds and readBy (parallel arrays)
+      if (key && key.recipientIds && key.readBy) {
+        indexesToDrop.push(idx.name)
+      }
+    }
+    
+    // Also try common index name patterns
+    const commonNames = [
       "readBy_1_recipientIds_1",
       "recipientIds_1_readBy_1",
-      "readBy_1",
-      "recipientIds_1",
     ]
+    
+    for (const name of commonNames) {
+      if (existingIndexes.some((i) => i.name === name) && !indexesToDrop.includes(name)) {
+        indexesToDrop.push(name)
+      }
+    }
 
     const droppedIndexes = []
     const skippedIndexes = []

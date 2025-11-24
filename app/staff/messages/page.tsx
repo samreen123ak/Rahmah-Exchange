@@ -58,6 +58,10 @@ export default function StaffMessagesPage() {
   const [showNewChat, setShowNewChat] = useState(false)
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const lastFetchRef = useRef<number>(0)
+  const lastMessageFetchRef = useRef<{ [key: string]: number }>({})
+  const lastFetchRef = useRef<number>(0)
+  const lastMessageFetchRef = useRef<{ [key: string]: number }>({})
 
   useEffect(() => {
     const token = getAuthToken()
@@ -88,16 +92,17 @@ export default function StaffMessagesPage() {
 
       // Refresh staff list and conversations periodically to show new users
       // Only refresh when not actively viewing a conversation to avoid conflicts
+      // Increased interval to reduce API calls
       const interval = setInterval(() => {
-        if (!selectedConversation) {
+        if (!selectedConversation && !sending) {
           fetchAllStaff()
           fetchConversations()
         }
-      }, 15000) // Refresh every 15 seconds (less frequent)
+      }, 30000) // Refresh every 30 seconds (reduced frequency)
 
       return () => clearInterval(interval)
     }
-  }, [currentUser, selectedConversation])
+  }, [currentUser, selectedConversation, sending])
 
   useEffect(() => {
     scrollToBottom()
@@ -107,16 +112,18 @@ export default function StaffMessagesPage() {
     if (selectedConversation) {
       // Fetch messages immediately without loading delay
       fetchMessages(selectedConversation.conversationId, true)
+      
+      // Poll for new messages less frequently to reduce API calls
       const interval = setInterval(() => {
-        if (selectedConversation && !sending) {
-          // Only poll if not currently sending a message to avoid conflicts
+        if (selectedConversation && !sending && !loadingMessages) {
+          // Only poll if not currently sending a message and not loading to avoid conflicts
           // Don't mark as read on polling, only on initial load
           fetchMessages(selectedConversation.conversationId, false)
         }
-      }, 5000) // Poll every 5 seconds
+      }, 10000) // Poll every 10 seconds (reduced from 5 seconds)
       return () => clearInterval(interval)
     }
-  }, [selectedConversation?.conversationId, sending]) // Only depend on conversationId and sending state
+  }, [selectedConversation?.conversationId, sending, loadingMessages]) // Added loadingMessages to dependencies
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -148,6 +155,14 @@ export default function StaffMessagesPage() {
   }
 
   const fetchConversations = async (preserveUnreadCountFor?: string) => {
+    // Throttle API calls - minimum 2 seconds between fetches
+    const FETCH_THROTTLE_MS = 2000
+    const now = Date.now()
+    if (now - lastFetchRef.current < FETCH_THROTTLE_MS && lastFetchRef.current > 0) {
+      return // Skip if called too recently (but allow first call)
+    }
+    lastFetchRef.current = now
+
     try {
       setLoading(true)
       const res = await authenticatedFetch("/api/staff/messages/conversations")
@@ -162,7 +177,7 @@ export default function StaffMessagesPage() {
           const serverConv = serverConversations.find((c: any) => c._id === preserveUnreadCountFor || c.conversationId === preserveUnreadCountFor)
           
           if (preservedConv && preservedConv.unreadCount === 0 && serverConv) {
-            // Merge server data but keep unreadCount as 0
+            // Merge server data but keep unreadCount: 0
             return serverConversations.map((c: any) => 
               (c._id === preserveUnreadCountFor || c.conversationId === preserveUnreadCountFor)
                 ? { ...c, unreadCount: 0 }
@@ -182,29 +197,42 @@ export default function StaffMessagesPage() {
   }
 
   const fetchMessages = async (conversationId: string, markAsRead: boolean = true) => {
+    // Prevent multiple simultaneous calls
+    if (loadingMessages) {
+      return
+    }
+    
+    // Throttle API calls per conversation - minimum 1 second between fetches for same conversation
+    const MESSAGE_FETCH_THROTTLE_MS = 1000
+    const now = Date.now()
+    const lastFetch = lastMessageFetchRef.current[conversationId] || 0
+    if (now - lastFetch < MESSAGE_FETCH_THROTTLE_MS && lastFetch > 0) {
+      return // Skip if called too recently for this conversation (but allow first call)
+    }
+    lastMessageFetchRef.current[conversationId] = now
+    
     try {
+      setLoadingMessages(true)
       const res = await authenticatedFetch(`/api/staff/messages/conversations/${conversationId}`)
       if (!res.ok) throw new Error("Failed to load messages")
       const data = await res.json()
       setMessages(data.messages || [])
       
-      // Mark conversation as read and refresh conversations list to update unread count
+      // Mark conversation as read and update local state (don't fetch conversations again)
       if (markAsRead) {
-        // The API already updates lastReadAt, refresh conversations to sync with server
-        // Delay slightly to ensure server has updated, and preserve unreadCount: 0 for this conversation
-        setTimeout(() => {
-          // Get current conversation ID to preserve
-          setConversations(prev => {
-            const currentConv = prev.find(c => c.conversationId === conversationId)
-            const convIdToPreserve = currentConv?._id || conversationId
-            // Fetch and merge, preserving unreadCount: 0
-            fetchConversations(convIdToPreserve).catch(console.error)
-            return prev // Keep current state until server responds
-          })
-        }, 500) // Delay to ensure server has updated lastReadAt
+        // Update local conversation state to mark as read without another API call
+        setConversations(prev => 
+          prev.map(conv => 
+            conv.conversationId === conversationId
+              ? { ...conv, unreadCount: 0 }
+              : conv
+          )
+        )
       }
     } catch (error: any) {
       console.error("Error fetching messages:", error)
+    } finally {
+      setLoadingMessages(false)
     }
   }
 
@@ -271,11 +299,27 @@ export default function StaffMessagesPage() {
       }
       setMessages(prev => [...prev, newMsg])
       
-      // Silently refresh messages and conversations in background without causing reload
+      // Update conversation list locally without another API call
+      setConversations(prev =>
+        prev.map(conv =>
+          conv.conversationId === selectedConversation.conversationId
+            ? {
+                ...conv,
+                lastMessage: messageText,
+                lastMessageAt: new Date().toISOString(),
+                messageCount: (conv.messageCount || 0) + 1,
+                unreadCount: 0, // Mark as read for sender
+              }
+            : conv
+        )
+      )
+      
+      // Silently refresh messages only (not conversations) after a longer delay
       setTimeout(() => {
-        fetchMessages(selectedConversation.conversationId, false).catch(console.error)
-        fetchConversations().catch(console.error)
-      }, 500)
+        if (selectedConversation && !sending) {
+          fetchMessages(selectedConversation.conversationId, false).catch(console.error)
+        }
+      }, 2000) // Increased delay to reduce API calls
     } catch (error: any) {
       console.error("Error sending message:", error)
       // Restore message text on error

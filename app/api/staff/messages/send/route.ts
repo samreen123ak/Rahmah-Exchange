@@ -5,6 +5,7 @@ import Message from "@/lib/models/Message"
 import Conversation from "@/lib/models/Conversation"
 import User from "@/lib/models/User"
 import { sendEmail } from "@/lib/email"
+import mongoose from "mongoose"
 
 /**
  * POST /api/staff/messages/send - Send a message in a staff conversation
@@ -48,24 +49,79 @@ export async function POST(request: NextRequest) {
     )
 
     // Create message (caseId is optional for staff conversations)
-    const message = await Message.create({
-      conversationId,
-      caseId: conversation.caseId || undefined, // Optional for staff conversations
-      senderId: user._id,
-      senderEmail: user.internalEmail || user.email,
-      senderRole: user.role,
-      senderName: user.name,
-      body,
-      messageType: "text",
-      recipientIds: recipients.map((p: any) => p.userId),
-      recipientEmails: recipients.map((p: any) => p.email || p.internalEmail),
-      readBy: [
-        {
-          userId: user._id,
-          readAt: new Date(),
-        },
-      ],
-    })
+    // Handle potential index errors gracefully
+    let message
+    try {
+      message = await Message.create({
+        conversationId,
+        caseId: conversation.caseId || undefined, // Optional for staff conversations
+        senderId: user._id,
+        senderEmail: user.internalEmail || user.email,
+        senderRole: user.role,
+        senderName: user.name,
+        body,
+        messageType: "text",
+        recipientIds: recipients.map((p: any) => p.userId),
+        recipientEmails: recipients.map((p: any) => p.email || p.internalEmail),
+        readBy: [
+          {
+            userId: user._id,
+            readAt: new Date(),
+          },
+        ],
+      })
+    } catch (createError: any) {
+      // If error is about parallel arrays index, try to drop it and retry
+      if (createError.message && createError.message.includes("parallel arrays")) {
+        console.warn("Parallel arrays index error detected, attempting to fix...")
+        try {
+          const db = mongoose.connection.db
+          if (db) {
+            const collection = db.collection("messages")
+            const indexes = await collection.listIndexes().toArray()
+            const problematicIndex = indexes.find(
+              (idx: any) =>
+                idx.name === "recipientIds_1_readBy_1" ||
+                idx.name === "readBy_1_recipientIds_1" ||
+                (idx.key && idx.key.recipientIds && idx.key.readBy)
+            )
+            
+            if (problematicIndex) {
+              await collection.dropIndex(problematicIndex.name)
+              console.log(`Dropped problematic index: ${problematicIndex.name}`)
+              // Retry message creation
+              message = await Message.create({
+                conversationId,
+                caseId: conversation.caseId || undefined,
+                senderId: user._id,
+                senderEmail: user.internalEmail || user.email,
+                senderRole: user.role,
+                senderName: user.name,
+                body,
+                messageType: "text",
+                recipientIds: recipients.map((p: any) => p.userId),
+                recipientEmails: recipients.map((p: any) => p.email || p.internalEmail),
+                readBy: [
+                  {
+                    userId: user._id,
+                    readAt: new Date(),
+                  },
+                ],
+              })
+            } else {
+              throw createError
+            }
+          } else {
+            throw createError
+          }
+        } catch (fixError: any) {
+          console.error("Failed to fix index and create message:", fixError)
+          throw createError // Throw original error
+        }
+      } else {
+        throw createError
+      }
+    }
 
     // Update conversation
     await Conversation.updateOne(

@@ -114,4 +114,45 @@ messageSchema.index({ recipientIds: 1 })
 messageSchema.index({ "readBy.userId": 1 })
 messageSchema.index({ isDeleted: 1 })
 
-export default mongoose.models.Message || mongoose.model("Message", messageSchema)
+// Force model recreation to clear any cached schema with old indexes
+if (mongoose.models.Message) {
+  delete mongoose.models.Message
+}
+
+// Create model
+const MessageModel = mongoose.model("Message", messageSchema)
+
+// Auto-fix indexes on model initialization (only in server environment)
+if (typeof window === "undefined") {
+  // This runs only on the server
+  ;(async () => {
+    try {
+      await mongoose.connection.db?.collection("messages").listIndexes().then(async (indexes) => {
+        const indexArray = await indexes.toArray()
+        const problematicIndexes = indexArray.filter(
+          (idx: any) =>
+            idx.name === "recipientIds_1_readBy_1" ||
+            idx.name === "readBy_1_recipientIds_1" ||
+            (idx.key && idx.key.recipientIds && idx.key.readBy)
+        )
+
+        for (const idx of problematicIndexes) {
+          try {
+            await mongoose.connection.db?.collection("messages").dropIndex(idx.name)
+            console.log(`[Message Model] Dropped problematic index: ${idx.name}`)
+          } catch (err: any) {
+            if (err.code !== 27) {
+              // 27 = index not found (already dropped)
+              console.warn(`[Message Model] Could not drop index ${idx.name}:`, err.message)
+            }
+          }
+        }
+      })
+    } catch (err) {
+      // Ignore errors during auto-fix (might not be connected yet)
+      console.warn("[Message Model] Could not auto-fix indexes:", err)
+    }
+  })()
+}
+
+export default MessageModel
