@@ -60,8 +60,6 @@ export default function StaffMessagesPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const lastFetchRef = useRef<number>(0)
   const lastMessageFetchRef = useRef<{ [key: string]: number }>({})
-  const lastFetchRef = useRef<number>(0)
-  const lastMessageFetchRef = useRef<{ [key: string]: number }>({})
 
   useEffect(() => {
     const token = getAuthToken()
