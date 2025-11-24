@@ -106,10 +106,19 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     if (error || !user) return NextResponse.json({ message: error || "Unauthorized" }, { status: 401 })
 
     // Restrict editing to only caseworker and admin
+    // BUT allow approvers to update ONLY the status field (needed for grant approvals)
+    const bodyKeys = Object.keys(body)
+    const isOnlyStatusUpdate = bodyKeys.length === 1 && bodyKeys[0] === "status"
+    
     if (user.role !== "caseworker" && user.role !== "admin") {
-      return NextResponse.json({ 
-        message: "Only caseworkers and admins can edit applicant data" 
-      }, { status: 403 })
+      // Approvers can only update status, not other applicant data
+      if (user.role === "approver" && isOnlyStatusUpdate) {
+        // Allow approver to update status only
+      } else {
+        return NextResponse.json({ 
+          message: "Only caseworkers and admins can edit applicant data" 
+        }, { status: 403 })
+      }
     }
 
     const body = await request.json()
