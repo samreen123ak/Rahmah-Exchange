@@ -6,7 +6,7 @@ const paymentRecordSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Grant",
       required: true,
-      index: true,
+      // Index defined below
     },
     applicantId: {
       type: mongoose.Schema.Types.ObjectId,

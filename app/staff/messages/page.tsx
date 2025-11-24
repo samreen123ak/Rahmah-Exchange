@@ -112,16 +112,17 @@ export default function StaffMessagesPage() {
       fetchMessages(selectedConversation.conversationId, true)
       
       // Poll for new messages less frequently to reduce API calls
+      // Use a ref to track if we're currently loading to avoid dependency issues
       const interval = setInterval(() => {
-        if (selectedConversation && !sending && !loadingMessages) {
-          // Only poll if not currently sending a message and not loading to avoid conflicts
+        // Check current state without causing re-renders
+        if (selectedConversation && !sending) {
           // Don't mark as read on polling, only on initial load
-          fetchMessages(selectedConversation.conversationId, false)
+          fetchMessages(selectedConversation.conversationId, false).catch(console.error)
         }
-      }, 10000) // Poll every 10 seconds (reduced from 5 seconds)
+      }, 10000) // Poll every 10 seconds
       return () => clearInterval(interval)
     }
-  }, [selectedConversation?.conversationId, sending, loadingMessages]) // Added loadingMessages to dependencies
+  }, [selectedConversation?.conversationId, sending]) // Removed loadingMessages to prevent continuous restarts
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -195,13 +196,9 @@ export default function StaffMessagesPage() {
   }
 
   const fetchMessages = async (conversationId: string, markAsRead: boolean = true) => {
-    // Prevent multiple simultaneous calls
-    if (loadingMessages) {
-      return
-    }
-    
-    // Throttle API calls per conversation - minimum 1 second between fetches for same conversation
-    const MESSAGE_FETCH_THROTTLE_MS = 1000
+    // Throttle API calls per conversation - minimum 2 seconds between fetches for same conversation
+    // This prevents too frequent calls but allows polling to work
+    const MESSAGE_FETCH_THROTTLE_MS = 2000
     const now = Date.now()
     const lastFetch = lastMessageFetchRef.current[conversationId] || 0
     if (now - lastFetch < MESSAGE_FETCH_THROTTLE_MS && lastFetch > 0) {
@@ -209,12 +206,20 @@ export default function StaffMessagesPage() {
     }
     lastMessageFetchRef.current[conversationId] = now
     
+    // Skip if already loading to prevent duplicate calls
+    if (loadingMessages) {
+      return
+    }
+    
     try {
       setLoadingMessages(true)
       const res = await authenticatedFetch(`/api/staff/messages/conversations/${conversationId}`)
       if (!res.ok) throw new Error("Failed to load messages")
       const data = await res.json()
-      setMessages(data.messages || [])
+      const newMessages = data.messages || []
+      
+      // Always update messages to ensure we have the latest
+      setMessages(newMessages)
       
       // Mark conversation as read and update local state (don't fetch conversations again)
       if (markAsRead) {

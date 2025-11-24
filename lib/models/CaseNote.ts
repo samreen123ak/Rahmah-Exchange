@@ -11,7 +11,7 @@ const caseNoteSchema = new mongoose.Schema(
     caseId: {
       type: String,
       required: true,
-      index: true,
+      // Index defined below as compound index with createdAt
     },
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
