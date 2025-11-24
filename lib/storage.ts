@@ -17,28 +17,15 @@ export async function uploadBuffer(
   originalName: string,
   baseUrl?: string
 ): Promise<UploadResult> {
-  // Check for Vercel Blob token - required for production (Vercel)
-  const vercelBlobToken = process.env.VERCEL_BLOB_READ_WRITE_TOKEN || process.env.VERCEL_BLOB_TOKEN
   const isVercel = !!process.env.VERCEL
   const isProduction = process.env.NODE_ENV === "production"
 
-  // In production/Vercel, we MUST use Vercel Blob (filesystem is read-only)
+  // In production/Vercel, try Vercel Blob first (filesystem is read-only)
+  // Vercel may provide the token automatically when Blob Store is linked
   if (isVercel || isProduction) {
-    if (!vercelBlobToken) {
-      const errorMessage = `Vercel Blob storage is required but not configured. 
-Please add the VERCEL_BLOB_READ_WRITE_TOKEN environment variable in your Vercel project settings:
-1. Go to your Vercel project dashboard
-2. Navigate to Settings > Environment Variables
-3. Add VERCEL_BLOB_READ_WRITE_TOKEN with your blob storage token
-4. Redeploy your application
-
-Alternatively, you can get the token from: https://vercel.com/docs/storage/vercel-blob/quickstart`
-      console.error(errorMessage)
-      throw new Error(errorMessage.replace(/\n/g, " "))
-    }
-
     try {
       // Dynamically import @vercel/blob
+      // @vercel/blob can work without explicit token if Blob Store is linked to project
       // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
       const { put } = require("@vercel/blob")
       
@@ -53,11 +40,21 @@ Alternatively, you can get the token from: https://vercel.com/docs/storage/verce
       }
     } catch (err: any) {
       console.error("Vercel Blob upload failed:", err)
+      // If Vercel Blob fails, provide helpful error message
+      const errorMsg = err.message || "Unknown error"
+      if (errorMsg.includes("token") || errorMsg.includes("authentication") || errorMsg.includes("unauthorized")) {
+        throw new Error(
+          `Vercel Blob storage authentication failed. Please ensure your Blob Store is linked to this project, or add VERCEL_BLOB_READ_WRITE_TOKEN environment variable. Error: ${errorMsg}`
+        )
+      }
       throw new Error(
-        `Failed to upload file to Vercel Blob: ${err.message || "Unknown error"}. Please check your VERCEL_BLOB_READ_WRITE_TOKEN configuration.`
+        `Failed to upload file to Vercel Blob: ${errorMsg}`
       )
     }
   }
+
+  // Check for explicit token in local dev (optional)
+  const vercelBlobToken = process.env.VERCEL_BLOB_READ_WRITE_TOKEN || process.env.VERCEL_BLOB_TOKEN
 
   // Local development fallback: save under public/uploads (only for local dev)
   if (vercelBlobToken) {
