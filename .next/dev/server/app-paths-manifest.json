@@ -1,13 +1,5 @@
 {
-  "/api/auth/login/route": "app/api/auth/login/route.js",
-  "/api/auth/logout/route": "app/api/auth/logout/route.js",
-  "/api/staff/messages/conversations/[conversationId]/route": "app/api/staff/messages/conversations/[conversationId]/route.js",
-  "/api/staff/messages/conversations/route": "app/api/staff/messages/conversations/route.js",
-  "/api/staff/messages/send/route": "app/api/staff/messages/send/route.js",
-  "/api/staff/users/route": "app/api/staff/users/route.js",
   "/api/zakat-applicants/route": "app/api/zakat-applicants/route.js",
-  "/page": "app/page.js",
-  "/staff/dashboard/page": "app/staff/dashboard/page.js",
-  "/staff/login/page": "app/staff/login/page.js",
-  "/staff/messages/page": "app/staff/messages/page.js"
+  "/application-status/page": "app/application-status/page.js",
+  "/page": "app/page.js"
 }

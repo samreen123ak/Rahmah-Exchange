@@ -1,20 +1,132 @@
-[00:00:05.378] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-[00:00:08.428] Server  LOG      ✓ Ready in 7.4s
-[00:00:11.726] Server  LOG      ○ Compiling / ...
-[00:00:28.960] Browser WARN    Image with src "http://localhost:3000/logo1.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:29.349] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:29.349] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/staff/login","route":"/staff/login"}
-[00:00:29.349] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/staff/login color: rgb(120, 120, 120) color: inherit {"dp":"/staff/login","o":"http://localhost:3000/staff/login","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1763987778620}
-[00:00:39.803] Browser LOG     Login API URL: /api/auth/login
-[00:00:45.560] Browser LOG     Login response status: 200
-[00:00:45.560] Browser LOG     Login response data: {"message":"Login successful","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MGIwMWRiNTc1MWZhYjgzYjkxOGU3MiIsInJvbGUiOiJhZG1pbiIsIm5hbWUiOiJ0ZXN0aW5nIG1haWwiLCJlbWFpbCI6InN0YWZmQGdtYWlsLmNvbSIsImlhdCI6MTc2Mzk4Nzc5NCwiZXhwIjoxNzY2NTc5Nzk0fQ.tujKteFhhBSt7DF5k1d2iPsSRufQm4dp4MWdKSwOaZY","user":{"email":"staff@gmail.com","id":"690b01db5751fab83b918e72","name":"testing mail","role":"admin"}}
-[00:00:46.686] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/staff/dashboard color: rgb(120, 120, 120) color: inherit {"dp":"/staff/dashboard","o":"http://localhost:3000/staff/dashboard","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1763987795974}
-[00:00:52.876] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/staff/messages color: rgb(120, 120, 120) color: inherit {"dp":"/staff/messages","o":"http://localhost:3000/staff/messages","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1763987802172}
-[00:00:54.984] Server  WARN    [Message Model] Could not auto-fix indexes: TypeError: __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__.default.connection.db?.collection(...).listIndexes(...).then is not a function
-[00:01:03.472] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/staff/dashboard color: rgb(120, 120, 120) color: inherit {"dp":"/staff/dashboard","o":"http://localhost:3000/staff/dashboard","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1763987812763}
-[00:01:06.205] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/staff/login color: rgb(120, 120, 120) color: inherit {"dp":"/staff/login","o":"http://localhost:3000/staff/login","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1763987815494}
-[00:01:33.177] Browser LOG     Login API URL: /api/auth/login
-[00:01:33.725] Browser LOG     Login response status: 200
-[00:01:33.725] Browser LOG     Login response data: {"message":"Login successful","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWM0OWE1YmIxMzQyOWEyNDU0ZDRmYSIsInJvbGUiOiJjYXNld29ya2VyIiwibmFtZSI6IkNhc2UgV29ya2VyIiwiZW1haWwiOiJjYXNld29ya2VyQHJhaG1haC5pbnRlcm5hbCIsImlhdCI6MTc2Mzk4Nzg0MiwiZXhwIjoxNzY2NTc5ODQyfQ.td0i8vTgcW4Pm5cFAsjU138gQrCnerBerv9QAU-bc7M","user":{"email":"caseworker@rahmah.internal","id":"691c49a5bb13429a2454d4fa","name":"Case Worker","role":"caseworker"}}
-[00:01:33.725] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/staff/dashboard color: rgb(120, 120, 120) color: inherit {"dp":"/staff/dashboard","o":"http://localhost:3000/staff/dashboard","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1763987843018}
-[00:01:43.760] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/staff/messages color: rgb(120, 120, 120) color: inherit {"dp":"/staff/messages","o":"http://localhost:3000/staff/messages","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1763987852979}
+[00:00:03.769] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:05.258] Server  LOG      ✓ Ready in 4.2s
+[00:00:21.085] Server  LOG      ○ Compiling / ...
+[00:00:37.895] Browser WARN    Image with src "http://localhost:3000/logo1.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:39.421] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:39.421] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/application-status","route":"/application-status"}
+[00:00:39.422] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/application-status color: rgb(120, 120, 120) color: inherit {"dp":"/application-status","o":"http://localhost:3000/application-status","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764140506541}
+[00:00:47.802] Browser ERROR   {}
+[00:01:57.616] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en">
+                          <body
+                            className="font-sans antialiased"
+-                           cz-shortcut-listen="true"
+                          >
+                  ...
+
+[00:01:57.616] Browser WARN    Image with src "http://localhost:3000/logo1.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:01:57.991] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:01:57.991] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:01:57.991] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764140585135}
+[02:52:23.579] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en">
+                          <body
+                            className="font-sans antialiased"
+-                           data-new-gr-c-s-check-loaded="14.1264.0"
+-                           data-gr-ext-installed=""
+-                           cz-shortcut-listen="true"
+                          >
+                  ...
+
+[02:52:23.579] Browser WARN    Image with src "http://localhost:3000/logo1.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[02:52:23.827] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:52:23.827] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[02:52:23.828] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764150797554}
+[04:08:52.787] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en">
+                          <body
+                            className="font-sans antialiased"
+-                           cz-shortcut-listen="true"
+                          >
+                  ...
+
+[04:08:52.787] Browser WARN    Image with src "http://localhost:3000/logo1.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[04:08:54.022] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[04:08:54.022] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[04:08:54.022] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764155386900}
+[04:09:33.261] Browser WARN    Image with src "/31.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading

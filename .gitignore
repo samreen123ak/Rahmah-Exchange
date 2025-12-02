@@ -1,37 +1,37 @@
-<<<<<<< HEAD
-# Ignore environment files
+# Environment files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .env.example.local
-=======
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.env.*
 
-# dependencies
-/node_modules
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
 
-# next.js
-/.next/
-/out/
+# Next.js
+.next/
+out/
 
-# production
-/build
+# Production build
+build/
+dist/
 
-# debug
+# Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
-# env files
-.env*
+# Vercel
+.vercel/
 
-# vercel
-.vercel
-
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
->>>>>>> ff0056ed (Updated project)
+
+# Misc
+.DS_Store
