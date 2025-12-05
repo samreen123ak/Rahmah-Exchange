@@ -33,5 +33,49 @@ pnpm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Misc
+# Testing
+coverage/
+*.lcov
+.nyc_output/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.code-workspace
+.project
+.classpath
+.settings/
+
+# OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Cache directories
+.cache/
+.parcel-cache/
+.swc/
+.turbo/
+.eslintcache
+.stylelintcache
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Optional: Keep lock files (uncomment if you want to ignore them)
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock
