@@ -7,7 +7,7 @@ import { requireRole } from "@/lib/role-middleware"
 /**
  * GET /api/cases/[caseId]/notes - Get all notes for a case
  */
-export async function GET(request: NextRequest, { params }: { params: { caseId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ caseId: string }> }) {
   const roleCheck = await requireRole(request, ["admin", "caseworker", "approver", "treasurer"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: { caseId: 
   try {
     await dbConnect()
 
-    const caseId = (await params).caseId
+    const { caseId } = await params
     const { searchParams } = new URL(request.url)
     const includeInternal = searchParams.get("includeInternal") !== "false"
 
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest, { params }: { params: { caseId: 
 /**
  * POST /api/cases/[caseId]/notes - Create a new case note
  */
-export async function POST(request: NextRequest, { params }: { params: { caseId: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ caseId: string }> }) {
   const roleCheck = await requireRole(request, ["admin", "caseworker", "approver", "treasurer"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest, { params }: { params: { caseId:
 
     await dbConnect()
 
-    const caseId = (await params).caseId
+    const { caseId } = await params
     const applicant = await ZakatApplicant.findOne({ caseId })
 
     if (!applicant) {

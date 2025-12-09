@@ -8,6 +8,7 @@ import ZakatApplicant from "@/lib/models/ZakatApplicant"
 import User from "@/lib/models/User"
 import { sendEmail } from "@/lib/email"
 import { uploadBuffer } from "@/lib/storage"
+import { escapeHtml, nl2br } from "@/lib/utils/html-sanitize"
 
 // POST - Send a message as applicant
 export async function POST(request: NextRequest) {
@@ -365,6 +366,13 @@ function generateMessageEmailTemplate(
   messageBody: string,
   messageId: string
 ): string {
+  // Sanitize all user input
+  const safeSenderName = escapeHtml(senderName)
+  const safeCaseInfo = escapeHtml(caseInfo)
+  const safeMessageBody = nl2br(messageBody)
+  const safeMessageId = escapeHtml(messageId)
+  const safeBaseUrl = escapeHtml(process.env.NEXT_PUBLIC_API_URL || "https://rahmah.local")
+  
   return `<!DOCTYPE html>
     <html>
       <head>
@@ -386,14 +394,14 @@ function generateMessageEmailTemplate(
           </div>
           <div class="content">
             <p>Hi there,</p>
-            <p><strong>${senderName}</strong> sent you a message regarding <strong>${caseInfo}</strong>.</p>
+            <p><strong>${safeSenderName}</strong> sent you a message regarding <strong>${safeCaseInfo}</strong>.</p>
             
             <div class="message-box">
-              <p>${messageBody.split("\n").join("<br>")}</p>
+              <p>${safeMessageBody}</p>
             </div>
 
             <p>
-              <a href="${process.env.NEXT_PUBLIC_API_URL || "https://rahmah.local"}/messages?id=${messageId}" class="button">
+              <a href="${safeBaseUrl}/messages?id=${safeMessageId}" class="button">
                 View in Messages
               </a>
             </p>

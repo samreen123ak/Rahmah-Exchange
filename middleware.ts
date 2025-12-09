@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
 
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
 
-  // Get token from localStorage (client-side) or cookies
+  // Get token from cookies (middleware runs server-side)
   const token = request.cookies.get("rahmah_admin_token")?.value
 
   // If accessing protected route without token, redirect to login

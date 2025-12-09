@@ -9,6 +9,7 @@ interface AuthenticatedUser {
   _id: string
   name: string
   email: string
+  internalEmail?: string
   role: string
 }
 

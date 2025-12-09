@@ -127,7 +127,8 @@ if (typeof window === "undefined") {
   // This runs only on the server
   ;(async () => {
     try {
-      await mongoose.connection.db?.collection("messages").listIndexes().then(async (indexes) => {
+      const indexes = mongoose.connection.db?.collection("messages").listIndexes()
+      if (indexes) {
         const indexArray = await indexes.toArray()
         const problematicIndexes = indexArray.filter(
           (idx: any) =>
@@ -147,7 +148,7 @@ if (typeof window === "undefined") {
             }
           }
         }
-      })
+      }
     } catch (err) {
       // Ignore errors during auto-fix (might not be connected yet)
       console.warn("[Message Model] Could not auto-fix indexes:", err)

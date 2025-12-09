@@ -4,6 +4,7 @@ import ZakatApplicant from "@/lib/models/ZakatApplicant"
 import { getAdminEmail, sendEmail } from "@/lib/email"
 import { generateMagicLink } from "@/lib/applicant-token-utils"
 import { uploadBuffer } from "@/lib/storage"
+import { escapeHtml } from "@/lib/utils/html-sanitize"
 
 // Generate unique case ID
 async function generateUniqueCaseId(): Promise<string> {
@@ -178,7 +179,7 @@ export async function POST(request: NextRequest) {
             to: applicant.email,
             subject: `We received your application (Case ID: ${applicant.caseId})`,
             html: `
-              <p>Assalamu Alaikum ${applicant.firstName || ""},</p>
+              <p>Assalamu Alaikum ${escapeHtml(applicant.firstName || "")},</p>
               <p>We have received your Zakat assistance application.</p>
               <p><strong>Case ID:</strong> ${applicant.caseId}</p>
               <p>You can access your application portal and upload additional documents using the link below:</p>

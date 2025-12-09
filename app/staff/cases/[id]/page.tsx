@@ -1536,7 +1536,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   // ✅ Save/Update Number of Months (for caseworkers)
   const handleNumberOfMonthsUpdate = async () => {
-    if (!numberOfMonths || numberOfMonths === "") {
+    if (!numberOfMonths || (typeof numberOfMonths === "string" && numberOfMonths === "") || (typeof numberOfMonths === "number" && numberOfMonths <= 0)) {
       setUpdateError("Please enter a number of months")
       return
     }
@@ -1555,7 +1555,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       const grantPayload: any = {
         applicantId: id,
         numberOfMonths: Number(numberOfMonths),
-        status: caseData.status || "Pending",
+        status: caseData?.status || "Pending",
       }
 
       const grantResponse = await fetch(`/api/grants`, {

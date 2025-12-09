@@ -85,8 +85,8 @@ export default function CaseEditModal({ isOpen, caseData, onClose, onSave, userR
   const handleDocumentDelete = (documentId: string) => {
     if (!confirm("Are you sure you want to delete this document? It will be removed when you save changes.")) return
 
-    // Convert documentId to string if it's an ObjectId
-    const docIdStr = typeof documentId === 'string' ? documentId : (documentId?.toString() || documentId)
+    // documentId is already a string
+    const docIdStr = documentId
     
     // Mark document for deletion - will delete when Save Changes is clicked
     setDocumentsToDelete((prev) => {

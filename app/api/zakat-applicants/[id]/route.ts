@@ -62,6 +62,7 @@ import { dbConnect } from "@/lib/db"
 import ZakatApplicant from "@/lib/models/ZakatApplicant"
 import DocumentAudit from "@/lib/models/DocumentAudit"
 import { authenticateRequest } from "@/lib/auth-middleware"
+import { escapeHtml, nl2br } from "@/lib/utils/html-sanitize"
 import { verifyApplicantToken } from "@/lib/applicant-token-utils"
 import { sendEmail } from "@/lib/email"
 import User from "@/lib/models/User"
@@ -228,13 +229,17 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
             const notesHtml = approvalNotes.length > 0
               ? `<div style="background-color: #f0f9ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
                   <h3 style="margin-top: 0; color: #0d9488;">Approval Notes:</h3>
-                  ${approvalNotes.map((note: any) => `
+                  ${approvalNotes.map((note: any) => {
+                    const safeContent = nl2br(note.content || '')
+                    const safeAuthorName = escapeHtml(note.authorName || 'Approver')
+                    return `
                     <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e0e7ff;">
                       ${note.approvalAmount ? `<p style="margin: 0; font-weight: bold; color: #0d9488;">Approval Amount: $${note.approvalAmount.toLocaleString()}</p>` : ''}
-                      <p style="margin: 5px 0 0 0;">${note.content || ''}</p>
-                      <p style="margin: 5px 0 0 0; font-size: 12px; color: #6b7280;">By ${note.authorName || 'Approver'} on ${new Date(note.createdAt).toLocaleDateString()}</p>
+                      <p style="margin: 5px 0 0 0;">${safeContent}</p>
+                      <p style="margin: 5px 0 0 0; font-size: 12px; color: #6b7280;">By ${safeAuthorName} on ${new Date(note.createdAt).toLocaleDateString()}</p>
                     </div>
-                  `).join('')}
+                  `
+                  }).join('')}
                 </div>`
               : ''
 

@@ -14,6 +14,7 @@ interface StaffUser {
   email: string
   role: string
   internalEmail?: string
+  isActive?: boolean
 }
 
 interface StaffConversation {
