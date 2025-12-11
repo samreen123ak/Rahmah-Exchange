@@ -1,10 +1,11 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import type React from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { LogOut, Plus, Edit2, UserCheck, UserX, Shield, Users, AlertCircle, Loader2 } from "lucide-react"
+import { LogOut, Plus, Edit2, UserCheck, UserX, Users, AlertCircle, Loader2, Eye, EyeOff } from "lucide-react"
 import { getAuthToken, removeAuthToken, authenticatedFetch } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
 
@@ -28,6 +29,8 @@ export default function UsersPage() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [showCreatePassword, setShowCreatePassword] = useState(false)
+  const [showEditPassword, setShowEditPassword] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -46,7 +49,8 @@ export default function UsersPage() {
     try {
       const decoded: any = jwtDecode(token)
       setUserRole(decoded.role || "")
-      if (decoded.role !== "admin") {
+      // Allow both admin and super_admin to access this page
+      if (decoded.role !== "admin" && decoded.role !== "super_admin") {
         router.push("/staff/dashboard")
         return
       }
@@ -65,18 +69,18 @@ export default function UsersPage() {
       setError("")
       const res = await authenticatedFetch("/api/users")
       const data = await res.json()
-      
+
       if (!res.ok) {
         // Show the actual error message from the API
         throw new Error(data.message || "Failed to fetch users")
       }
-      
+
       setUsers(data.users || [])
     } catch (err: any) {
       const errorMessage = err.message || "Failed to load users"
       setError(errorMessage)
       console.error("Error fetching users:", err)
-      
+
       // If it's an admin access error, provide helpful guidance
       if (errorMessage.includes("Admin access restricted")) {
         setError(`${errorMessage}. Please ensure your email is authorized for admin access.`)
@@ -130,6 +134,7 @@ export default function UsersPage() {
 
       setShowCreateModal(false)
       setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
+      setShowCreatePassword(false)
       setError("")
       fetchUsers()
     } catch (err: any) {
@@ -213,7 +218,7 @@ export default function UsersPage() {
     }
   }
 
-  if (userRole !== "admin") {
+  if (userRole !== "admin" && userRole !== "super_admin") {
     return null
   }
 
@@ -265,12 +270,22 @@ export default function UsersPage() {
           <div className="p-6 border-b border-gray-200 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Users className="w-6 h-6 text-teal-600" />
-              <h2 className="text-xl font-bold text-gray-900">All Users ({users.length})</h2>
+              <h2 className="text-xl font-bold text-gray-900">
+                {userRole === "super_admin" ? `All Admins (${users.length})` : `All Users (${users.length})`}
+              </h2>
             </div>
             <button
               onClick={() => {
                 setError("")
+                // Close edit modal if open
+                setShowEditModal(false)
+                setSelectedUser(null)
+                // Reset form data completely
                 setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
+                // Clear password visibility states
+                setShowCreatePassword(false)
+                setShowEditPassword(false)
+                // Open create modal
                 setShowCreateModal(true)
               }}
               className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium"
@@ -290,11 +305,21 @@ export default function UsersPage() {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Email
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Role
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -315,10 +340,10 @@ export default function UsersPage() {
                               </span>
                             </div>
                             <div>
-                              <div className="text-sm font-medium text-gray-900">{user.name || user.email || "Unknown"}</div>
-                              {user.internalEmail && (
-                                <div className="text-xs text-gray-500">{user.internalEmail}</div>
-                              )}
+                              <div className="text-sm font-medium text-gray-900">
+                                {user.name || user.email || "Unknown"}
+                              </div>
+                              {user.internalEmail && <div className="text-xs text-gray-500">{user.internalEmail}</div>}
                             </div>
                           </div>
                         </td>
@@ -326,7 +351,9 @@ export default function UsersPage() {
                           <div className="text-sm text-gray-900">{user.email || "N/A"}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeColor(user.role || "")}`}>
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeColor(user.role || "")}`}
+                          >
                             {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "N/A"}
                           </span>
                         </td>
@@ -369,9 +396,13 @@ export default function UsersPage() {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">Create New User</h3>
               <button
+                type="button"
                 onClick={() => {
                   setShowCreateModal(false)
                   setError("")
+                  // Reset form data when closing modal
+                  setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
+                  setShowCreatePassword(false)
                 }}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -384,6 +415,7 @@ export default function UsersPage() {
                 <input
                   type="text"
                   required
+                  autoComplete="off"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
@@ -394,6 +426,7 @@ export default function UsersPage() {
                 <input
                   type="email"
                   required
+                  autoComplete="off"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
@@ -401,13 +434,23 @@ export default function UsersPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input
-                  type="password"
-                  required
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                />
+                <div className="relative">
+                  <input
+                    type={showCreatePassword ? "text" : "password"}
+                    required
+                    autoComplete="new-password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCreatePassword(!showCreatePassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showCreatePassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
@@ -464,10 +507,14 @@ export default function UsersPage() {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">Edit User</h3>
               <button
+                type="button"
                 onClick={() => {
                   setShowEditModal(false)
                   setSelectedUser(null)
                   setError("")
+                  // Reset form data when closing edit modal
+                  setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
+                  setShowEditPassword(false)
                 }}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -497,15 +544,25 @@ export default function UsersPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Password <span className="text-xs text-gray-500 font-normal">(leave blank to keep current password)</span>
+                  Password{" "}
+                  <span className="text-xs text-gray-500 font-normal">(leave blank to keep current password)</span>
                 </label>
-                <input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="Enter new password (optional)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                />
+                <div className="relative">
+                  <input
+                    type={showEditPassword ? "text" : "password"}
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    placeholder="Enter new password (optional)"
+                    className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowEditPassword(!showEditPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showEditPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
@@ -558,4 +615,3 @@ export default function UsersPage() {
     </div>
   )
 }
-

@@ -4,6 +4,7 @@ import Grant from "@/lib/models/Grant"
 import { authenticateRequest } from "@/lib/auth-middleware"
 import { sendEmail } from "@/lib/email"
 import { getTreasurerEmails, getCaseworkerEmails } from "@/lib/internal-email"
+import { getTenantFilter } from "@/lib/tenant-middleware"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -15,8 +16,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params
     await dbConnect()
 
-    // Use grant ID, not applicantId
-    const grant = await Grant.findById(id).populate("applicantId")
+    // Get tenant filter
+    const tenantFilter = await getTenantFilter(request)
+
+    // Use grant ID, not applicantId - filter by tenant
+    const grant = await Grant.findOne({ _id: id, ...tenantFilter }).populate("applicantId")
     if (!grant) {
       return NextResponse.json({ message: "Grant not found" }, { status: 404 })
     }
@@ -58,6 +62,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     await dbConnect()
 
+    // Get tenant filter
+    const tenantFilter = await getTenantFilter(request)
+
     // Support both field names for backwards compatibility
     const updateData: any = {}
     if (grantedAmount !== undefined || amountGranted !== undefined) {
@@ -73,7 +80,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       updateData.numberOfMonths = numberOfMonths
     }
 
-    const updated = await Grant.findByIdAndUpdate(id, updateData, { new: true }).populate("applicantId")
+    const updated = await Grant.findOneAndUpdate(
+      { _id: id, ...tenantFilter },
+      updateData,
+      { new: true }
+    ).populate("applicantId")
 
     if (!updated) {
       return NextResponse.json({ message: "Grant not found" }, { status: 404 })
@@ -191,7 +202,10 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const { id } = await params
     await dbConnect()
 
-    const deleted = await Grant.findByIdAndDelete(id)
+    // Get tenant filter
+    const tenantFilter = await getTenantFilter(request)
+
+    const deleted = await Grant.findOneAndDelete({ _id: id, ...tenantFilter })
     if (!deleted) {
       return NextResponse.json({ message: "Grant not found" }, { status: 404 })
     }

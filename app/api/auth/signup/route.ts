@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
           role: user.role,
           name: user.name,
           email: user.email,
+          tenantId: user.tenantId?.toString(),
         }),
         user: {
           id: user._id,

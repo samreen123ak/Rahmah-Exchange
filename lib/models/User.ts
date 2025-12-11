@@ -19,17 +19,23 @@ const userSchema = new mongoose.Schema(
     },
     internalEmail: {
       type: String,
-      unique: true,
       sparse: true,
-      // Format: firstname.lastname@rahmah.internal
+      // Format: firstname.lastname@[tenant-slug].internal or firstname.lastname@rahmah.internal
+      // Note: unique constraint removed - will be unique per tenant
     },
     internalEmailGenerated: {
       type: Boolean,
       default: false,
     },
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tenant",
+      required: false, // Optional for super admin or migration period
+      index: true,
+    },
     role: {
       type: String,
-      enum: ["admin", "caseworker", "approver", "treasurer", "applicant"],
+      enum: ["admin", "caseworker", "approver", "treasurer", "applicant", "super_admin"],
       default: "applicant",
     },
     isActive: {
@@ -51,11 +57,23 @@ const userSchema = new mongoose.Schema(
 
 // Hash password before saving
 userSchema.pre("save", async function (next) {
-  if (this.isModified("name") || this.isNew) {
+  if (this.isModified("name") || this.isNew || this.isModified("tenantId")) {
     if (this.role !== "applicant" && !this.internalEmailGenerated) {
       const firstName = this.name.split(" ")[0].toLowerCase()
       const lastName = this.name.split(" ").slice(1).join("").toLowerCase() || "staff"
-      this.internalEmail = `${firstName}.${lastName}@rahmah.internal`
+
+      // If tenantId exists, use tenant slug for internal email domain
+      if (this.tenantId) {
+        const Tenant = mongoose.model("Tenant")
+        const tenant = (await Tenant.findById(this.tenantId).lean()) as { slug?: string } | null
+        if (tenant && tenant.slug) {
+          this.internalEmail = `${firstName}.${lastName}@${tenant.slug}.internal`
+        } else {
+          this.internalEmail = `${firstName}.${lastName}@rahmah.internal`
+        }
+      } else {
+        this.internalEmail = `${firstName}.${lastName}@rahmah.internal`
+      }
       this.internalEmailGenerated = true
     }
   }

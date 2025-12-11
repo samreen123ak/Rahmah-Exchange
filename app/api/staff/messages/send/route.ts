@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: error || "Unauthorized" }, { status: 401 })
     }
 
-    // Only staff can send messages
-    const allowedRoles = ["admin", "caseworker", "approver", "treasurer"]
+    // Only staff and super_admin can send messages
+    const allowedRoles = ["admin", "caseworker", "approver", "treasurer", "super_admin"]
     if (!allowedRoles.includes(user.role)) {
       return NextResponse.json({ message: "Only staff can send messages" }, { status: 403 })
     }

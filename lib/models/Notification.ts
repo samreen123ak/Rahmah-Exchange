@@ -2,6 +2,12 @@ import mongoose from "mongoose"
 
 const notificationSchema = new mongoose.Schema(
   {
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tenant",
+      required: true,
+      index: true,
+    },
     applicantId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ZakatApplicant",
