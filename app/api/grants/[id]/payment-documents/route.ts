@@ -67,10 +67,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     // Add documents to grant
+    // Initialize paymentDocuments if it doesn't exist
     if (!grant.paymentDocuments) {
-      grant.paymentDocuments = []
+      // Use Mongoose's set method to properly initialize the array
+      grant.set('paymentDocuments', [])
     }
-    grant.paymentDocuments.push(...uploadedDocuments)
+    // Push all documents to the array
+    grant.paymentDocuments.push(...(uploadedDocuments as any[]))
     await grant.save()
 
     const response: any = {

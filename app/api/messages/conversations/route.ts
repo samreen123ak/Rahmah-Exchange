@@ -58,12 +58,13 @@ export async function GET(request: NextRequest) {
     console.log("Authenticated user:", user)
 
     // Fetch conversations
-    const conversations: ConversationWithParticipants[] = await Conversation.find(query)
+    // Use .lean() to get plain objects, then cast to expected type
+    const conversations = await Conversation.find(query)
       .sort({ lastMessageAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate("caseId", "caseId firstName lastName email")
-      .lean()
+      .lean() as ConversationWithParticipants[]
 
     const total = await Conversation.countDocuments(query)
 

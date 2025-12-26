@@ -7,7 +7,7 @@ import mongoose from "mongoose"
 /**
  * POST /api/case-assignments/[assignmentId]/accept - Accept case assignment
  */
-export async function POST(request: NextRequest, { params }: { params: { assignmentId: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ assignmentId: string }> }) {
   const roleCheck = await requireRole(request, ["caseworker"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest, { params }: { params: { assignm
   try {
     await dbConnect()
 
-    const assignmentId = (await params).assignmentId
+    const { assignmentId } = await params
 
     if (!mongoose.Types.ObjectId.isValid(assignmentId)) {
       return NextResponse.json({ message: "Invalid assignment ID" }, { status: 400 })

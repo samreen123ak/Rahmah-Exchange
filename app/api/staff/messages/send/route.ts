@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: error || "Unauthorized" }, { status: 401 })
     }
 
-    // Only staff can send messages
-    const allowedRoles = ["admin", "caseworker", "approver", "treasurer"]
+    // Only staff and super_admin can send messages
+    const allowedRoles = ["admin", "caseworker", "approver", "treasurer", "super_admin"]
     if (!allowedRoles.includes(user.role)) {
       return NextResponse.json({ message: "Only staff can send messages" }, { status: 403 })
     }
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
     // Send email notifications to recipients
     for (const recipient of recipients) {
       try {
-        const recipientUser = await User.findById(recipient.userId).lean()
+        const recipientUser = await User.findById(recipient.userId).lean() as any
         if (recipientUser && recipientUser.emailOnNewMessage) {
           await sendEmail({
             to: recipientUser.email,
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
       senderName: message.senderName,
       senderEmail: message.senderEmail,
       senderRole: message.senderRole,
-      senderId: message.senderId.toString(),
+      senderId: message.senderId?.toString() || "",
       createdAt: message.createdAt,
       readBy: message.readBy || [],
     }

@@ -9,7 +9,7 @@ import mongoose from "mongoose"
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { caseId: string; noteId: string } }
+  { params }: { params: Promise<{ caseId: string; noteId: string }> }
 ) {
   const roleCheck = await requireRole(request, ["admin", "caseworker", "approver", "treasurer"])
   if (!roleCheck.authorized) {
@@ -20,7 +20,7 @@ export async function PATCH(
     const { title, content, priority, isResolved, approvalAmount } = await request.json()
     await dbConnect()
 
-    const noteId = (await params).noteId
+    const { noteId } = await params
 
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
       return NextResponse.json({ message: "Invalid note ID" }, { status: 400 })
@@ -61,7 +61,7 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { caseId: string; noteId: string } }
+  { params }: { params: Promise<{ caseId: string; noteId: string }> }
 ) {
   const roleCheck = await requireRole(request, ["admin", "approver", "caseworker", "treasurer"])
   if (!roleCheck.authorized) {
@@ -71,7 +71,7 @@ export async function DELETE(
   try {
     await dbConnect()
 
-    const noteId = (await params).noteId
+    const { noteId } = await params
 
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
       return NextResponse.json({ message: "Invalid note ID" }, { status: 400 })

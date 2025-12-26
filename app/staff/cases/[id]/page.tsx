@@ -2,9 +2,10 @@
 import React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronLeft, Download, X, Edit, Upload, Trash2, FileText, Mail } from 'lucide-react'
+import { ChevronLeft, Download, X, Edit, Upload, Trash2, FileText, Mail, Share2 } from "lucide-react"
 import { useState, useEffect } from "react"
 import CaseEditModal from "@/components/case-edit-modal"
+import ShareProfileModal from "@/components/share-profile-modal"
 import { getAuthToken } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
 
@@ -187,7 +188,7 @@ function ApprovalNotesSection({
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
   const [editNoteContent, setEditNoteContent] = useState("")
   const [editNoteAmount, setEditNoteAmount] = useState<number | "">("")
-  
+
   const canEditNotes = userRole === "approver" || userRole === "admin"
 
   // Fetch notes history
@@ -208,7 +209,7 @@ function ApprovalNotesSection({
           const data = await res.json()
           // Filter for approval notes
           const approvalNotes = (data.notes || []).filter(
-            (note: any) => note.noteType === "approval_note" || note.authorRole === "approver"
+            (note: any) => note.noteType === "approval_note" || note.authorRole === "approver",
           )
           setNotesHistory(approvalNotes)
         }
@@ -271,7 +272,7 @@ function ApprovalNotesSection({
       if (notesRes.ok) {
         const data = await notesRes.json()
         const approvalNotes = (data.notes || []).filter(
-          (note: any) => note.noteType === "approval_note" || note.authorRole === "approver"
+          (note: any) => note.noteType === "approval_note" || note.authorRole === "approver",
         )
         setNotesHistory(approvalNotes)
       }
@@ -315,9 +316,9 @@ function ApprovalNotesSection({
         },
       })
       if (notesRes.ok) {
-        const data = await notesRes.json()
+        const data = await res.json()
         const approvalNotes = (data.notes || []).filter(
-          (note: any) => note.noteType === "approval_note" || note.authorRole === "approver"
+          (note: any) => note.noteType === "approval_note" || note.authorRole === "approver",
         )
         setNotesHistory(approvalNotes)
       }
@@ -377,9 +378,9 @@ function ApprovalNotesSection({
         },
       })
       if (notesRes.ok) {
-        const data = await notesRes.json()
+        const data = await res.json()
         const approvalNotes = (data.notes || []).filter(
-          (note: any) => note.noteType === "approval_note" || note.authorRole === "approver"
+          (note: any) => note.noteType === "approval_note" || note.authorRole === "approver",
         )
         setNotesHistory(approvalNotes)
       }
@@ -400,9 +401,7 @@ function ApprovalNotesSection({
       {canEditNotes && (
         <>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              Approval Amount (Optional)
-            </label>
+            <label className="block text-sm font-medium text-gray-900 mb-2">Approval Amount (Optional)</label>
             <input
               type="number"
               value={approvalAmount}
@@ -447,17 +446,12 @@ function ApprovalNotesSection({
           <h5 className="text-sm font-semibold text-gray-900 mb-3">Notes History</h5>
           <div className="space-y-3 max-h-64 overflow-y-auto">
             {notesHistory.map((note: any) => (
-              <div
-                key={note._id}
-                className="p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm"
-              >
+              <div key={note._id} className="p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm">
                 {editingNoteId === note._id && canEditNotes ? (
                   // Edit Mode
                   <div>
                     <div className="mb-3">
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Approval Amount
-                      </label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Approval Amount</label>
                       <input
                         type="number"
                         value={editNoteAmount}
@@ -498,12 +492,8 @@ function ApprovalNotesSection({
                   <>
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <p className="font-medium text-gray-900">
-                          {note.authorName || note.authorEmail || "Unknown"}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(note.createdAt).toLocaleString()}
-                        </p>
+                        <p className="font-medium text-gray-900">{note.authorName || note.authorEmail || "Unknown"}</p>
+                        <p className="text-xs text-gray-500">{new Date(note.createdAt).toLocaleString()}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         {note.approvalAmount && (
@@ -538,9 +528,7 @@ function ApprovalNotesSection({
         </div>
       )}
 
-      {loadingNotes && (
-        <p className="text-sm text-gray-500 mt-4">Loading notes history...</p>
-      )}
+      {loadingNotes && <p className="text-sm text-gray-500 mt-4">Loading notes history...</p>}
     </div>
   )
 }
@@ -600,7 +588,8 @@ function RoleBasedStatusSection({
   const availableStatuses = getAvailableStatusOptions()
   const canUpdateStatus = availableStatuses.length > 0
   // Everyone can see granted amount, but only approvers can edit it
-  const canSeeGrant = userRole === "approver" || userRole === "treasurer" || userRole === "admin" || userRole === "caseworker"
+  const canSeeGrant =
+    userRole === "approver" || userRole === "treasurer" || userRole === "admin" || userRole === "caseworker"
   const canSetGrantAmount = userRole === "approver" // Only approvers can set grant amount
   // Everyone can see numberOfMonths, but only caseworkers can edit
   const canSeeNumberOfMonths = true // Visible to everyone
@@ -660,7 +649,7 @@ function RoleBasedStatusSection({
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-900 mb-2">Remarks</label>
             {/* Caseworkers and approvers can edit remarks */}
-            {(canSetGrantAmount || userRole === "caseworker" || userRole === "admin") ? (
+            {canSetGrantAmount || userRole === "caseworker" || userRole === "admin" ? (
               <textarea
                 value={remarks}
                 onChange={(e) => setRemarks(e.target.value)}
@@ -715,14 +704,20 @@ function RoleBasedStatusSection({
                 disabled={isUpdating || numberOfMonths === "" || numberOfMonths === null}
                 className="w-full mt-3 bg-teal-600 text-white font-medium py-2 rounded-lg hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isUpdating ? "Saving..." : (grantData?.numberOfMonths ? "Update Number of Months" : "Save Number of Months")}
+                {isUpdating
+                  ? "Saving..."
+                  : grantData?.numberOfMonths
+                    ? "Update Number of Months"
+                    : "Save Number of Months"}
               </button>
             </>
           ) : (
             <>
               <div className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg">
                 {grantData?.numberOfMonths ? (
-                  <p className="text-gray-900 font-medium">{grantData.numberOfMonths} {grantData.numberOfMonths === 1 ? 'month' : 'months'}</p>
+                  <p className="text-gray-900 font-medium">
+                    {grantData.numberOfMonths} {grantData.numberOfMonths === 1 ? "month" : "months"}
+                  </p>
                 ) : (
                   <p className="text-gray-400 italic">Not added yet</p>
                 )}
@@ -735,11 +730,7 @@ function RoleBasedStatusSection({
 
       {/* General Notes Section - All Staff Can Add Notes */}
       {caseData?.caseId && (
-        <GeneralNotesSection
-          caseId={caseData.caseId}
-          applicantId={applicantId}
-          userRole={userRole}
-        />
+        <GeneralNotesSection caseId={caseData.caseId} applicantId={applicantId} userRole={userRole} />
       )}
     </div>
   )
@@ -798,9 +789,7 @@ function GeneralNotesSection({
         if (res.ok) {
           const data = await res.json()
           // Filter out approval notes (those are shown separately)
-          const generalNotes = (data.notes || []).filter(
-            (note: any) => note.noteType !== "approval_note"
-          )
+          const generalNotes = (data.notes || []).filter((note: any) => note.noteType !== "approval_note")
           setNotes(generalNotes)
         }
       } catch (err) {
@@ -850,7 +839,7 @@ function GeneralNotesSection({
 
       setNewNoteContent("")
       setNewNoteTitle("")
-      
+
       // Refresh notes
       const res = await fetch(`/api/cases/${caseId}/notes`, {
         headers: {
@@ -859,9 +848,7 @@ function GeneralNotesSection({
       })
       if (res.ok) {
         const data = await res.json()
-        const generalNotes = (data.notes || []).filter(
-          (note: any) => note.noteType !== "approval_note"
-        )
+        const generalNotes = (data.notes || []).filter((note: any) => note.noteType !== "approval_note")
         setNotes(generalNotes)
       }
     } catch (err: any) {
@@ -907,7 +894,7 @@ function GeneralNotesSection({
       setEditingNoteId(null)
       setEditNoteContent("")
       setEditNoteTitle("")
-      
+
       // Refresh notes
       const res = await fetch(`/api/cases/${caseId}/notes`, {
         headers: {
@@ -916,9 +903,7 @@ function GeneralNotesSection({
       })
       if (res.ok) {
         const data = await res.json()
-        const generalNotes = (data.notes || []).filter(
-          (note: any) => note.noteType !== "approval_note"
-        )
+        const generalNotes = (data.notes || []).filter((note: any) => note.noteType !== "approval_note")
         setNotes(generalNotes)
       }
     } catch (err: any) {
@@ -961,9 +946,7 @@ function GeneralNotesSection({
       })
       if (res.ok) {
         const data = await res.json()
-        const generalNotes = (data.notes || []).filter(
-          (note: any) => note.noteType !== "approval_note"
-        )
+        const generalNotes = (data.notes || []).filter((note: any) => note.noteType !== "approval_note")
         setNotes(generalNotes)
       }
     } catch (err: any) {
@@ -1004,9 +987,7 @@ function GeneralNotesSection({
   return (
     <div className="mb-6 mt-6 border-t pt-6">
       <h4 className="text-md font-semibold text-gray-900 mb-4">Case Notes</h4>
-      <p className="text-sm text-gray-600 mb-4">
-        Add notes about this case. All staff members can view and add notes.
-      </p>
+      <p className="text-sm text-gray-600 mb-4">Add notes about this case. All staff members can view and add notes.</p>
 
       {/* Add Note Form - All Staff */}
       {canAddNotes && (
@@ -1095,15 +1076,11 @@ function GeneralNotesSection({
                   </div>
                 ) : (
                   <>
-                    {note.title && (
-                      <h6 className="font-semibold text-gray-900 mb-1">{note.title}</h6>
-                    )}
+                    {note.title && <h6 className="font-semibold text-gray-900 mb-1">{note.title}</h6>}
                     <p className="text-gray-700 whitespace-pre-wrap mb-2">{note.content}</p>
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">
-                          {note.authorName || note.authorId?.name || "Unknown Staff"}
-                        </span>
+                        <span className="font-medium">{note.authorName || note.authorId?.name || "Unknown Staff"}</span>
                         <span>•</span>
                         <span className="capitalize">{note.authorRole || "Staff"}</span>
                         <span>•</span>
@@ -1111,10 +1088,7 @@ function GeneralNotesSection({
                       </div>
                       <div className="flex gap-2">
                         {canEditNote(note) && (
-                          <button
-                            onClick={() => startEditing(note)}
-                            className="text-teal-600 hover:text-teal-700"
-                          >
+                          <button onClick={() => startEditing(note)} className="text-teal-600 hover:text-teal-700">
                             Edit
                           </button>
                         )}
@@ -1359,13 +1333,9 @@ function PaymentDocumentsSection({
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">{doc.originalname}</p>
-                    {doc.size && (
-                      <p className="text-xs text-gray-500">{(doc.size / 1024).toFixed(2)} KB</p>
-                    )}
+                    {doc.size && <p className="text-xs text-gray-500">{(doc.size / 1024).toFixed(2)} KB</p>}
                     {doc.uploadedAt && (
-                      <p className="text-xs text-gray-400">
-                        {new Date(doc.uploadedAt).toLocaleDateString()}
-                      </p>
+                      <p className="text-xs text-gray-400">{new Date(doc.uploadedAt).toLocaleDateString()}</p>
                     )}
                   </div>
                 </div>
@@ -1403,9 +1373,7 @@ function PaymentDocumentsSection({
           <div className="text-center py-6 text-gray-500">
             <FileText className="w-12 h-12 mx-auto mb-2 text-gray-300" />
             <p className="text-sm">No payment documents uploaded yet</p>
-            {canEdit && (
-              <p className="text-xs text-gray-400 mt-1">Click "Add Payment Proof" to upload documents</p>
-            )}
+            {canEdit && <p className="text-xs text-gray-400 mt-1">Click "Add Payment Proof" to upload documents</p>}
           </div>
         )
       )}
@@ -1413,7 +1381,7 @@ function PaymentDocumentsSection({
   )
 }
 
-export default function Page({ params }: { params: Promise<{ id: string }> }) {
+export default function CaseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params)
   const [caseData, setCaseData] = useState<CaseDetail | null>(null)
   const [loading, setLoading] = useState(true)
@@ -1428,9 +1396,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [remarks, setRemarks] = useState("")
   const [numberOfMonths, setNumberOfMonths] = useState<number | "">("")
   const [loadingGrant, setLoadingGrant] = useState(true)
-
   const [showEditModal, setShowEditModal] = useState(false)
   const [userRole, setUserRole] = useState<string>("")
+  const [showShareModal, setShowShareModal] = useState(false)
 
   // ✅ Fetch case detail
   useEffect(() => {
@@ -1487,7 +1455,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   useEffect(() => {
     const fetchGrantData = async () => {
       try {
-        if (!id || (userRole !== "treasurer" && userRole !== "caseworker" && userRole !== "admin" && userRole !== "approver")) {
+        if (
+          !id ||
+          (userRole !== "treasurer" && userRole !== "caseworker" && userRole !== "admin" && userRole !== "approver")
+        ) {
           setLoadingGrant(false)
           return
         }
@@ -1536,7 +1507,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   // ✅ Save/Update Number of Months (for caseworkers)
   const handleNumberOfMonthsUpdate = async () => {
-    if (!numberOfMonths || numberOfMonths === "") {
+    if (
+      !numberOfMonths ||
+      (typeof numberOfMonths === "string" && numberOfMonths === "") ||
+      (typeof numberOfMonths === "number" && numberOfMonths <= 0)
+    ) {
       setUpdateError("Please enter a number of months")
       return
     }
@@ -1555,7 +1530,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       const grantPayload: any = {
         applicantId: id,
         numberOfMonths: Number(numberOfMonths),
-        status: caseData.status || "Pending",
+        status: caseData?.status || "Pending",
       }
 
       const grantResponse = await fetch(`/api/grants`, {
@@ -1642,31 +1617,37 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       // Caseworkers can update/create grants with status, numberOfMonths, and remarks (NOT amount)
       // Approvers can update/create grants with status, grantedAmount, and remarks
       // Admin can update/create grants with all fields
-      const shouldUpdateGrant = 
-        (userRole === "approver" && (updateStatus || grantedAmount !== "" && grantedAmount !== null || remarks)) ||
-        (userRole === "caseworker" && (updateStatus || numberOfMonths !== "" && numberOfMonths !== null || remarks || grantData)) ||
-        (userRole === "admin" && (updateStatus || grantedAmount !== "" && grantedAmount !== null || numberOfMonths !== "" && numberOfMonths !== null || remarks || grantData))
-      
+      const shouldUpdateGrant =
+        (userRole === "approver" && (updateStatus || (grantedAmount !== "" && grantedAmount !== null) || remarks)) ||
+        (userRole === "caseworker" &&
+          (updateStatus || (numberOfMonths !== "" && numberOfMonths !== null) || remarks || grantData)) ||
+        (userRole === "admin" &&
+          (updateStatus ||
+            (grantedAmount !== "" && grantedAmount !== null) ||
+            (numberOfMonths !== "" && numberOfMonths !== null) ||
+            remarks ||
+            grantData))
+
       if (shouldUpdateGrant) {
         const grantPayload: any = {
           applicantId: id,
         }
-        
+
         // All roles can update status
         if (updateStatus) {
           grantPayload.status = updateStatus
         }
-        
+
         // Only approvers and admin can set grantedAmount (caseworkers cannot)
         if ((userRole === "approver" || userRole === "admin") && grantedAmount !== "" && grantedAmount !== null) {
           grantPayload.grantedAmount = Number(grantedAmount)
         }
-        
+
         // Caseworkers and admin can set numberOfMonths (approvers cannot)
         if ((userRole === "caseworker" || userRole === "admin") && numberOfMonths !== "" && numberOfMonths !== null) {
           grantPayload.numberOfMonths = Number(numberOfMonths)
         }
-        
+
         // Caseworkers, approvers, and admin can set remarks
         if (remarks && (userRole === "caseworker" || userRole === "approver" || userRole === "admin")) {
           grantPayload.remarks = remarks
@@ -1675,9 +1656,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         // If grant already exists, use PUT to update it
         // Otherwise, use POST to create it
         const grantMethod = grantData?._id ? "PUT" : "POST"
-        const grantUrl = grantData?._id 
-          ? `/api/grants/${grantData._id}`
-          : `/api/grants`
+        const grantUrl = grantData?._id ? `/api/grants/${grantData._id}` : `/api/grants`
 
         const grantResponse = await fetch(grantUrl, {
           method: grantMethod,
@@ -1700,7 +1679,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           setUpdateStatus(grantStatus)
         } else {
           const errorData = await grantResponse.json().catch(() => ({}))
-          throw new Error(errorData.message || `Grant ${grantMethod === "PUT" ? "update" : "creation"} failed: ${grantResponse.status}`)
+          throw new Error(
+            errorData.message ||
+              `Grant ${grantMethod === "PUT" ? "update" : "creation"} failed: ${grantResponse.status}`,
+          )
         }
       }
 
@@ -1777,7 +1759,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     setCaseData(updatedData?.applicant || updatedData)
   }
 
-
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -1795,8 +1776,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const canEditCase = userRole === "admin" || userRole === "caseworker"
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-teal-50 to-blue-50">
-      <header className="bg-white border-b border-gray-200 px-8 py-6">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 px-8 py-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/staff/dashboard" className="flex items-center gap-3">
             <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={140} height={140} priority />
@@ -1818,15 +1800,26 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <h1 className="text-3xl font-bold text-gray-900">
                     {caseData.firstName} {caseData.lastName}
                   </h1>
-                  {canEditCase && (
-                    <button
-                      onClick={() => setShowEditModal(true)}
-                      className="mt-4 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
-                    >
-                      <Edit className="w-4 h-4" />
-                      Edit Case Details
-                    </button>
-                  )}
+                  <div className="flex gap-2 mt-4">
+                    {canEditCase && (
+                      <button
+                        onClick={() => setShowEditModal(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Edit Case Details
+                      </button>
+                    )}
+                    {(userRole === "admin" || userRole === "caseworker") && (
+                      <button
+                        onClick={() => setShowShareModal(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition text-sm font-medium"
+                      >
+                        <Share2 className="w-4 h-4" />
+                        Share Profile
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <span
                   className={`px-4 py-2 rounded-full text-sm font-medium ${
@@ -2151,42 +2144,44 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             )}
 
             {/* Granted Amount Display - Visible to Approver, Treasurer and Admin */}
-            {(userRole === "approver" || userRole === "treasurer" || userRole === "admin") && grantData && grantData.grantedAmount && (
-              <div className="bg-white rounded-lg p-6 mt-6 border-2 border-teal-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600 mb-1">Granted Amount</p>
-                    <p className="text-3xl font-bold text-teal-600">${grantData.grantedAmount.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500 mt-2">
-                      Status: <span className="font-medium text-gray-900">{caseData.status || grantData.status}</span>
-                    </p>
-                    {grantData.remarks && <p className="text-sm text-gray-700 mt-2 italic">"{grantData.remarks}"</p>}
-                  </div>
-                  <div className="text-right">
-                    <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+            {(userRole === "approver" || userRole === "treasurer" || userRole === "admin") &&
+              grantData &&
+              grantData.grantedAmount && (
+                <div className="bg-white rounded-lg p-6 mt-6 border-2 border-teal-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Granted Amount</p>
+                      <p className="text-3xl font-bold text-teal-600">${grantData.grantedAmount.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Status: <span className="font-medium text-gray-900">{caseData.status || grantData.status}</span>
+                      </p>
+                      {grantData.remarks && <p className="text-sm text-gray-700 mt-2 italic">"{grantData.remarks}"</p>}
+                    </div>
+                    <div className="text-right">
+                      <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
+                  {grantData.createdAt && (
+                    <p className="text-xs text-gray-500 mt-4">
+                      Granted on:{" "}
+                      {new Date(grantData.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
+                  )}
                 </div>
-                {grantData.createdAt && (
-                  <p className="text-xs text-gray-500 mt-4">
-                    Granted on:{" "}
-                    {new Date(grantData.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                )}
-              </div>
-            )}
+              )}
 
             {/* Quick Stats */}
             <div className="bg-white rounded-lg p-6 mt-6">
@@ -2222,6 +2217,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
       {/* Document Viewer Modal */}
       <DocumentViewer doc={selectedDocument} isOpen={showDocumentViewer} onClose={() => setShowDocumentViewer(false)} />
+
+      {/* Share Profile Modal */}
+      <ShareProfileModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        profileId={id}
+        profileName={`${caseData.firstName} ${caseData.lastName}`}
+      />
     </div>
   )
 }

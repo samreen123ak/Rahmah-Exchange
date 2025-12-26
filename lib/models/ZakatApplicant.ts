@@ -2,6 +2,12 @@ import mongoose from "mongoose"
 
 const zakatApplicantSchema = new mongoose.Schema(
   {
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tenant",
+      required: true,
+      index: true,
+    },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     streetAddress: String,
@@ -53,11 +59,18 @@ const zakatApplicantSchema = new mongoose.Schema(
         uploadedAt: { type: Date, default: Date.now },
       },
     ],
-    status: { type: String, default: "Pending", enum: ["Pending", "Approved", "Rejected","Ready for Approval","Need Info","In Review"] },
-    caseId: { type: String, unique: true, index: true },
+    status: {
+      type: String,
+      default: "Pending",
+      enum: ["Pending", "Approved", "Rejected", "Ready for Approval", "Need Info", "In Review"],
+    },
+    caseId: { type: String },
     isOldCase: { type: Boolean, default: false }, // Flag to indicate this is an old/historical case (no emails sent)
   },
-  { timestamps: true }
+  { timestamps: true },
 )
+
+// Compound index for caseId uniqueness per tenant
+zakatApplicantSchema.index({ tenantId: 1, caseId: 1 }, { unique: true })
 
 export default mongoose.models.ZakatApplicant || mongoose.model("ZakatApplicant", zakatApplicantSchema)

@@ -14,6 +14,7 @@ interface StaffUser {
   email: string
   role: string
   internalEmail?: string
+  isActive?: boolean
 }
 
 interface StaffConversation {
@@ -136,12 +137,13 @@ export default function StaffMessagesPage() {
         // API already filters for staff and active users, but double-check
         // Also exclude current user from the list
         const currentUserId = currentUser?._id?.toString()
+        // For super_admin, API already returns only admins
+        // For regular staff, API returns all staff from their tenant
         const staff = (data.users || []).filter(
           (u: StaffUser) => {
             const userId = u._id?.toString() || u._id
-            return u.role !== "applicant" && 
-                   u.isActive !== false && 
-                   userId !== currentUserId
+            // Exclude current user and ensure active
+            return u.isActive !== false && userId !== currentUserId
           }
         )
         setAllStaff(staff)

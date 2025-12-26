@@ -35,7 +35,7 @@ export async function POST(request: NextRequest, context: any) {
       if (!decoded || decoded.applicantId !== applicantId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
       }
-      uploadedBy = decoded.applicantEmail || "applicant"
+      uploadedBy = "applicant"
     }
 
     let formData: FormData

@@ -16,18 +16,22 @@ function isAuthorizedAdmin(user: any): boolean {
   if (!user || user.role !== "admin") {
     return false
   }
-  
+
   // Trust the database role - if user has role "admin" in database, they are authorized
   // The ADMIN_EMAIL env var is not used to restrict access, only for other purposes
   return true
 }
+
+type RoleCheckResult =
+  | { authorized: true; user: any; error: null; statusCode: 200 }
+  | { authorized: false; user?: never; error: string; statusCode: 401 | 403 }
 
 /**
  * Role-based access control middleware
  * Checks if user has required role(s) from database
  * For admin role, checks database role first, then optional email restriction if ADMIN_EMAIL is set
  */
-export async function requireRole(request: NextRequest, allowedRoles: string[]) {
+export async function requireRole(request: NextRequest, allowedRoles: string[]): Promise<RoleCheckResult> {
   const { user, error } = await authenticateRequest(request)
 
   if (error || !user) {
@@ -51,6 +55,16 @@ export async function requireRole(request: NextRequest, allowedRoles: string[]) 
         error: "Admin access denied. Please ensure your account has admin role in the database.",
         statusCode: 403,
       }
+    }
+  }
+
+  // Super admin can access any role-restricted endpoint
+  if (user.role === "super_admin") {
+    return {
+      authorized: true,
+      user,
+      error: null,
+      statusCode: 200,
     }
   }
 
@@ -80,9 +94,7 @@ export function withRoleProtection(handler: Function, allowedRoles: string[]) {
     if (!roleCheck.authorized) {
       return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
     }
-
-    // Pass user to handler via request context
-    (request as any).user = roleCheck.user
+    ;(request as any).user = roleCheck.user
     return handler(request, ...args)
   }
 }

@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
       role: user.role,
       name: user.name,
       email: user.email,
+      tenantId: user.tenantId?.toString(),
     })
 
     return NextResponse.json(
@@ -48,6 +49,7 @@ export async function POST(request: NextRequest) {
           name: user.name,
           email: user.email,
           role: user.role,
+          tenantId: user.tenantId,
         },
       },
       { status: 200 },

@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/db"
 import Grant from "@/lib/models/Grant"
 import { authenticateRequest } from "@/lib/auth-middleware"
 import { sendEmail } from "@/lib/email"
+import { getTenantFilter } from "@/lib/tenant-middleware"
 import mongoose from "mongoose"
 
 export async function POST(request: NextRequest) {
@@ -20,9 +21,12 @@ export async function POST(request: NextRequest) {
 
     await dbConnect()
 
-    // Verify applicant exists
+    // Get tenant filter
+    const tenantFilter = await getTenantFilter(request)
+
+    // Verify applicant exists and belongs to tenant
     const ZakatApplicant = (await import("@/lib/models/ZakatApplicant")).default
-    const applicant = await ZakatApplicant.findById(applicantId)
+    const applicant = await ZakatApplicant.findOne({ _id: applicantId, ...tenantFilter })
     if (!applicant) {
       return NextResponse.json({ message: "Applicant not found" }, { status: 404 })
     }
@@ -52,10 +56,11 @@ export async function POST(request: NextRequest) {
       : "Pending"
     
     // Check if grant already exists for this applicant
-    const existingGrant = await Grant.findOne({ applicantId })
+    const existingGrant = await Grant.findOne({ applicantId, ...tenantFilter })
     
     // Create grant with ONLY the new field names - never include amountGranted
     const grantData: any = {
+      tenantId: applicant.tenantId,
       applicantId,
       status: grantStatus,
     }
@@ -260,11 +265,14 @@ export async function GET(request: NextRequest) {
 
     await dbConnect()
 
+    // Get tenant filter
+    const tenantFilter = await getTenantFilter(request)
+
     const { searchParams } = new URL(request.url)
     const applicantId = searchParams.get("applicantId")
 
     // Build filter
-    const filter: any = {}
+    const filter: any = { ...tenantFilter }
     if (applicantId && mongoose.Types.ObjectId.isValid(applicantId)) {
       filter.applicantId = applicantId
     }

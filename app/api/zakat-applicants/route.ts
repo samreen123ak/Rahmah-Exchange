@@ -1,12 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { dbConnect } from "@/lib/db"
 import ZakatApplicant from "@/lib/models/ZakatApplicant"
-import { getAdminEmail, sendEmail } from "@/lib/email"
+import { sendEmail } from "@/lib/email"
+import { getTenantEmail } from "@/lib/tenant-email"
 import { generateMagicLink } from "@/lib/applicant-token-utils"
 import { uploadBuffer } from "@/lib/storage"
+import { escapeHtml } from "@/lib/utils/html-sanitize"
+import { getTenantFilter } from "@/lib/tenant-middleware"
+import { authenticateRequest } from "@/lib/auth-middleware"
 
-// Generate unique case ID
-async function generateUniqueCaseId(): Promise<string> {
+// Generate unique case ID per tenant
+async function generateUniqueCaseId(tenantId: string): Promise<string> {
   let caseId = ""
   let exists = true
 
@@ -14,13 +18,13 @@ async function generateUniqueCaseId(): Promise<string> {
     const date = new Date().toISOString().split("T")[0].replace(/-/g, "")
     const random = Math.random().toString(36).substring(2, 8).toUpperCase()
     caseId = `CASE-${date}-${random}`
-    exists = !!(await ZakatApplicant.exists({ caseId }))
+    exists = !!(await ZakatApplicant.exists({ tenantId, caseId }))
   }
 
   return caseId
 }
 
-// GET all applicants (public)
+// GET all applicants - filtered by tenant for authenticated users
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -32,7 +36,42 @@ export async function GET(request: NextRequest) {
 
     await dbConnect()
 
-    const filter: any = {}
+    // Try to get tenant filter (for authenticated requests)
+    // This is REQUIRED - no tenant filter means we can't determine which tenant's data to show
+    let tenantFilter: { tenantId?: string } = {}
+    let userRole: string | null = null
+    try {
+      // First authenticate to get user info
+      const { authenticateRequest } = await import("@/lib/auth-middleware")
+      const { user, error } = await authenticateRequest(request)
+      
+      if (error || !user) {
+        return NextResponse.json({ error: "Unauthorized - Authentication required" }, { status: 401 })
+      }
+      
+      userRole = user.role
+      
+      // Get tenant filter based on user role
+      tenantFilter = await getTenantFilter(request)
+      
+      // For non-super_admin users, tenantFilter MUST have tenantId
+      if (userRole !== "super_admin" && !tenantFilter.tenantId) {
+        console.error("User is not super_admin but has no tenantId filter:", { userId: user._id, role: userRole, tenantId: user.tenantId })
+        return NextResponse.json({ 
+          error: "Access denied - User is not associated with a masjid" 
+        }, { status: 403 })
+      }
+      
+    } catch (authError: any) {
+      // If authentication fails, require authentication
+      console.error("Authentication error in GET applicants:", authError)
+      return NextResponse.json({ error: "Unauthorized - Authentication required" }, { status: 401 })
+    }
+    
+    // Log the filter being applied (for debugging)
+    console.log("Tenant filter applied:", tenantFilter, "User role:", userRole)
+
+    const filter: any = { ...tenantFilter }
     if (status) filter.status = status
     if (q) {
       filter.$or = [
@@ -105,9 +144,36 @@ export async function POST(request: NextRequest) {
       reference2 = formData.get("reference2") ? JSON.parse(formData.get("reference2")!.toString()) : undefined
     } catch {}
 
-    // Check for duplicate email
+    // Get tenantId - from form data, query param, or authenticated user
+    let tenantId: string | null = null
+    
+    // Try to get from authenticated user first
+    try {
+      const { user } = await authenticateRequest(request)
+      if (user?.tenantId) {
+        tenantId = user.tenantId.toString()
+      }
+    } catch {}
+
+    // If not from user, try form data or query param (for public submissions)
+    if (!tenantId) {
+      tenantId = formData.get("tenantId")?.toString() || new URL(request.url).searchParams.get("tenantId") || null
+    }
+
+    if (!tenantId) {
+      return NextResponse.json({ error: "tenantId is required" }, { status: 400 })
+    }
+
+    // Verify tenant exists
+    const Tenant = (await import("@/lib/models/Tenant")).default
+    const tenant = await Tenant.findById(tenantId)
+    if (!tenant || !tenant.isActive) {
+      return NextResponse.json({ error: "Invalid or inactive tenant" }, { status: 400 })
+    }
+
+    // Check for duplicate email within tenant
     const email = formData.get("email")?.toString()
-    if (email && (await ZakatApplicant.findOne({ email }))) {
+    if (email && (await ZakatApplicant.findOne({ email, tenantId }))) {
       return NextResponse.json({ error: "Email already exists" }, { status: 409 })
     }
 
@@ -120,6 +186,7 @@ export async function POST(request: NextRequest) {
     const skipEmail = formData.get("skipEmail")?.toString() === "true"
 
     const applicantData: any = {
+      tenantId,
       firstName: formData.get("firstName"),
       lastName: formData.get("lastName"),
       streetAddress: formData.get("streetAddress"),
@@ -152,7 +219,7 @@ export async function POST(request: NextRequest) {
       reference1,
       reference2,
       documents: documentMetadata,
-      caseId: await generateUniqueCaseId(),
+      caseId: await generateUniqueCaseId(tenantId),
       isOldCase: skipEmail, // Store flag to indicate this is an old case
     }
 
@@ -167,7 +234,8 @@ export async function POST(request: NextRequest) {
       ;(async () => {
         try {
           const baseUrl = new URL(request.url).origin
-          const adminEmail = getAdminEmail()
+          // Get admin email from tenant (not from env)
+          const adminEmail = await getTenantEmail(tenantId)
           const magicLink = generateMagicLink(applicant._id.toString(), baseUrl)
           
           console.log(`Generated magic link for applicant ${applicant._id.toString()}: ${magicLink}`)
@@ -178,7 +246,7 @@ export async function POST(request: NextRequest) {
             to: applicant.email,
             subject: `We received your application (Case ID: ${applicant.caseId})`,
             html: `
-              <p>Assalamu Alaikum ${applicant.firstName || ""},</p>
+              <p>Assalamu Alaikum ${escapeHtml(applicant.firstName || "")},</p>
               <p>We have received your Zakat assistance application.</p>
               <p><strong>Case ID:</strong> ${applicant.caseId}</p>
               <p>You can access your application portal and upload additional documents using the link below:</p>
