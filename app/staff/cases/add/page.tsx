@@ -8,6 +8,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
+import { jwtDecode } from "jwt-decode"
 
 function Toast({ message, type, isVisible }: { message: string; type: "success" | "error"; isVisible: boolean }) {
   if (!isVisible) return null
@@ -61,6 +62,8 @@ export default function AddCasePage() {
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [emailExists, setEmailExists] = useState(false)
   const [checkingEmail, setCheckingEmail] = useState(false)
+  const [tenants, setTenants] = useState<{ _id: string; name: string; slug: string }[]>([])
+  const [loadingTenants, setLoadingTenants] = useState(false)
 
   const [formData, setFormData] = useState({
     // Step 1: Personal
@@ -78,6 +81,7 @@ export default function AddCasePage() {
     legalStatus: "",
     referredBy: "",
     referrerPhone: "",
+    tenantId: "",
     // Step 2: Employment
     employmentStatus: "",
     // Step 3: Family
@@ -109,8 +113,37 @@ export default function AddCasePage() {
     const token = getAuthToken()
     if (!token) {
       router.push("/staff/login")
+      return
     }
+
+    try {
+      const decoded: any = jwtDecode(token)
+      if (decoded?.tenantId) {
+        setFormData((prev) => ({ ...prev, tenantId: decoded.tenantId }))
+      }
+    } catch (err) {
+      console.error("Failed to decode token for tenant", err)
+    }
+
+    fetchTenants()
   }, [router])
+
+  const fetchTenants = async () => {
+    setLoadingTenants(true)
+    try {
+      const res = await authenticatedFetch("/api/public/tenants")
+      const data = await res.json()
+      if (res.ok) {
+        setTenants(data.tenants || [])
+      } else {
+        console.error("Failed to load masjids:", data?.message || res.statusText)
+      }
+    } catch (err) {
+      console.error("Failed to load masjids", err)
+    } finally {
+      setLoadingTenants(false)
+    }
+  }
 
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type, isVisible: true })
@@ -127,6 +160,7 @@ export default function AddCasePage() {
 
   const validateStep1 = async (): Promise<boolean> => {
     const newErrors: ValidationErrors = {}
+    if (!formData.tenantId) newErrors.tenantId = "Masjid is required"
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required"
     if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"
     if (!formData.streetAddress.trim()) newErrors.streetAddress = "Street address is required"
@@ -353,6 +387,7 @@ export default function AddCasePage() {
       submitData.append("legalStatus", formData.legalStatus)
       submitData.append("referredBy", formData.referredBy)
       submitData.append("referrerPhone", formData.referrerPhone)
+      submitData.append("tenantId", formData.tenantId)
       submitData.append("employmentStatus", formData.employmentStatus)
       submitData.append("dependentsInfo", formData.dependentsInfo)
       submitData.append("totalMonthlyIncome", formData.totalMonthlyIncome)
@@ -488,6 +523,34 @@ export default function AddCasePage() {
           {currentStep === 1 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Personal Information</h2>
+
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Select Masjid <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="tenantId"
+                  value={formData.tenantId}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 ${
+                    errors.tenantId ? "border-red-500 bg-red-50" : "border-gray-300"
+                  }`}
+                  disabled={loadingTenants}
+                >
+                  <option value="">{loadingTenants ? "Loading masjids..." : "Select a masjid"}</option>
+                  {tenants.map((tenant) => (
+                    <option key={tenant._id} value={tenant._id}>
+                      {tenant.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.tenantId && (
+                  <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors.tenantId}
+                  </p>
+                )}
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>

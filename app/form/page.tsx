@@ -1,7 +1,7 @@
 "use client"
 import axios from "axios"
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronLeft, Upload, CheckCircle2, AlertCircle, CheckCircle } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -60,6 +60,7 @@ export default function ApplyPage() {
   const [emailExists, setEmailExists] = useState(false)
   const [checkingEmail, setCheckingEmail] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
+  const [submittedApplicantData, setSubmittedApplicantData] = useState<any>(null)
 
   const [formData, setFormData] = useState({
     // Step 1: Personal
@@ -77,6 +78,7 @@ export default function ApplyPage() {
     legalStatus: "",
     referredBy: "",
     referrerPhone: "",
+    tenantId: "",
     // Step 2: Employment
     employmentStatus: "",
     // Step 3: Family
@@ -102,6 +104,29 @@ export default function ApplyPage() {
     // Step 7: Documents
     documents: [] as File[],
   })
+  const [tenants, setTenants] = useState<{ _id: string; name: string; slug: string }[]>([])
+  const [loadingTenants, setLoadingTenants] = useState(false)
+
+  useEffect(() => {
+    const fetchTenants = async () => {
+      setLoadingTenants(true)
+      try {
+        const res = await fetch("/api/public/tenants")
+        const data = await res.json()
+        if (res.ok) {
+          setTenants(data.tenants || [])
+        } else {
+          console.error("Failed to load masjids:", data?.message || res.statusText)
+        }
+      } catch (err) {
+        console.error("Failed to load masjids", err)
+      } finally {
+        setLoadingTenants(false)
+      }
+    }
+
+    fetchTenants()
+  }, [])
 
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type, isVisible: true })
@@ -267,6 +292,10 @@ export default function ApplyPage() {
   const validateStep6 = (): boolean => {
     const newErrors: ValidationErrors = {}
 
+    if (!formData.tenantId) {
+      newErrors.tenantId = "Please select a masjid"
+    }
+
     if (!formData.reference1.fullName.trim()) {
       newErrors["reference1.fullName"] = "Please enter full name"
     }
@@ -412,6 +441,7 @@ export default function ApplyPage() {
       submitData.append("legalStatus", formData.legalStatus)
       submitData.append("referredBy", formData.referredBy)
       submitData.append("referrerPhone", formData.referrerPhone)
+      submitData.append("tenantId", formData.tenantId)
       submitData.append("employmentStatus", formData.employmentStatus)
       submitData.append("dependentsInfo", formData.dependentsInfo)
       submitData.append("totalMonthlyIncome", formData.totalMonthlyIncome)
@@ -449,6 +479,8 @@ export default function ApplyPage() {
 
       if (response.status === 201 || response.data.applicant) {
         console.log("Application submitted successfully:", response.data)
+        // Store the applicant data from response
+        setSubmittedApplicantData(response.data.applicant)
         showToast("Application submitted successfully!", "success")
         setIsSubmitted(true)
         return
@@ -483,7 +515,7 @@ export default function ApplyPage() {
             <p className="text-green-800 font-semibold">Application submitted successfully!</p>
           </div>
 
-          <ApplicationStatus email={formData.email} />
+          <ApplicationStatus email={formData.email} applicantData={submittedApplicantData} />
         </div>
       </div>
     )
@@ -1225,6 +1257,34 @@ export default function ApplyPage() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-3">References (2 Required)</h2>
               <p className="text-gray-600 mb-8">Please provide two references who can vouch for you</p>
+
+            <div className="mb-10">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                Select Masjid <span className="text-red-500">*</span>
+              </label>
+              <select
+                name="tenantId"
+                value={formData.tenantId}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${
+                  errors.tenantId ? "border-red-500 bg-red-50" : "border-gray-300"
+                }`}
+                disabled={loadingTenants}
+              >
+                <option value="">{loadingTenants ? "Loading masjids..." : "Select a masjid"}</option>
+                {tenants.map((tenant) => (
+                  <option key={tenant._id} value={tenant._id}>
+                    {tenant.name}
+                  </option>
+                ))}
+              </select>
+              {errors.tenantId && (
+                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-4 h-4" />
+                  {errors.tenantId}
+                </p>
+              )}
+            </div>
 
               {/* Reference 1 */}
               <div className="mb-8 pb-8 border-b border-gray-200">

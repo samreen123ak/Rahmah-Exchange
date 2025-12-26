@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server"
+import mongoose from "mongoose"
 import { dbConnect } from "./db"
 import BlacklistedToken from "./models/BlacklistedToken"
 import User from "./models/User"
@@ -11,6 +12,7 @@ interface AuthenticatedUser {
   email: string
   internalEmail?: string
   role: string
+  tenantId?: string | mongoose.Types.ObjectId
 }
 
 export async function authenticateRequest(request: NextRequest) {
@@ -57,6 +59,11 @@ export async function authenticateRequest(request: NextRequest) {
       } else {
         user.role = "user"
       }
+    }
+
+    // Include tenantId in user object
+    if (user.tenantId) {
+      user.tenantId = user.tenantId.toString()
     }
 
     return { user, error: null }

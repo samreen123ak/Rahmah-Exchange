@@ -28,10 +28,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 /**
- * PATCH /api/users/[userId] - Update user (admin only)
+ * PATCH /api/users/[userId] - Update user (admin or super_admin)
+ * - Super admin can edit any admin
+ * - Regular admin can edit users in their tenant
  */
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
-  const roleCheck = await requireRole(request, ["admin"])
+  const roleCheck = await requireRole(request, ["admin", "super_admin"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
   }
@@ -46,9 +48,32 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ message: "User not found" }, { status: 404 })
     }
 
+    // Super admin can only edit admins
+    if (roleCheck.user.role === "super_admin" && user.role !== "admin") {
+      return NextResponse.json({ 
+        message: "Super admin can only edit admin users" 
+      }, { status: 403 })
+    }
+
+    // Regular admin can only edit users in their tenant
+    if (roleCheck.user.role !== "super_admin") {
+      const { requireTenant } = await import("@/lib/tenant-middleware")
+      const tenantCheck = await requireTenant(request)
+      if (tenantCheck.tenantId && user.tenantId?.toString() !== tenantCheck.tenantId) {
+        return NextResponse.json({ 
+          message: "You can only edit users from your masjid" 
+        }, { status: 403 })
+      }
+    }
+
     // Check if email is being changed and if it's already taken by another user
     if (email && email !== user.email) {
-      const existingUser = await User.findOne({ email: email.toLowerCase(), _id: { $ne: userId } })
+      const emailFilter: any = { email: email.toLowerCase(), _id: { $ne: userId } }
+      // For super_admin, check globally; for regular admin, check within tenant
+      if (roleCheck.user.role !== "super_admin" && user.tenantId) {
+        emailFilter.tenantId = user.tenantId
+      }
+      const existingUser = await User.findOne(emailFilter)
       if (existingUser) {
         return NextResponse.json({ message: "Email already in use by another user" }, { status: 400 })
       }
@@ -72,9 +97,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     // Update password if provided
+    // Let the User model's pre-save hook handle hashing automatically
     if (password && password.trim() !== "") {
-      const salt = await bcrypt.genSalt(10)
-      user.password = await bcrypt.hash(password, salt)
+      user.password = password
     }
 
     await user.save()

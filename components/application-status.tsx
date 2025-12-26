@@ -14,12 +14,34 @@ interface ApplicationData {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
 
-export default function ApplicationStatus({ email }: { email: string }) {
+export default function ApplicationStatus({ 
+  email, 
+  applicantData 
+}: { 
+  email: string
+  applicantData?: any 
+}) {
   const [data, setData] = useState<ApplicationData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // If applicant data is provided directly, use it
+    if (applicantData) {
+      setData({
+        caseId: applicantData.caseId || applicantData._id,
+        status: applicantData.status || "Pending",
+        createdAt: applicantData.createdAt,
+        firstName: applicantData.firstName,
+        lastName: applicantData.lastName,
+        email: applicantData.email,
+        requestType: applicantData.requestType,
+      })
+      setLoading(false)
+      return
+    }
+
+    // Otherwise, fetch from API
     const fetchApplicant = async () => {
       try {
         setLoading(true)
@@ -28,27 +50,35 @@ export default function ApplicationStatus({ email }: { email: string }) {
 
         const result = await res.json()
 
-        let applicantData = null
+        let fetchedApplicantData = null
 
         if (Array.isArray(result) && result.length > 0) {
           // If API returns array directly
-          applicantData = result[0]
+          fetchedApplicantData = result[0]
         } else if (result?.data && Array.isArray(result.data)) {
           // If API returns { data: [...] }
-          applicantData = result.data[0]
+          fetchedApplicantData = result.data[0]
         } else if (result?.items && Array.isArray(result.items)) {
           // If API returns { items: [...] }
-          applicantData = result.items[0]
+          fetchedApplicantData = result.items[0]
         } else if (result?.data && typeof result.data === "object") {
           // If API returns { data: {...} } (single object)
-          applicantData = result.data
+          fetchedApplicantData = result.data
         } else if (typeof result === "object" && !Array.isArray(result)) {
           // If API returns object directly
-          applicantData = result
+          fetchedApplicantData = result
         }
 
-        if (applicantData) {
-          setData(applicantData)
+        if (fetchedApplicantData) {
+          setData({
+            caseId: fetchedApplicantData.caseId || fetchedApplicantData._id,
+            status: fetchedApplicantData.status || "Pending",
+            createdAt: fetchedApplicantData.createdAt,
+            firstName: fetchedApplicantData.firstName,
+            lastName: fetchedApplicantData.lastName,
+            email: fetchedApplicantData.email,
+            requestType: fetchedApplicantData.requestType,
+          })
         } else {
           setError("Application data not found. Please check if you've submitted an application or try again later.")
         }
@@ -66,7 +96,7 @@ export default function ApplicationStatus({ email }: { email: string }) {
       setError("No email provided")
       setLoading(false)
     }
-  }, [email])
+  }, [email, applicantData])
 
   if (loading) {
     return <p className="text-gray-600">Loading application details... ⏳</p>

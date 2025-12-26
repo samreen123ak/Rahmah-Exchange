@@ -84,12 +84,41 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     await dbConnect()
-    const applicant = await ZakatApplicant.findById(id)
-    if (!applicant) return NextResponse.json({ error: "Applicant not found" }, { status: 404 })
+    
+    // Try to get tenant filter for authenticated requests
+    let tenantFilter: { tenantId?: string } = {}
+    let isAuthenticatedRequest = false
+    try {
+      const { getTenantFilter } = await import("@/lib/tenant-middleware")
+      tenantFilter = await getTenantFilter(request)
+      isAuthenticatedRequest = true
+      console.log("Tenant filter for GET applicant:", tenantFilter)
+    } catch (authError) {
+      // If not authenticated, allow access via token (applicant portal)
+      // But we still need to verify the applicant exists
+      isAuthenticatedRequest = false
+    }
+
+    // Build query - if authenticated, apply tenant filter; if not, only allow if token is valid
+    const query: any = { _id: id }
+    if (isAuthenticatedRequest && Object.keys(tenantFilter).length > 0) {
+      // Apply tenant filter for authenticated staff users
+      Object.assign(query, tenantFilter)
+    }
+    // If not authenticated and no token, this will fail below
+
+    const applicant = await ZakatApplicant.findOne(query)
+    if (!applicant) {
+      // If authenticated but not found, it might be from another tenant
+      if (isAuthenticatedRequest) {
+        return NextResponse.json({ error: "Applicant not found or access denied" }, { status: 404 })
+      }
+      return NextResponse.json({ error: "Applicant not found" }, { status: 404 })
+    }
 
     // If token was used, also return document logs
     if (token) {
-      const documentLogs = await DocumentAudit.find({ applicantId: id }).sort({ createdAt: -1 })
+      const documentLogs = await DocumentAudit.find({ applicantId: id, tenantId: applicant.tenantId }).sort({ createdAt: -1 })
       return NextResponse.json({ applicant, documentLogs }, { status: 200 })
     }
 
@@ -126,13 +155,21 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       }
     }
 
-    // Prevent duplicate email
+    // Get tenant filter
+    const { getTenantFilter } = await import("@/lib/tenant-middleware")
+    const tenantFilter = await getTenantFilter(request)
+
+    // Prevent duplicate email within tenant
     if (body.email) {
-      const existing = await ZakatApplicant.findOne({ email: body.email, _id: { $ne: id } })
+      const existing = await ZakatApplicant.findOne({ 
+        email: body.email, 
+        _id: { $ne: id },
+        ...tenantFilter
+      })
       if (existing) return NextResponse.json({ error: "Email already exists" }, { status: 409 })
     }
 
-    const currentApplicant = await ZakatApplicant.findById(id)
+    const currentApplicant = await ZakatApplicant.findOne({ _id: id, ...tenantFilter })
     if (!currentApplicant) {
       return NextResponse.json({ error: "Applicant not found" }, { status: 404 })
     }
@@ -151,7 +188,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       delete updateBody.documents
     }
 
-    const updated = await ZakatApplicant.findByIdAndUpdate(id, updateBody, { new: true, runValidators: true })
+    const updated = await ZakatApplicant.findOneAndUpdate(
+      { _id: id, ...tenantFilter },
+      updateBody,
+      { new: true, runValidators: true }
+    )
     if (!updated) return NextResponse.json({ error: "Applicant not found" }, { status: 404 })
 
     // Send emails based on status changes
@@ -192,7 +233,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       // If approver approved → email treasurer
       if (user.role === "approver" && newStatus === "Approved") {
         try {
-          const treasurers = await User.find({ role: "treasurer", isActive: true }).lean()
+          const treasurers = await User.find({ 
+            role: "treasurer", 
+            isActive: true,
+            tenantId: currentApplicant.tenantId
+          }).lean()
           
           if (treasurers.length > 0) {
             const baseUrl = new URL(request.url).origin

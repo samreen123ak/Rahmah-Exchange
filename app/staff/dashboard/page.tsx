@@ -1,6 +1,3 @@
-// Updated DashboardPage with right sidebar removed and Status Overview moved under Today's Applications
-// Full file below
-
 "use client"
 
 import type React from "react"
@@ -15,10 +12,9 @@ import {
   LogOut,
   Users,
   MessageSquare,
-  Search,
-  Plus,
   ChevronRight,
   Shield,
+  Share2,
 } from "lucide-react"
 import { removeAuthToken, getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
@@ -74,7 +70,10 @@ export default function DashboardPage() {
     try {
       const token = getAuthToken()
       if (token) {
-        await authenticatedFetch(`/api/auth/logout`, { method: "POST", headers: { "Content-Type": "application/json" } }).catch(() => {})
+        await authenticatedFetch(`/api/auth/logout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }).catch(() => {})
       }
       removeAuthToken()
       router.push("/staff/login")
@@ -143,7 +142,18 @@ export default function DashboardPage() {
     { name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" },
     { name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" },
     { name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" },
-    ...(userRole === "admin" ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }] : []),
+    {
+      name: "Shared Profiles",
+      icon: Share2,
+      href: "/staff/shared-profiles",
+      active: pathname === "/staff/shared-profiles",
+    },
+    ...(userRole === "admin" || userRole === "super_admin"
+      ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
+      : []),
+    ...(userRole === "super_admin"
+      ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
+      : []),
   ]
 
   return (
@@ -175,7 +185,10 @@ export default function DashboardPage() {
         </nav>
 
         <div className="p-4 border-t border-gray-200">
-          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 w-full">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 w-full"
+          >
             <LogOut className="w-5 h-5" /> Logout
           </button>
         </div>
@@ -193,7 +206,9 @@ export default function DashboardPage() {
 
         {/* Greeting Banner */}
         <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl p-8 text-white mt-6">
-          <h1 className="text-3xl font-bold">{getGreeting()}, {userName.split(" ")[0]}</h1>
+          <h1 className="text-3xl font-bold">
+            {getGreeting()}, {userName.split(" ")[0]}
+          </h1>
           <p className="text-teal-100 mt-2">
             You have <span className="font-semibold text-white">{pendingCount}</span> pending applications.
           </p>
@@ -201,10 +216,30 @@ export default function DashboardPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-          <StatCard title="Total Applications" value={totalFromAPI ?? applicants.length} icon={<FileText className="w-5 h-5" />} color="from-blue-600 to-cyan-600" />
-          <StatCard title="Pending Review" value={pendingCount} icon={<TrendingUp className="w-5 h-5" />} color="from-yellow-600 to-orange-600" />
-          <StatCard title="Approved" value={approvedCount} icon={<CheckCircle2 className="w-5 h-5" />} color="from-green-600 to-emerald-600" />
-          <StatCard title="New Today" value={todaysSubmissions} icon={<Shield className="w-5 h-5" />} color="from-purple-600 to-pink-600" />
+          <StatCard
+            title="Total Applications"
+            value={totalFromAPI ?? applicants.length}
+            icon={<FileText className="w-5 h-5" />}
+            color="from-blue-600 to-cyan-600"
+          />
+          <StatCard
+            title="Pending Review"
+            value={pendingCount}
+            icon={<TrendingUp className="w-5 h-5" />}
+            color="from-yellow-600 to-orange-600"
+          />
+          <StatCard
+            title="Approved"
+            value={approvedCount}
+            icon={<CheckCircle2 className="w-5 h-5" />}
+            color="from-green-600 to-emerald-600"
+          />
+          <StatCard
+            title="New Today"
+            value={todaysSubmissions}
+            icon={<Shield className="w-5 h-5" />}
+            color="from-purple-600 to-pink-600"
+          />
         </div>
 
         {/* Today's Applications Table */}
@@ -229,12 +264,24 @@ export default function DashboardPage() {
 
               <tbody className="bg-white divide-y">
                 {loading ? (
-                  <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                      Loading...
+                    </td>
+                  </tr>
                 ) : todaysApplicants.length === 0 ? (
-                  <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">No applications today</td></tr>
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                      No applications today
+                    </td>
+                  </tr>
                 ) : (
                   todaysApplicants.map((app, index) => (
-                    <tr key={app._id || app.id || `app-${index}`} className="hover:bg-gray-50 cursor-pointer" onClick={() => router.push(`/staff/cases/${app._id || app.id}`)}>
+                    <tr
+                      key={app._id || app.id || `app-${index}`}
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onClick={() => router.push(`/staff/cases/${app._id || app.id}`)}
+                    >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
@@ -243,7 +290,9 @@ export default function DashboardPage() {
                             </span>
                           </div>
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{app.firstName} {app.lastName}</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {app.firstName} {app.lastName}
+                            </div>
                             {app.caseId && <div className="text-xs text-gray-500">{app.caseId}</div>}
                           </div>
                         </div>
@@ -252,17 +301,25 @@ export default function DashboardPage() {
                       <td className="px-6 py-4 text-sm text-gray-900">{app.email || "N/A"}</td>
 
                       <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          app.normalizedStatus === "approved" ? "bg-green-100 text-green-800" :
-                          app.normalizedStatus === "pending" ? "bg-yellow-100 text-yellow-800" :
-                          app.normalizedStatus === "rejected" ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-800"
-                        }`}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            app.normalizedStatus === "approved"
+                              ? "bg-green-100 text-green-800"
+                              : app.normalizedStatus === "pending"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : app.normalizedStatus === "rejected"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
                           {app.status || "Pending"}
                         </span>
                       </td>
 
                       <td className="px-6 py-4 text-sm text-gray-900">
-                        {app.createdAt ? new Date(app.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "N/A"}
+                        {app.createdAt
+                          ? new Date(app.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                          : "N/A"}
                       </td>
                     </tr>
                   ))

@@ -3,7 +3,7 @@ import { dbConnect } from "@/lib/db"
 import Notification from "@/lib/models/Notification"
 import { authenticateRequest } from "@/lib/auth-middleware"
 
-// GET notifications
+//GET notifications
 export async function GET(request: NextRequest) {
   try {
     const { error } = await authenticateRequest(request)

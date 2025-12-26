@@ -15,27 +15,45 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: error || "Unauthorized" }, { status: 401 })
     }
 
-    // Only staff can access
-    const allowedRoles = ["admin", "caseworker", "approver", "treasurer"]
+    // Only staff and super_admin can access
+    const allowedRoles = ["admin", "caseworker", "approver", "treasurer", "super_admin"]
     if (!allowedRoles.includes(user.role)) {
       return NextResponse.json({ message: "Only staff can access this" }, { status: 403 })
     }
 
     await dbConnect()
 
-    // Find all staff conversations where user is a participant
-    // Staff conversations have conversationId starting with "staff_"
-    const conversations = await Conversation.find({
-      "participants.userId": user._id,
+    // Build query based on role
+    const query: any = {
       conversationId: { $regex: "^staff_" },
       isArchived: false,
-    })
-      .sort({ lastMessageAt: -1, updatedAt: -1 })
-      .lean()
+    }
+
+    if (user.role === "super_admin") {
+      // Super admin sees conversations where all participants are admins
+      // Find conversations where user is participant AND all other participants are admins
+      query["participants.userId"] = user._id
+      // We'll filter results to only show admin-to-admin conversations
+    } else {
+      // Regular staff sees their own conversations
+      query["participants.userId"] = user._id
+    }
+
+    const conversations = await Conversation.find(query).sort({ lastMessageAt: -1, updatedAt: -1 }).lean()
+
+    // For super_admin, filter to only show conversations with admins
+    let filteredConversations = conversations
+    if (user.role === "super_admin") {
+      filteredConversations = conversations.filter((conv: any) => {
+        // Check if all participants (except super_admin) are admins
+        const otherParticipants = conv.participants.filter((p: any) => p.userId.toString() !== user._id.toString())
+        return otherParticipants.every((p: any) => p.role === "admin")
+      })
+    }
 
     // Format conversations with unread counts
     const formattedConversations = await Promise.all(
-      conversations.map(async (conv: any) => {
+      filteredConversations.map(async (conv: any) => {
         const participant = conv.participants.find((p: any) => p.userId.toString() === user._id.toString())
         const lastReadAt = participant?.lastReadAt || new Date(0)
 
@@ -76,7 +94,7 @@ export async function GET(request: NextRequest) {
           unreadCount,
           messageCount: conv.messageCount || 0,
         }
-      })
+      }),
     )
 
     return NextResponse.json({ conversations: formattedConversations }, { status: 200 })
@@ -96,8 +114,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: error || "Unauthorized" }, { status: 401 })
     }
 
-    // Only staff can create conversations
-    const allowedRoles = ["admin", "caseworker", "approver", "treasurer"]
+    // Only staff and super_admin can create conversations
+    const allowedRoles = ["admin", "caseworker", "approver", "treasurer", "super_admin"]
     if (!allowedRoles.includes(user.role)) {
       return NextResponse.json({ message: "Only staff can create conversations" }, { status: 403 })
     }
@@ -106,6 +124,23 @@ export async function POST(request: NextRequest) {
 
     if (!recipientIds || !Array.isArray(recipientIds) || recipientIds.length === 0) {
       return NextResponse.json({ message: "At least one recipient is required" }, { status: 400 })
+    }
+
+    // For super_admin, only allow creating conversations with admins
+    if (user.role === "super_admin") {
+      const recipientUsers = await User.find({
+        _id: { $in: recipientIds.map((id: string) => new mongoose.Types.ObjectId(id)) },
+      }).lean()
+
+      const allAdmins = recipientUsers.every((u: any) => u.role === "admin")
+      if (!allAdmins) {
+        return NextResponse.json(
+          {
+            message: "Super admin can only create conversations with admins",
+          },
+          { status: 403 },
+        )
+      }
     }
 
     await dbConnect()
@@ -123,7 +158,7 @@ export async function POST(request: NextRequest) {
     const existingConversation = await Conversation.findOne({
       conversationId: { $regex: "^staff_" },
       "participants.userId": { $all: uniqueParticipantIds.map((id) => new mongoose.Types.ObjectId(id)) },
-      "participants": { $size: uniqueParticipantIds.length },
+      participants: { $size: uniqueParticipantIds.length },
     }).lean()
 
     if (existingConversation) {
@@ -190,4 +225,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: error.message || "Internal server error" }, { status: 500 })
   }
 }
-

@@ -2,6 +2,12 @@ import mongoose from "mongoose"
 
 const messageSchema = new mongoose.Schema(
   {
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tenant",
+      required: true,
+      index: true,
+    },
     // Conversation context
     caseId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -105,14 +111,14 @@ const messageSchema = new mongoose.Schema(
 )
 
 // Indexes for quick queries
-messageSchema.index({ caseId: 1, createdAt: -1 })
-messageSchema.index({ conversationId: 1, createdAt: -1 })
-messageSchema.index({ senderId: 1, createdAt: -1 })
-messageSchema.index({ applicantId: 1, createdAt: -1 })
+messageSchema.index({ tenantId: 1, caseId: 1, createdAt: -1 })
+messageSchema.index({ tenantId: 1, conversationId: 1, createdAt: -1 })
+messageSchema.index({ tenantId: 1, senderId: 1, createdAt: -1 })
+messageSchema.index({ tenantId: 1, applicantId: 1, createdAt: -1 })
 // Separate indexes for arrays - MongoDB doesn't support compound indexes on parallel arrays
-messageSchema.index({ recipientIds: 1 })
-messageSchema.index({ "readBy.userId": 1 })
-messageSchema.index({ isDeleted: 1 })
+messageSchema.index({ tenantId: 1, recipientIds: 1 })
+messageSchema.index({ tenantId: 1, "readBy.userId": 1 })
+messageSchema.index({ tenantId: 1, isDeleted: 1 })
 
 // Force model recreation to clear any cached schema with old indexes
 if (mongoose.models.Message) {

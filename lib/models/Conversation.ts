@@ -2,6 +2,12 @@ import mongoose from "mongoose"
 
 const conversationSchema = new mongoose.Schema(
   {
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tenant",
+      required: true,
+      index: true,
+    },
     // Case reference (optional for staff conversations)
     caseId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -13,9 +19,9 @@ const conversationSchema = new mongoose.Schema(
     conversationId: {
       type: String,
       required: true,
-      unique: true,
       index: true,
       // Format: "case_[caseObjectId]" or "staff_[objectId]" for staff conversations
+      // Removed unique - will be unique per tenant
     },
 
     // Participants
@@ -68,9 +74,11 @@ const conversationSchema = new mongoose.Schema(
 )
 
 // Index for fast queries
-conversationSchema.index({ caseId: 1, createdAt: -1 })
-conversationSchema.index({ "participants.userId": 1 })
-conversationSchema.index({ isArchived: 1 })
+conversationSchema.index({ tenantId: 1, caseId: 1, createdAt: -1 })
+conversationSchema.index({ tenantId: 1, "participants.userId": 1 })
+conversationSchema.index({ tenantId: 1, isArchived: 1 })
+// Compound unique index for conversationId per tenant
+conversationSchema.index({ tenantId: 1, conversationId: 1 }, { unique: true })
 
 // Delete cached model to force recompilation with updated schema
 if (mongoose.models.Conversation) {

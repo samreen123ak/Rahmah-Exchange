@@ -2,6 +2,12 @@ import mongoose from "mongoose"
 
 const paymentRecordSchema = new mongoose.Schema(
   {
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tenant",
+      required: true,
+      index: true,
+    },
     grantId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Grant",
