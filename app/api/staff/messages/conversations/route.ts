@@ -51,6 +51,13 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    // Only show conversations that have at least one message
+    // This ensures we only show conversations that have actually been started with messages
+    filteredConversations = filteredConversations.filter((conv: any) => {
+      // Show if messageCount > 0 OR if lastMessage exists (in case messageCount isn't updated yet)
+      return (conv.messageCount && conv.messageCount > 0) || (conv.lastMessage && conv.lastMessage.trim().length > 0)
+    })
+
     // Format conversations with unread counts
     const formattedConversations = await Promise.all(
       filteredConversations.map(async (conv: any) => {
@@ -149,10 +156,35 @@ export async function POST(request: NextRequest) {
     const allParticipantIds = [user._id.toString(), ...recipientIds]
     const uniqueParticipantIds = [...new Set(allParticipantIds)]
 
+    // Validate that all recipient IDs are valid ObjectIds
+    const validRecipientIds = recipientIds.filter((id: string) => {
+      try {
+        new mongoose.Types.ObjectId(id)
+        return true
+      } catch {
+        return false
+      }
+    })
+
+    if (validRecipientIds.length !== recipientIds.length) {
+      return NextResponse.json({ message: "Invalid recipient ID(s)" }, { status: 400 })
+    }
+
     // Get user details for all participants
     const participants = await User.find({
       _id: { $in: uniqueParticipantIds.map((id) => new mongoose.Types.ObjectId(id)) },
     }).lean()
+
+    // Verify all participants exist
+    if (participants.length !== uniqueParticipantIds.length) {
+      return NextResponse.json({ message: "One or more recipients not found" }, { status: 404 })
+    }
+
+    // Verify all participants are active
+    const inactiveParticipants = participants.filter((p: any) => p.isActive === false)
+    if (inactiveParticipants.length > 0) {
+      return NextResponse.json({ message: "Cannot create conversation with inactive users" }, { status: 400 })
+    }
 
     // Check if conversation already exists with these exact participants
     const existingConversation = await Conversation.findOne({
@@ -192,17 +224,40 @@ export async function POST(request: NextRequest) {
       isActive: true,
     }))
 
-    // Create a dummy caseId for staff conversations (since caseId is required but we don't have a real case)
+    // Get tenantId from current user (required for Conversation model)
+    // For super_admin, use the first participant's tenantId, or null if all are super_admin
+    let tenantId = user.tenantId
+    if (!tenantId && user.role === "super_admin" && participants.length > 0) {
+      // Try to get tenantId from first participant
+      const firstParticipant = participants.find((p: any) => p.tenantId)
+      tenantId = firstParticipant?.tenantId || null
+    }
+    
+    // If still no tenantId, we need to handle this - for staff conversations, we can use a default or make it optional
+    // For now, if no tenantId, we'll use the first participant's tenantId or create without tenantId
+    if (!tenantId && participants.length > 0) {
+      const participantWithTenant = participants.find((p: any) => p.tenantId)
+      tenantId = participantWithTenant?.tenantId || null
+    }
+
+    // Create a dummy caseId for staff conversations (since caseId is optional but we set it for consistency)
     const dummyCaseId = new mongoose.Types.ObjectId()
 
-    const conversation = await Conversation.create({
+    const conversationData: any = {
       conversationId,
       caseId: dummyCaseId, // Dummy caseId for staff conversations
       title: `Chat: ${participants.map((p: any) => p.name).join(", ")}`,
       participants: participantData,
       messageCount: 0,
       isArchived: false,
-    })
+    }
+
+    // Only add tenantId if we have one (required field)
+    if (tenantId) {
+      conversationData.tenantId = tenantId
+    }
+
+    const conversation = await Conversation.create(conversationData)
 
     const formatted = {
       _id: conversation._id.toString(),
@@ -222,6 +277,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ conversation: formatted }, { status: 201 })
   } catch (error: any) {
     console.error("Error creating staff conversation:", error)
-    return NextResponse.json({ message: error.message || "Internal server error" }, { status: 500 })
+    
+    // Provide more detailed error messages
+    let errorMessage = "Failed to create conversation"
+    let statusCode = 500
+    
+    if (error.name === "ValidationError") {
+      errorMessage = `Validation error: ${error.message}`
+      statusCode = 400
+    } else if (error.code === 11000) {
+      errorMessage = "A conversation with these participants already exists"
+      statusCode = 409
+    } else if (error.message) {
+      errorMessage = error.message
+    }
+    
+    return NextResponse.json({ message: errorMessage }, { status: statusCode })
   }
 }

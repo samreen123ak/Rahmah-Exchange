@@ -43,6 +43,8 @@ export default function DashboardPage() {
   const [applicants, setApplicants] = useState<ZakatApplicant[]>([])
   const [totalFromAPI, setTotalFromAPI] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
+  const [tenants, setTenants] = useState<any[]>([])
+  const [tenantsLoading, setTenantsLoading] = useState<boolean>(false)
   const [userRole, setUserRole] = useState<string>("")
   const [userName, setUserName] = useState<string>("")
   const [userEmail, setUserEmail] = useState<string>("")
@@ -84,8 +86,12 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
-    const fetchApplicants = async () => {
+    // Wait until we know the user's role before loading dashboard data
+    if (!userRole) return
+
+    const fetchData = async () => {
       try {
+        // Always load applicants for counts (for tenants or super admin)
         const res = await authenticatedFetch(`/api/zakat-applicants`)
         const json = await res.json()
 
@@ -97,8 +103,23 @@ export default function DashboardPage() {
         }))
 
         setApplicants(normalizedArray)
-
         setTotalFromAPI(json.total ?? json.totalCount ?? normalizedArray.length)
+
+        // For super_admin, also load tenants to show masjid-level stats
+        if (userRole === "super_admin") {
+          setTenantsLoading(true)
+          try {
+            const tenantsRes = await authenticatedFetch(`/api/tenants`)
+            const tenantsJson = await tenantsRes.json()
+            const tenantArray: any[] = Array.isArray(tenantsJson) ? tenantsJson : tenantsJson.tenants || []
+            setTenants(tenantArray)
+          } catch (tenErr) {
+            console.error("Error fetching tenants for super admin dashboard:", tenErr)
+            setTenants([])
+          } finally {
+            setTenantsLoading(false)
+          }
+        }
       } catch (error) {
         console.error("Error fetching applicants:", error)
         setApplicants([])
@@ -107,8 +128,8 @@ export default function DashboardPage() {
       }
     }
 
-    fetchApplicants()
-  }, [])
+    fetchData()
+  }, [userRole])
 
   const approvedCount = applicants.filter((a) => a.normalizedStatus === "approved").length
   const pendingCount = applicants.filter((a) => a.normalizedStatus === "pending").length
@@ -139,15 +160,27 @@ export default function DashboardPage() {
 
   const navItems = [
     { name: "Dashboard", icon: FileText, href: "/staff/dashboard", active: pathname === "/staff/dashboard" },
-    { name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" },
-    { name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" },
-    { name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" },
-    {
-      name: "Shared Profiles",
-      icon: Share2,
-      href: "/staff/shared-profiles",
-      active: pathname === "/staff/shared-profiles",
-    },
+    ...(userRole === "super_admin" || userRole === "admin"
+      ? [{ name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" }]
+      : []),
+    // Messages should be visible ONLY for masjid staff (admin, caseworker, approver, treasurer)
+    ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
+      ? [{ name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" }]
+      : []),
+    ...(userRole === "admin" || userRole === "super_admin"
+      ? [{ name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" }]
+      : []),
+    // Shared Profiles also only for masjid staff, not super_admin
+    ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
+      ? [
+          {
+            name: "Shared Profiles",
+            icon: Share2,
+            href: "/staff/shared-profiles",
+            active: pathname === "/staff/shared-profiles",
+          },
+        ]
+      : []),
     ...(userRole === "admin" || userRole === "super_admin"
       ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
       : []),
@@ -155,6 +188,11 @@ export default function DashboardPage() {
       ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
       : []),
   ]
+
+  // Masjid-level stats for super admin
+  const totalMasjids = tenants.length
+  const activeMasjids = tenants.filter((t: any) => t.isActive !== false).length
+  const inactiveMasjids = tenants.filter((t: any) => t.isActive === false).length
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -215,32 +253,61 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-          <StatCard
-            title="Total Applications"
-            value={totalFromAPI ?? applicants.length}
-            icon={<FileText className="w-5 h-5" />}
-            color="from-blue-600 to-cyan-600"
-          />
-          <StatCard
-            title="Pending Review"
-            value={pendingCount}
-            icon={<TrendingUp className="w-5 h-5" />}
-            color="from-yellow-600 to-orange-600"
-          />
-          <StatCard
-            title="Approved"
-            value={approvedCount}
-            icon={<CheckCircle2 className="w-5 h-5" />}
-            color="from-green-600 to-emerald-600"
-          />
-          <StatCard
-            title="New Today"
-            value={todaysSubmissions}
-            icon={<Shield className="w-5 h-5" />}
-            color="from-purple-600 to-pink-600"
-          />
-        </div>
+        {userRole === "super_admin" ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+            <StatCard
+              title="Total Masjids"
+              value={tenantsLoading ? "..." : totalMasjids}
+              icon={<FileText className="w-5 h-5" />}
+              color="from-blue-600 to-cyan-600"
+            />
+            <StatCard
+              title="Active Masjids"
+              value={tenantsLoading ? "..." : activeMasjids}
+              icon={<TrendingUp className="w-5 h-5" />}
+              color="from-green-600 to-emerald-600"
+            />
+            <StatCard
+              title="Inactive Masjids"
+              value={tenantsLoading ? "..." : inactiveMasjids}
+              icon={<CheckCircle2 className="w-5 h-5" />}
+              color="from-red-600 to-rose-600"
+            />
+            <StatCard
+              title="Total Applications (All Masjids)"
+              value={loading ? "..." : totalFromAPI ?? applicants.length}
+              icon={<Shield className="w-5 h-5" />}
+              color="from-purple-600 to-pink-600"
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+            <StatCard
+              title="Total Applications"
+              value={totalFromAPI ?? applicants.length}
+              icon={<FileText className="w-5 h-5" />}
+              color="from-blue-600 to-cyan-600"
+            />
+            <StatCard
+              title="Pending Review"
+              value={pendingCount}
+              icon={<TrendingUp className="w-5 h-5" />}
+              color="from-yellow-600 to-orange-600"
+            />
+            <StatCard
+              title="Approved"
+              value={approvedCount}
+              icon={<CheckCircle2 className="w-5 h-5" />}
+              color="from-green-600 to-emerald-600"
+            />
+            <StatCard
+              title="New Today"
+              value={todaysSubmissions}
+              icon={<Shield className="w-5 h-5" />}
+              color="from-purple-600 to-pink-600"
+            />
+          </div>
+        )}
 
         {/* Today's Applications Table */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 mt-10">

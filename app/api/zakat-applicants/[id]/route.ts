@@ -200,7 +200,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       // Email to applicant if approved or rejected
       if (updated.email && (newStatus === "Approved" || newStatus === "Rejected")) {
         const isApproved = newStatus === "Approved"
-        const subject = isApproved ? "Your Rahmah Application - Approved" : "Your Rahmah Application - Update"
+        const subject = isApproved ? "Your Al Falah Application - Approved" : "Your Al Falah Application - Update"
         
         // Get approval amount from approval notes if approved
         let approvalAmount: number | null = null
@@ -394,9 +394,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
             }
           }
 
-          // If no assigned caseworkers, send to all active caseworkers
+          // If no assigned caseworkers, send to all active caseworkers in this applicant's masjid (tenant)
           if (caseworkerEmails.size === 0) {
-            const allCaseworkers = await User.find({ role: "caseworker", isActive: true }).lean()
+            const allCaseworkers = await User.find({
+              role: "caseworker",
+              isActive: true,
+              tenantId: currentApplicant.tenantId,
+            }).lean()
             for (const cw of allCaseworkers) {
               const email = (cw as any).internalEmail || (cw as any).email
               if (email) caseworkerEmails.add(email)

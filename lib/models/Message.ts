@@ -5,7 +5,7 @@ const messageSchema = new mongoose.Schema(
     tenantId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Tenant",
-      required: true,
+      required: false, // Made optional for staff conversations (super_admin doesn't have tenantId)
       index: true,
     },
     // Conversation context
@@ -39,7 +39,7 @@ const messageSchema = new mongoose.Schema(
     },
     senderRole: {
       type: String,
-      enum: ["applicant", "caseworker", "approver", "treasurer", "admin"],
+      enum: ["applicant", "caseworker", "approver", "treasurer", "admin", "super_admin"],
       required: true,
     },
     senderName: String,
@@ -110,15 +110,15 @@ const messageSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-// Indexes for quick queries
-messageSchema.index({ tenantId: 1, caseId: 1, createdAt: -1 })
-messageSchema.index({ tenantId: 1, conversationId: 1, createdAt: -1 })
-messageSchema.index({ tenantId: 1, senderId: 1, createdAt: -1 })
-messageSchema.index({ tenantId: 1, applicantId: 1, createdAt: -1 })
+// Indexes for quick queries (sparse to allow null tenantId for staff conversations)
+messageSchema.index({ tenantId: 1, caseId: 1, createdAt: -1 }, { sparse: true })
+messageSchema.index({ tenantId: 1, conversationId: 1, createdAt: -1 }, { sparse: true })
+messageSchema.index({ tenantId: 1, senderId: 1, createdAt: -1 }, { sparse: true })
+messageSchema.index({ tenantId: 1, applicantId: 1, createdAt: -1 }, { sparse: true })
 // Separate indexes for arrays - MongoDB doesn't support compound indexes on parallel arrays
-messageSchema.index({ tenantId: 1, recipientIds: 1 })
-messageSchema.index({ tenantId: 1, "readBy.userId": 1 })
-messageSchema.index({ tenantId: 1, isDeleted: 1 })
+messageSchema.index({ tenantId: 1, recipientIds: 1 }, { sparse: true })
+messageSchema.index({ tenantId: 1, "readBy.userId": 1 }, { sparse: true })
+messageSchema.index({ tenantId: 1, isDeleted: 1 }, { sparse: true })
 
 // Force model recreation to clear any cached schema with old indexes
 if (mongoose.models.Message) {

@@ -21,7 +21,6 @@ if (!MONGODB_URI) {
 
 import mongoose from "mongoose"
 import User from "../lib/models/User"
-import bcrypt from "bcryptjs"
 import * as readline from "readline"
 
 // Create readline interface for user input
@@ -66,6 +65,19 @@ async function createSuperAdmin() {
       existingUser.role = "super_admin"
       // Super admin doesn't need tenantId (can access all tenants)
       existingUser.tenantId = undefined
+
+      // Optionally reset password to avoid any old/double-hashed values
+      const resetPassword = await question("Do you want to set a NEW password for this super admin? (yes/no): ")
+      if (resetPassword.toLowerCase() === "yes" || resetPassword.toLowerCase() === "y") {
+        const newPassword = await question("Enter new password (min 6 characters): ")
+        if (!newPassword || newPassword.length < 6) {
+          console.error("❌ Password is required and must be at least 6 characters")
+          process.exit(1)
+        }
+        // Assign plain password; User model pre-save hook will hash it once
+        ;(existingUser as any).password = newPassword
+      }
+
       await existingUser.save()
 
       console.log("\n✅ Successfully updated user to super_admin!")
@@ -88,15 +100,13 @@ async function createSuperAdmin() {
         process.exit(1)
       }
 
-      // Hash password
-      const salt = await bcrypt.genSalt(10)
-      const hashedPassword = await bcrypt.hash(password, salt)
-
       // Create user
+      // NOTE: We pass the plain-text password here.
+      // The User model's pre-save hook will hash it once before storing.
       const newUser = await User.create({
         name,
         email: email.toLowerCase(),
-        password: hashedPassword,
+        password,
         role: "super_admin",
         // Super admin doesn't need tenantId
         tenantId: undefined,

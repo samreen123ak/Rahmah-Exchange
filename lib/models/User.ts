@@ -55,26 +55,32 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 )
 
-// Hash password before saving
+// Hash password before saving and manage internal email
 userSchema.pre("save", async function (next) {
-  if (this.isModified("name") || this.isNew || this.isModified("tenantId")) {
-    if (this.role !== "applicant" && !this.internalEmailGenerated) {
+  // Generate internalEmail only for staff linked to a tenant (not for applicants or super admins)
+  if (this.isNew || this.isModified("name") || this.isModified("tenantId") || this.isModified("role")) {
+    if (
+      this.tenantId && // must belong to a tenant
+      this.role !== "applicant" &&
+      this.role !== "super_admin" &&
+      !this.internalEmailGenerated
+    ) {
       const firstName = this.name.split(" ")[0].toLowerCase()
       const lastName = this.name.split(" ").slice(1).join("").toLowerCase() || "staff"
 
-      // If tenantId exists, use tenant slug for internal email domain
-      if (this.tenantId) {
-        const Tenant = mongoose.model("Tenant")
-        const tenant = (await Tenant.findById(this.tenantId).lean()) as { slug?: string } | null
-        if (tenant && tenant.slug) {
-          this.internalEmail = `${firstName}.${lastName}@${tenant.slug}.internal`
-        } else {
-          this.internalEmail = `${firstName}.${lastName}@rahmah.internal`
-        }
-      } else {
-        this.internalEmail = `${firstName}.${lastName}@rahmah.internal`
+      const Tenant = mongoose.model("Tenant")
+      const tenant = (await Tenant.findById(this.tenantId).lean()) as { slug?: string } | null
+
+      if (tenant && tenant.slug) {
+        this.internalEmail = `${firstName}.${lastName}@${tenant.slug}.internal`
+        this.internalEmailGenerated = true
       }
-      this.internalEmailGenerated = true
+    }
+
+    // For users without a tenant (e.g. super admins), ensure no internalEmail is set
+    if (!this.tenantId || this.role === "super_admin") {
+      this.internalEmail = undefined
+      this.internalEmailGenerated = false
     }
   }
 

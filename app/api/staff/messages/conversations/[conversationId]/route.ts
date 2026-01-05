@@ -18,8 +18,8 @@ export async function GET(
       return NextResponse.json({ message: error || "Unauthorized" }, { status: 401 })
     }
 
-    // Only staff can access
-    const allowedRoles = ["admin", "caseworker", "approver", "treasurer"]
+    // Only staff and super_admin can access
+    const allowedRoles = ["admin", "caseworker", "approver", "treasurer", "super_admin"]
     if (!allowedRoles.includes(user.role)) {
       return NextResponse.json({ message: "Only staff can access this" }, { status: 403 })
     }

@@ -8,6 +8,7 @@ import { uploadBuffer } from "@/lib/storage"
 import { escapeHtml } from "@/lib/utils/html-sanitize"
 import { getTenantFilter } from "@/lib/tenant-middleware"
 import { authenticateRequest } from "@/lib/auth-middleware"
+import User from "@/lib/models/User"
 
 // Generate unique case ID per tenant
 async function generateUniqueCaseId(tenantId: string): Promise<string> {
@@ -51,8 +52,16 @@ export async function GET(request: NextRequest) {
       
       userRole = user.role
       
-      // Get tenant filter based on user role
-      tenantFilter = await getTenantFilter(request)
+      // Check if tenantId is provided in query params (for super admin filtering)
+      const tenantIdParam = searchParams.get("tenantId")
+      
+      // If super admin provides tenantId in query, use it; otherwise get tenant filter based on user role
+      if (userRole === "super_admin" && tenantIdParam) {
+        tenantFilter = { tenantId: tenantIdParam }
+      } else {
+        // Get tenant filter based on user role
+        tenantFilter = await getTenantFilter(request)
+      }
       
       // For non-super_admin users, tenantFilter MUST have tenantId
       if (userRole !== "super_admin" && !tenantFilter.tenantId) {
@@ -236,6 +245,22 @@ export async function POST(request: NextRequest) {
           const baseUrl = new URL(request.url).origin
           // Get admin email from tenant (not from env)
           const adminEmail = await getTenantEmail(tenantId)
+
+          // Also get all active staff for this masjid (tenant)
+          const staffUsers = await User.find({
+            tenantId,
+            role: { $in: ["admin", "caseworker", "approver", "treasurer"] },
+            isActive: true,
+          }).lean()
+
+          const staffEmails = staffUsers
+            .map((u: any) => u.email)
+            .filter(Boolean) as string[]
+
+          // Unique list of admin + staff emails for masjid notifications
+          const masjidNotificationEmails = Array.from(
+            new Set([adminEmail, ...staffEmails].filter(Boolean)),
+          ) as string[]
           const magicLink = generateMagicLink(applicant._id.toString(), baseUrl)
           
           console.log(`Generated magic link for applicant ${applicant._id.toString()}: ${magicLink}`)
@@ -257,7 +282,7 @@ export async function POST(request: NextRequest) {
                 <li>Upload missing or additional documents</li>
               </ul>
               <p>We will review your application and get back to you. JazakAllahu Khairan.</p>
-              <p>— Rahmah Foundation Team</p>
+              <p>— Al Falah Team</p>
             `,
             text: `Assalamu Alaikum ${applicant.firstName || ""},
 
@@ -272,14 +297,14 @@ This link will allow you to:
 - Upload missing or additional documents
 
 We will review your application and get back to you. JazakAllahu Khairan.
-— Rahmah Foundation Team`,
+— Al Falah Team`,
           })
         }
 
-        // Email to admin (if configured)
-        if (adminEmail) {
+        // Email to admin + their masjid staff (if configured)
+        if (masjidNotificationEmails.length > 0) {
           await sendEmail({
-            to: adminEmail,
+            to: masjidNotificationEmails,
             subject: `New Zakat application received: ${applicant.caseId}`,
             html: `
               <p>A new Zakat application has been submitted.</p>

@@ -4,15 +4,31 @@ import Link from "next/link";
 import Image from "next/image";
 import { LogOut, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { removeAuthToken } from "@/lib/auth-utils";
+import { useEffect, useState } from "react";
+import { getAuthToken, removeAuthToken } from "@/lib/auth-utils";
+import { jwtDecode } from "jwt-decode";
 
 export default function Header() {
   const router = useRouter();
+  const [userRole, setUserRole] = useState<string>("");
+
+  useEffect(() => {
+    try {
+      const token = getAuthToken();
+      if (!token) return;
+      const decoded: any = jwtDecode(token);
+      setUserRole(decoded.role || "");
+    } catch {
+      // If decoding fails, default role stays empty
+    }
+  }, []);
 
   const handleLogout = () => {
     removeAuthToken();
     router.push("/staff/login");
   };
+
+  const showMessagesButton = userRole && userRole !== "super_admin";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -21,7 +37,7 @@ export default function Header() {
         <Link href="/staff/dashboard" className="flex items-center gap-3">
           <Image
             src="/logo1.svg"
-            alt="Rahmah Exchange Logo"
+            alt="Al Falah Logo"
             width={140}
             height={140}
             priority
@@ -30,10 +46,15 @@ export default function Header() {
 
         {/* Right Section */}
         <div className="flex items-center gap-3">
-          <Link href="/messages" className="hidden md:flex items-center gap-2 px-4 py-2 text-gray-700 bg-teal-50 hover:bg-teal-100 rounded-lg transition font-medium">
-            <Mail className="w-4 h-4 text-teal-600" />
-            Messages
-          </Link>
+          {showMessagesButton && (
+            <Link
+              href="/messages"
+              className="hidden md:flex items-center gap-2 px-4 py-2 text-gray-700 bg-teal-50 hover:bg-teal-100 rounded-lg transition font-medium"
+            >
+              <Mail className="w-4 h-4 text-teal-600" />
+              Messages
+            </Link>
+          )}
 
           <button
             onClick={handleLogout}

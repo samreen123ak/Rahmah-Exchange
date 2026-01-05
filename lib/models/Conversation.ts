@@ -5,7 +5,7 @@ const conversationSchema = new mongoose.Schema(
     tenantId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Tenant",
-      required: true,
+      required: false, // Made optional for staff conversations (super_admin doesn't have tenantId)
       index: true,
     },
     // Case reference (optional for staff conversations)
@@ -36,7 +36,7 @@ const conversationSchema = new mongoose.Schema(
         name: String,
         role: {
           type: String,
-          enum: ["applicant", "caseworker", "approver", "treasurer", "admin"],
+          enum: ["applicant", "caseworker", "approver", "treasurer", "admin", "super_admin"],
         },
         joinedAt: {
           type: Date,
@@ -77,8 +77,8 @@ const conversationSchema = new mongoose.Schema(
 conversationSchema.index({ tenantId: 1, caseId: 1, createdAt: -1 })
 conversationSchema.index({ tenantId: 1, "participants.userId": 1 })
 conversationSchema.index({ tenantId: 1, isArchived: 1 })
-// Compound unique index for conversationId per tenant
-conversationSchema.index({ tenantId: 1, conversationId: 1 }, { unique: true })
+// Compound unique index for conversationId per tenant (sparse to allow null tenantId)
+conversationSchema.index({ tenantId: 1, conversationId: 1 }, { unique: true, sparse: true })
 
 // Delete cached model to force recompilation with updated schema
 if (mongoose.models.Conversation) {

@@ -97,8 +97,20 @@ export async function POST(request: NextRequest) {
     }
     // 🔧 END FIX
 
-    // Get conversation
-    const conversation = await Conversation.findOne({ conversationId })
+    // Get applicant details first (needed for tenantId)
+    const applicant = await ZakatApplicant.findById(applicantId)
+    if (!applicant) {
+      return NextResponse.json(
+        { error: "Applicant not found" },
+        { status: 404 }
+      )
+    }
+
+    // Get conversation, scoped to this applicant's tenant
+    const conversation = await Conversation.findOne({
+      tenantId: applicant.tenantId,
+      conversationId,
+    })
     if (!conversation) {
       console.error("Conversation not found", { conversationId, applicantId })
       return NextResponse.json(
@@ -190,15 +202,6 @@ const adminUsers = await User.find({ name: "Admin" })
       }
     }
 
-    // Get applicant details
-    const applicant = await ZakatApplicant.findById(applicantId)
-    if (!applicant) {
-      return NextResponse.json(
-        { error: "Applicant not found" },
-        { status: 404 }
-      )
-    }
-
     // Ensure sender email is present to satisfy schema requirements
     const senderEmail = applicant.email || `applicant-${applicantId}@no-reply.local`
     const senderName = `${applicant.firstName || ""} ${applicant.lastName || ""}`.trim() || "Applicant"
@@ -208,6 +211,7 @@ const adminUsers = await User.find({ name: "Admin" })
     const messageBody = body.trim() || (attachments.length > 0 ? "📎 Shared file(s)" : "")
     
     const messageData: any = {
+      tenantId: applicant.tenantId,
       caseId: applicant._id,
       body: messageBody,
       conversationId,

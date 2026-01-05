@@ -586,7 +586,7 @@ function RoleBasedStatusSection({
   }
 
   const availableStatuses = getAvailableStatusOptions()
-  const canUpdateStatus = availableStatuses.length > 0
+  const canUpdateStatus = availableStatuses.length > 0 && userRole !== "super_admin"
   // Everyone can see granted amount, but only approvers can edit it
   const canSeeGrant =
     userRole === "approver" || userRole === "treasurer" || userRole === "admin" || userRole === "caseworker"
@@ -596,6 +596,47 @@ function RoleBasedStatusSection({
   const canSetNumberOfMonths = userRole === "caseworker" // Only caseworkers can edit
   // Approvers can add notes and approval amount
   const canAddApprovalNotes = userRole === "approver" || userRole === "admin"
+
+  // For super_admin, show read-only view
+  if (userRole === "super_admin") {
+    return (
+      <div>
+        <h3 className="text-lg font-bold text-gray-900 mb-6">Case Information</h3>
+
+        {/* Status - Read Only */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-900 mb-2">Status</label>
+          <div className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg">
+            <p className="text-gray-900 font-medium">{updateStatus || caseData.status || "Not added"}</p>
+          </div>
+        </div>
+
+        {/* Number of Months - Read Only */}
+        {canSeeNumberOfMonths && (
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-900 mb-2">Number of Months</label>
+            <div className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg">
+              {grantData?.numberOfMonths ? (
+                <p className="text-gray-900 font-medium">
+                  {grantData.numberOfMonths} {grantData.numberOfMonths === 1 ? "month" : "months"}
+                </p>
+              ) : (
+                <p className="text-gray-400 italic">Not added</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Notes History - Read Only */}
+        {caseData?.caseId && (
+          <div className="mt-6 border-t pt-6">
+            <h4 className="text-md font-semibold text-gray-900 mb-4">Notes History</h4>
+            <GeneralNotesSection caseId={caseData.caseId} applicantId={applicantId} userRole={userRole} />
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -756,8 +797,8 @@ function GeneralNotesSection({
   const [editNoteTitle, setEditNoteTitle] = useState("")
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
-  // All staff can add notes
-  const canAddNotes = true
+  // All staff can add notes, except super_admin (read-only)
+  const canAddNotes = userRole !== "super_admin"
 
   // Get current user ID
   useEffect(() => {
@@ -969,6 +1010,8 @@ function GeneralNotesSection({
   }
 
   const canEditNote = (note: any) => {
+    // Super admin cannot edit notes (read-only)
+    if (userRole === "super_admin") return false
     // Admin can edit all notes, others can only edit their own
     if (userRole === "admin") return true
     if (!currentUserId) return false
@@ -977,6 +1020,8 @@ function GeneralNotesSection({
   }
 
   const canDeleteNote = (note: any) => {
+    // Super admin cannot delete notes (read-only)
+    if (userRole === "super_admin") return false
     // Admin can delete all notes, others can only delete their own
     if (userRole === "admin") return true
     if (!currentUserId) return false
@@ -986,8 +1031,10 @@ function GeneralNotesSection({
 
   return (
     <div className="mb-6 mt-6 border-t pt-6">
-      <h4 className="text-md font-semibold text-gray-900 mb-4">Case Notes</h4>
-      <p className="text-sm text-gray-600 mb-4">Add notes about this case. All staff members can view and add notes.</p>
+      <h4 className="text-md font-semibold text-gray-900 mb-4">Notes History</h4>
+      {userRole !== "super_admin" && (
+        <p className="text-sm text-gray-600 mb-4">Add notes about this case. All staff members can view and add notes.</p>
+      )}
 
       {/* Add Note Form - All Staff */}
       {canAddNotes && (
@@ -2068,16 +2115,18 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
 
           {/* Right Sidebar - Case Actions */}
           <div className="col-span-1">
-            {/* Send Message Button */}
-            <div className="bg-white rounded-lg p-6 mb-6">
-              <Link
-                href={`/messages?caseId=${caseData.caseId}&applicantId=${id}`}
-                className="w-full bg-teal-600 text-white font-medium py-3 rounded-lg hover:bg-teal-700 transition flex items-center justify-center gap-2"
-              >
-                <Mail className="w-5 h-5" />
-                Send Message
-              </Link>
-            </div>
+            {/* Send Message Button - Hidden for Super Admin */}
+            {userRole !== "super_admin" && (
+              <div className="bg-white rounded-lg p-6 mb-6">
+                <Link
+                  href={`/messages?caseId=${caseData.caseId}&applicantId=${id}`}
+                  className="w-full bg-teal-600 text-white font-medium py-3 rounded-lg hover:bg-teal-700 transition flex items-center justify-center gap-2"
+                >
+                  <Mail className="w-5 h-5" />
+                  Send Message
+                </Link>
+              </div>
+            )}
 
             <div className="bg-white rounded-lg p-6 mb-6">
               <RoleBasedStatusSection

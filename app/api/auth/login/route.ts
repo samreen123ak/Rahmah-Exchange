@@ -14,7 +14,9 @@ export async function POST(request: NextRequest) {
 
     await dbConnect()
 
-    const user = await User.findOne({ email })
+    // Normalize email to match how we store it (lowercased)
+    const normalizedEmail = email.trim().toLowerCase()
+    const user = await User.findOne({ email: normalizedEmail })
     if (!user) {
       return NextResponse.json({ message: "Invalid email or password" }, { status: 400 })
     }

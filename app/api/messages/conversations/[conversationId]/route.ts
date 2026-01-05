@@ -43,8 +43,21 @@ export async function GET(
     const isParticipant = conversation.participants.some(
       (p: any) => p.userId?.toString() === userId
     );
-    if (!isParticipant && !isStaff) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+
+    // Applicants must be participants. Staff can access only if they're participants
+    // OR (for non-super_admin staff) if the conversation belongs to their tenant.
+    if (!isParticipant) {
+      if (!isStaff) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+
+      // For staff: enforce tenant isolation (except super_admin who can see all)
+      if (user.role !== "super_admin") {
+        const convoTenantId = conversation.tenantId?.toString?.() || conversation.tenantId
+        if (!convoTenantId || !user.tenantId || convoTenantId.toString() !== user.tenantId.toString()) {
+          return NextResponse.json({ error: "Access denied" }, { status: 403 });
+        }
+      }
     }
 
     const messages = await Message.find({

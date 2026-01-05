@@ -211,7 +211,18 @@ export default function MessagesPage() {
       const response = await authenticatedFetch(`/api/messages/conversations?archived=false`)
       if (!response.ok) throw new Error("Failed to load conversations")
       const data = await response.json()
-      const serverConversations = data.conversations || []
+      let serverConversations = data.conversations || []
+      
+      // Filter out conversations where applicant profile is deleted (caseId is null or missing required fields)
+      serverConversations = serverConversations.filter((conv: any) => {
+        // If caseId is null or undefined, filter it out
+        if (!conv.caseId) return false
+        // If caseId is an object but missing required fields (firstName or caseId), filter it out
+        if (typeof conv.caseId === 'object') {
+          if (!conv.caseId.firstName || !conv.caseId.caseId) return false
+        }
+        return true
+      })
       
       // If we're preserving unread count for a specific conversation (optimistic update)
       if (preserveUnreadCountFor) {
@@ -546,7 +557,9 @@ export default function MessagesPage() {
                       )}
                     </div>
                     <p className="text-xs text-gray-400 mt-2">
-                      {new Date(conv.lastMessageAt).toLocaleDateString()}
+                      {conv.lastMessageAt && !isNaN(new Date(conv.lastMessageAt).getTime())
+                        ? new Date(conv.lastMessageAt).toLocaleDateString()
+                        : "No date"}
                     </p>
                   </div>
                 ))

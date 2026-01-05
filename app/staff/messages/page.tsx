@@ -250,13 +250,17 @@ export default function StaffMessagesPage() {
         body: JSON.stringify({ recipientIds }),
       })
 
-      if (!res.ok) throw new Error("Failed to create conversation")
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}))
+        throw new Error(errorData.message || "Failed to create conversation")
+      }
+      
       const data = await res.json()
       setSelectedConversation(data.conversation)
       setShowNewChat(false)
       setSelectedRecipients([])
-      // Refresh conversations but don't cause reload
-      fetchConversations().catch(console.error)
+      // Refresh conversations to show the new one
+      await fetchConversations()
     } catch (error: any) {
       console.error("Error creating conversation:", error)
       alert(error.message || "Failed to start conversation")
@@ -350,10 +354,42 @@ export default function StaffMessagesPage() {
   const filteredStaff = allStaff.filter(
     (staff) =>
       staff._id !== currentUser?._id &&
+      staff.isActive !== false &&
       (staff.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         staff.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         staff.role?.toLowerCase().includes(searchQuery.toLowerCase()))
   )
+
+  // Handle clicking on a staff member to start conversation
+  const handleStaffMemberClick = async (staff: StaffUser) => {
+    try {
+      // Check if conversation already exists
+      const existingConv = conversations.find((conv) => {
+        const others = getOtherParticipants(conv)
+        return others.length === 1 && others[0].userId === staff._id
+      })
+
+      if (existingConv) {
+        // Open existing conversation
+        setConversations(prev => 
+          prev.map(conv => 
+            conv._id === existingConv._id 
+              ? { ...conv, unreadCount: 0 }
+              : conv
+          )
+        )
+        setSelectedConversation(existingConv)
+        fetchMessages(existingConv.conversationId, true)
+        setShowNewChat(false)
+      } else {
+        // Start new conversation
+        await handleStartConversation([staff._id])
+      }
+    } catch (error: any) {
+      console.error("Error in handleStaffMemberClick:", error)
+      alert(error.message || "Failed to start conversation")
+    }
+  }
 
   const handleLogout = async () => {
     try {
@@ -388,6 +424,17 @@ export default function StaffMessagesPage() {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => {
+                setShowNewChat(true)
+                setSelectedConversation(null)
+                setSelectedRecipients([])
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Start New Chat
+            </button>
             <Link
               href="/staff/dashboard"
               className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition font-medium"
@@ -422,90 +469,87 @@ export default function StaffMessagesPage() {
           </div>
 
           <div className="flex-1 overflow-y-auto">
-            {/* All Staff Members Section */}
-            <div className="p-4 border-b border-gray-200 bg-gray-50">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase mb-3">All Staff Members</h3>
-              <div className="space-y-2">
-                {loading ? (
-                  <div className="text-center py-4">
-                    <Loader2 className="w-4 h-4 animate-spin mx-auto text-teal-600" />
-                  </div>
-                ) : filteredStaff.length === 0 ? (
-                  <p className="text-xs text-gray-500 text-center py-2">No staff members found</p>
-                ) : (
-                  filteredStaff.map((staff) => {
-                    // Find existing conversation with this staff member
-                    const existingConv = conversations.find((conv) => {
-                      const others = getOtherParticipants(conv)
-                      return others.length === 1 && others[0].userId === staff._id
-                    })
-
-                    return (
-                      <div
-                        key={staff._id}
-                        onClick={async (e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          if (existingConv) {
-                            // Immediately update unread count in local state
+            {/* Conversations Section - Only show people with existing conversations */}
+            {conversations.length > 0 && (
+              <div className="p-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase mb-3">Conversations</h3>
+                <div className="space-y-2">
+                  {conversations
+                    .filter((conv) => getOtherParticipants(conv).length === 1) // Only 1-on-1 conversations
+                    .map((conv) => {
+                      const otherParticipant = getOtherParticipants(conv)[0]
+                      const isSelected = selectedConversation?._id === conv._id
+                      
+                      return (
+                        <div
+                          key={conv._id}
+                          onClick={async (e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
                             setConversations(prev => 
-                              prev.map(conv => 
-                                conv._id === existingConv._id 
-                                  ? { ...conv, unreadCount: 0 }
-                                  : conv
+                              prev.map(c => 
+                                c._id === conv._id 
+                                  ? { ...c, unreadCount: 0 }
+                                  : c
                               )
                             )
-                            setSelectedConversation(existingConv)
-                            // Mark as read when opening
-                            fetchMessages(existingConv.conversationId, true)
-                          } else {
-                            // Create new conversation
-                            await handleStartConversation([staff._id])
-                          }
-                        }}
-                        className={`p-3 border rounded-lg cursor-pointer transition ${
-                          existingConv && selectedConversation?._id === existingConv._id
-                            ? "bg-teal-50 border-teal-600"
-                            : "bg-white border-gray-200 hover:bg-gray-50"
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span className="text-teal-600 font-semibold text-sm">
-                              {staff.name?.charAt(0)?.toUpperCase() || "?"}
-                            </span>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <p className="font-medium text-gray-900 truncate text-sm">{staff.name}</p>
-                              {existingConv && existingConv.unreadCount > 0 && (
-                                <span className="bg-teal-600 text-white text-xs font-semibold rounded-full px-1.5 py-0.5">
-                                  {existingConv.unreadCount}
-                                </span>
-                              )}
+                            setSelectedConversation(conv)
+                            fetchMessages(conv.conversationId, true)
+                          }}
+                          className={`p-3 border rounded-lg cursor-pointer transition ${
+                            isSelected
+                              ? "bg-teal-50 border-teal-600"
+                              : "bg-white border-gray-200 hover:bg-gray-50"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                              <span className="text-teal-600 font-semibold text-sm">
+                                {otherParticipant?.name?.charAt(0)?.toUpperCase() || "?"}
+                              </span>
                             </div>
-                            <p className="text-xs text-gray-500 truncate">{staff.email}</p>
-                            <span className="text-xs text-gray-400 capitalize">{staff.role}</span>
-                          </div>
-                          {existingConv && (
-                            <div className="text-xs text-gray-400">
-                              {existingConv.lastMessageAt
-                                ? new Date(existingConv.lastMessageAt).toLocaleDateString()
-                                : ""}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <p className="font-medium text-gray-900 truncate text-sm">{otherParticipant?.name || "Unknown"}</p>
+                                {conv.unreadCount > 0 && (
+                                  <span className="bg-teal-600 text-white text-xs font-semibold rounded-full px-1.5 py-0.5">
+                                    {conv.unreadCount}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-500 truncate">{otherParticipant?.email || ""}</p>
+                              <span className="text-xs text-gray-400 capitalize">{otherParticipant?.role || ""}</span>
                             </div>
+                            {conv.lastMessageAt && (
+                              <div className="text-xs text-gray-400">
+                                {new Date(conv.lastMessageAt).toLocaleDateString()}
+                              </div>
+                            )}
+                          </div>
+                          {conv.lastMessage && (
+                            <p className="text-xs text-gray-600 truncate mt-2 ml-13">
+                              {conv.lastMessage}
+                            </p>
                           )}
                         </div>
-                        {existingConv?.lastMessage && (
-                          <p className="text-xs text-gray-600 truncate mt-2 ml-13">
-                            {existingConv.lastMessage}
-                          </p>
-                        )}
-                      </div>
-                    )
-                  })
-                )}
+                      )
+                    })}
+                </div>
               </div>
-            </div>
+            )}
+            
+            {conversations.length === 0 && !loading && (
+              <div className="p-4 text-center">
+                <MessageSquare className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                <p className="text-xs text-gray-500">No conversations yet. Click "Start New Chat" to begin.</p>
+              </div>
+            )}
+            
+            {loading && (
+              <div className="p-4 text-center">
+                <Loader2 className="w-4 h-4 animate-spin mx-auto text-teal-600" />
+              </div>
+            )}
 
             {/* Group Conversations Section */}
             {conversations.filter((conv) => getOtherParticipants(conv).length > 1).length > 0 && (
@@ -607,18 +651,28 @@ export default function StaffMessagesPage() {
                   <div className="space-y-2">
                     {filteredStaff.map((staff) => {
                       const isSelected = selectedRecipients.includes(staff._id)
+                      // Check if conversation already exists with this person
+                      const existingConv = conversations.find((conv) => {
+                        const others = getOtherParticipants(conv)
+                        return others.length === 1 && others[0].userId === staff._id
+                      })
+                      
                       return (
                         <div
                           key={staff._id}
-                          onClick={() => {
-                            if (isSelected) {
-                              setSelectedRecipients(selectedRecipients.filter((id) => id !== staff._id))
+                          onClick={async () => {
+                            // If conversation exists, open it directly
+                            if (existingConv) {
+                              await handleStaffMemberClick(staff)
                             } else {
-                              setSelectedRecipients([...selectedRecipients, staff._id])
+                              // If no conversation exists, start conversation immediately with this person
+                              await handleStaffMemberClick(staff)
                             }
                           }}
                           className={`p-4 border rounded-lg cursor-pointer transition ${
-                            isSelected ? "bg-teal-50 border-teal-600" : "bg-white border-gray-200 hover:bg-gray-50"
+                            isSelected ? "bg-teal-50 border-teal-600" : 
+                            existingConv ? "bg-blue-50 border-blue-300" :
+                            "bg-white border-gray-200 hover:bg-gray-50"
                           }`}
                         >
                           <div className="flex items-center gap-3">
@@ -628,7 +682,12 @@ export default function StaffMessagesPage() {
                               </span>
                             </div>
                             <div className="flex-1">
-                              <p className="font-medium text-gray-900">{staff.name}</p>
+                              <div className="flex items-center gap-2">
+                                <p className="font-medium text-gray-900">{staff.name}</p>
+                                {existingConv && (
+                                  <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded">Chat exists</span>
+                                )}
+                              </div>
                               <p className="text-sm text-gray-500">{staff.email}</p>
                               <span className="text-xs text-gray-400 capitalize">{staff.role}</span>
                             </div>

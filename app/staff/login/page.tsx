@@ -71,7 +71,7 @@ function StaffLoginForm() {
   return (
     <div className="bg-white rounded-2xl p-8 shadow-2xl justify-center items-center">
       <div className="flex items-center justify-center py-4">
-        <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={170} height={170} priority />
+        <Image src="/logo1.svg" alt="Al Falah Logo" width={170} height={170} priority />
       </div>
       {/* <h2 className="text-2xl font-bold text-gray-900 mb-2">Staff Login</h2> */}
       {/*<p className="text-gray-600 mb-8">Access the admin dashboard</p> */}

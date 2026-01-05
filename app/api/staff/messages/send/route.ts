@@ -48,11 +48,35 @@ export async function POST(request: NextRequest) {
       (p: any) => p.userId.toString() !== user._id.toString()
     )
 
-    // Create message (caseId is optional for staff conversations)
+    // Get tenantId from conversation or user (required for Message model, but optional for staff conversations)
+    let tenantId: mongoose.Types.ObjectId | null | undefined =
+      conversation.tenantId instanceof mongoose.Types.ObjectId
+        ? conversation.tenantId
+        : conversation.tenantId
+        ? new mongoose.Types.ObjectId(conversation.tenantId as any)
+        : undefined
+
+    if (!tenantId && user.tenantId) {
+      tenantId =
+        user.tenantId instanceof mongoose.Types.ObjectId
+          ? user.tenantId
+          : new mongoose.Types.ObjectId(user.tenantId as any)
+    }
+    // If still no tenantId, try to get from first participant
+    if (!tenantId && recipients.length > 0) {
+      const firstRecipient = await User.findById(recipients[0].userId).lean()
+      if (firstRecipient && (firstRecipient as any).tenantId) {
+        const tId = (firstRecipient as any).tenantId
+        tenantId =
+          tId instanceof mongoose.Types.ObjectId ? tId : new mongoose.Types.ObjectId(tId as any)
+      }
+    }
+
+    // Create message (caseId and tenantId are optional for staff conversations)
     // Handle potential index errors gracefully
     let message
     try {
-      message = await Message.create({
+      const messageData: any = {
         conversationId,
         caseId: conversation.caseId || undefined, // Optional for staff conversations
         senderId: user._id,
@@ -69,7 +93,14 @@ export async function POST(request: NextRequest) {
             readAt: new Date(),
           },
         ],
-      })
+      }
+
+      // Only add tenantId if we have one
+      if (tenantId) {
+        messageData.tenantId = tenantId
+      }
+
+      message = await Message.create(messageData)
     } catch (createError: any) {
       // If error is about parallel arrays index, try to drop it and retry
       if (createError.message && createError.message.includes("parallel arrays")) {
@@ -90,7 +121,7 @@ export async function POST(request: NextRequest) {
               await collection.dropIndex(problematicIndex.name)
               console.log(`Dropped problematic index: ${problematicIndex.name}`)
               // Retry message creation
-              message = await Message.create({
+              const retryMessageData: any = {
                 conversationId,
                 caseId: conversation.caseId || undefined,
                 senderId: user._id,
@@ -107,7 +138,14 @@ export async function POST(request: NextRequest) {
                     readAt: new Date(),
                   },
                 ],
-              })
+              }
+
+              // Only add tenantId if we have one
+              if (tenantId) {
+                retryMessageData.tenantId = tenantId
+              }
+
+              message = await Message.create(retryMessageData)
             } else {
               throw createError
             }

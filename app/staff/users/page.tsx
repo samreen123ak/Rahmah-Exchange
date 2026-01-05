@@ -149,16 +149,26 @@ export default function UsersPage() {
 
     setError("")
     try {
-      const updateData: any = {
-        name: formData.name,
-        email: formData.email,
-        role: formData.role,
-        isActive: formData.isActive,
-      }
-
-      // Only include password if it's provided
-      if (formData.password && formData.password.trim() !== "") {
+      const updateData: any = {}
+      
+      // Super admin can only change password
+      if (userRole === "super_admin") {
+        if (!formData.password || formData.password.trim() === "") {
+          setError("Password is required for super admin")
+          return
+        }
         updateData.password = formData.password
+      } else {
+        // Regular admin can update all fields
+        updateData.name = formData.name
+        updateData.email = formData.email
+        updateData.role = formData.role
+        updateData.isActive = formData.isActive
+
+        // Only include password if it's provided
+        if (formData.password && formData.password.trim() !== "") {
+          updateData.password = formData.password
+        }
       }
 
       const res = await authenticatedFetch(`/api/users/${selectedUser._id}`, {
@@ -274,25 +284,27 @@ export default function UsersPage() {
                 {userRole === "super_admin" ? `All Admins (${users.length})` : `All Users (${users.length})`}
               </h2>
             </div>
-            <button
-              onClick={() => {
-                setError("")
-                // Close edit modal if open
-                setShowEditModal(false)
-                setSelectedUser(null)
-                // Reset form data completely
-                setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
-                // Clear password visibility states
-                setShowCreatePassword(false)
-                setShowEditPassword(false)
-                // Open create modal
-                setShowCreateModal(true)
-              }}
-              className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium"
-            >
-              <Plus className="w-4 h-4" />
-              Create User
-            </button>
+            {userRole === "admin" && (
+              <button
+                onClick={() => {
+                  setError("")
+                  // Close edit modal if open
+                  setShowEditModal(false)
+                  setSelectedUser(null)
+                  // Reset form data completely
+                  setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
+                  // Clear password visibility states
+                  setShowCreatePassword(false)
+                  setShowEditPassword(false)
+                  // Open create modal
+                  setShowCreateModal(true)
+                }}
+                className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Create User
+              </button>
+            )}
           </div>
 
           {loading ? (
@@ -522,73 +534,147 @@ export default function UsersPage() {
               </button>
             </div>
             <form onSubmit={handleUpdateUser} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Password{" "}
-                  <span className="text-xs text-gray-500 font-normal">(leave blank to keep current password)</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showEditPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    placeholder="Enter new password (optional)"
-                    className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowEditPassword(!showEditPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showEditPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                <select
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                >
-                  <option value="caseworker">Caseworker</option>
-                  <option value="approver">Approver</option>
-                  <option value="treasurer">Treasurer</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="editIsActive"
-                  checked={formData.isActive}
-                  onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                  className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
-                />
-                <label htmlFor="editIsActive" className="text-sm font-medium text-gray-700">
-                  Active
-                </label>
-              </div>
+              {userRole === "super_admin" ? (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input
+                      type="text"
+                      value={selectedUser.name}
+                      disabled
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input
+                      type="email"
+                      value={selectedUser.email}
+                      disabled
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Password{" "}
+                      <span className="text-xs text-gray-500 font-normal">(required to change password)</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showEditPassword ? "text" : "password"}
+                        required
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        placeholder="Enter new password"
+                        className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowEditPassword(!showEditPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showEditPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                    <input
+                      type="text"
+                      value={selectedUser.role}
+                      disabled
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="editIsActive"
+                      checked={selectedUser.isActive}
+                      disabled
+                      className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-not-allowed"
+                    />
+                    <label htmlFor="editIsActive" className="text-sm font-medium text-gray-700">
+                      Active
+                    </label>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-blue-800">
+                      As Super Admin, you can only change passwords for admins. Other fields are read-only.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Password{" "}
+                      <span className="text-xs text-gray-500 font-normal">(leave blank to keep current password)</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showEditPassword ? "text" : "password"}
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        placeholder="Enter new password (optional)"
+                        className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowEditPassword(!showEditPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showEditPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                    <select
+                      value={formData.role}
+                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    >
+                      <option value="caseworker">Caseworker</option>
+                      <option value="approver">Approver</option>
+                      <option value="treasurer">Treasurer</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="editIsActive"
+                      checked={formData.isActive}
+                      onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                      className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                    />
+                    <label htmlFor="editIsActive" className="text-sm font-medium text-gray-700">
+                      Active
+                    </label>
+                  </div>
+                </>
+              )}
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"

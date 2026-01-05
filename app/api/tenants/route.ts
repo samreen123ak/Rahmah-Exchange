@@ -138,13 +138,13 @@ export async function POST(request: NextRequest) {
       const inviteLink = generateAdminInviteLink(adminUser._id.toString(), tenant._id.toString(), baseUrl)
 
       await sendEmail({
-        to: adminEmail,
-        subject: `Welcome to ${name} - Set Your Password`,
-        html: `
+      to: adminEmail,
+      subject: `Welcome to ${name} on Al Falah - Set Your Password`,
+      html: `
           <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #0d9488;">Welcome to Rahmah Exchange</h2>
+            <h2 style="color: #0d9488;">Welcome to Al Falah</h2>
             <p>Assalamu Alaikum ${escapeHtml(adminName)},</p>
-            <p>You have been granted admin access to <strong>${escapeHtml(name)}</strong> on the Rahmah Exchange platform.</p>
+            <p>You have been granted admin access to <strong>${escapeHtml(name)}</strong> on the Al Falah platform.</p>
             <p>To get started, please set your password by clicking the link below:</p>
             <p style="text-align: center; margin: 30px 0;">
               <a href="${inviteLink}" style="display: inline-block; padding: 12px 24px; background-color: #0d9488; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">
@@ -156,14 +156,14 @@ export async function POST(request: NextRequest) {
               <strong>Note:</strong> This link will expire in 7 days. If it expires, please contact the super administrator.
             </p>
             <p>After setting your password, you can log in at: <a href="${baseUrl}/staff/login">${baseUrl}/staff/login</a></p>
-            <p>Best regards,<br>Rahmah Exchange Team</p>
+            <p>Best regards,<br>Al Falah Team</p>
           </div>
         `,
-        text: `Welcome to Rahmah Exchange
+        text: `Welcome to Al Falah
 
 Assalamu Alaikum ${adminName},
 
-You have been granted admin access to ${name} on the Rahmah Exchange platform.
+You have been granted admin access to ${name} on the Al Falah platform.
 
 To get started, please set your password by clicking this link:
 ${inviteLink}
@@ -173,7 +173,7 @@ Note: This link will expire in 7 days.
 After setting your password, you can log in at: ${baseUrl}/staff/login
 
 Best regards,
-Rahmah Exchange Team`,
+Al Falah Team`,
       })
     } catch (userError: any) {
       console.error("Error creating admin user or sending invitation:", userError)

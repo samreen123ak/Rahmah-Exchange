@@ -4,6 +4,7 @@ import { dbConnect } from "@/lib/db"
 import { authenticateRequest } from "@/lib/auth-middleware"
 import Conversation from "@/lib/models/Conversation"
 import Message from "@/lib/models/Message"
+import ZakatApplicant from "@/lib/models/ZakatApplicant"
 
 // Define a local type for conversation objects returned from .lean()
 type ConversationWithParticipants = {
@@ -41,16 +42,23 @@ export async function GET(request: NextRequest) {
     const archived = searchParams.get("archived") === "true"
     const skip = (page - 1) * limit
 
-    // Allow all staff roles (admin, caseworker, approver, treasurer) to see all conversations
+    // Allow all staff roles (admin, caseworker, approver, treasurer, super_admin) to see conversations
     // Non-staff users (applicants) can only see their own conversations
-    const isStaff = ["admin", "caseworker", "approver", "treasurer"].includes(user.role)
+    const isStaff = ["admin", "caseworker", "approver", "treasurer", "super_admin"].includes(user.role)
 
     await dbConnect()
 
     // Build MongoDB query
     const query: any = { isArchived: archived }
+
     if (!isStaff) {
+      // Applicants: only conversations where they are a participant
       query["participants.userId"] = userId
+    } else {
+      // Staff: restrict by masjid (tenant) so each masjid only sees its own conversations
+      if (user.role !== "super_admin" && user.tenantId) {
+        query.tenantId = user.tenantId
+      }
     }
 
     // Debug logging
@@ -66,11 +74,35 @@ export async function GET(request: NextRequest) {
       .populate("caseId", "caseId firstName lastName email")
       .lean() as ConversationWithParticipants[]
 
+    // Filter out conversations where the applicant (caseId) is deleted or null
+    // Also verify the applicant actually exists in the database
+    const validConversations = await Promise.all(
+      conversations.map(async (conv) => {
+        // If caseId is null or undefined, filter it out
+        if (!conv.caseId) return null
+        // If caseId is an object but missing required fields, filter it out
+        if (typeof conv.caseId === 'object' && (!conv.caseId.firstName || !conv.caseId.caseId)) {
+          return null
+        }
+        // Verify the applicant actually exists in the database
+        if (conv.caseId && typeof conv.caseId === 'object' && conv.caseId._id) {
+          const applicantExists = await ZakatApplicant.findById(conv.caseId._id).lean()
+          if (!applicantExists) {
+            return null
+          }
+        }
+        return conv
+      })
+    )
+    
+    // Remove null entries (filtered out conversations)
+    const filteredConversations = validConversations.filter((conv) => conv !== null) as ConversationWithParticipants[]
+
     const total = await Conversation.countDocuments(query)
 
     // Count unread messages for each conversation
     const conversationsWithUnread = await Promise.all(
-      conversations.map(async (conv) => {
+      filteredConversations.map(async (conv) => {
         const userParticipant = conv.participants.find(p => p.userId === userId)
         const lastReadAt = userParticipant?.lastReadAt
 

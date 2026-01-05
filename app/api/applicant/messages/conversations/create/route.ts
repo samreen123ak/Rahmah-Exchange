@@ -48,12 +48,10 @@ export async function POST(request: NextRequest) {
     // Use provided conversationId or generate one
     const convId = conversationId || `applicant-${applicantId}`
 
-    // Check if conversation already exists - try both conversationId and caseId
-    let conversation = await Conversation.findOne({ 
-      $or: [
-        { conversationId: convId },
-        { caseId: applicant._id }
-      ]
+    // Check if conversation already exists - scoped to this applicant & tenant
+    let conversation = await Conversation.findOne({
+      tenantId: applicant.tenantId,
+      $or: [{ conversationId: convId }, { caseId: applicant._id }],
     })
 
     if (conversation) {
@@ -62,9 +60,12 @@ export async function POST(request: NextRequest) {
         conversation.conversationId = convId
         await conversation.save()
       }
-      // 🔧 FIX: Add admins if they're missing from existing conversation
+      // 🔧 FIX: Add admins for this tenant if they're missing from existing conversation
       try {
-        const adminUsers = await User.find({ role: { $in: ["admin", "caseworker", "approver", "treasurer"] } })
+        const adminUsers = await User.find({
+          role: { $in: ["admin", "caseworker", "approver", "treasurer"] },
+          tenantId: applicant.tenantId,
+        })
         let conversationUpdated = false
         
         console.log(`Found ${adminUsers.length} admin users to potentially add`)
@@ -116,8 +117,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new conversation
-    // Get admin/staff users to add as participants (including treasurer)
-    const adminUsers = await User.find({ role: { $in: ["admin", "caseworker", "approver", "treasurer"] } })
+    // Get admin/staff users for this applicant's masjid (tenant) to add as participants
+    const adminUsers = await User.find({
+      role: { $in: ["admin", "caseworker", "approver", "treasurer"] },
+      tenantId: applicant.tenantId,
+    })
     
     console.log(`Creating new conversation with ${adminUsers.length} admin users`)
     
@@ -160,6 +164,7 @@ export async function POST(request: NextRequest) {
       title || `Zakat Application - ${applicant.firstName} ${applicant.lastName} (${applicant.caseId})`
 
     conversation = new Conversation({
+      tenantId: applicant.tenantId,
       caseId: applicant._id,
       conversationId: convId,
       participants,

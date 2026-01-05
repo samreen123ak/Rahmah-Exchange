@@ -13,7 +13,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/logo1.svg"
-              alt="Rahmah Exchange Logo"
+              alt="Al Falah Logo"
               width={170}
               height={170}
               priority
