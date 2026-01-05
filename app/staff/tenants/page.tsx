@@ -351,14 +351,22 @@ export default function TenantsPage() {
 
   const navItems = [
     { name: "Dashboard", icon: FileText, href: "/staff/dashboard", active: pathname === "/staff/dashboard" },
-    { name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" },
-    { name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" },
-    { name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" },
+    ...(userRole === "super_admin" || userRole === "admin"
+      ? [{ name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" }]
+      : []),
+    // Messages should be visible ONLY for masjid staff (admin, caseworker, approver, treasurer)
+    ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
+      ? [{ name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" }]
+      : []),
+    ...(userRole === "admin" || userRole === "super_admin"
+      ? [{ name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" }]
+      : []),
+   
     ...(userRole === "admin" || userRole === "super_admin"
       ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
       : []),
     ...(userRole === "super_admin"
-      ? [{ name: "Manage Masjids", icon: Building2, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
+      ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
       : []),
   ]
 
