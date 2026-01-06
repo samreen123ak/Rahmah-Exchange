@@ -37,13 +37,12 @@ export async function GET(request: NextRequest) {
 
     await dbConnect()
 
-    // Try to get tenant filter (for authenticated requests)
-    // This is REQUIRED - no tenant filter means we can't determine which tenant's data to show
+    // Authenticate request - required for all GET requests
     let tenantFilter: { tenantId?: string } = {}
     let userRole: string | null = null
+    
     try {
-      // First authenticate to get user info
-      const { authenticateRequest } = await import("@/lib/auth-middleware")
+      // Authenticate to get user info
       const { user, error } = await authenticateRequest(request)
       
       if (error || !user) {
@@ -55,20 +54,37 @@ export async function GET(request: NextRequest) {
       // Check if tenantId is provided in query params (for super admin filtering)
       const tenantIdParam = searchParams.get("tenantId")
       
-      // If super admin provides tenantId in query, use it; otherwise get tenant filter based on user role
-      if (userRole === "super_admin" && tenantIdParam) {
-        tenantFilter = { tenantId: tenantIdParam }
+      // Handle tenant filtering based on user role
+      if (userRole === "super_admin") {
+        // Super admin can see all applicants, or filter by tenantId if provided
+        if (tenantIdParam) {
+          tenantFilter = { tenantId: tenantIdParam }
+        } else {
+          // No tenantId param = show all applicants (empty filter)
+          tenantFilter = {}
+        }
       } else {
-        // Get tenant filter based on user role
-        tenantFilter = await getTenantFilter(request)
-      }
-      
-      // For non-super_admin users, tenantFilter MUST have tenantId
-      if (userRole !== "super_admin" && !tenantFilter.tenantId) {
-        console.error("User is not super_admin but has no tenantId filter:", { userId: user._id, role: userRole, tenantId: user.tenantId })
-        return NextResponse.json({ 
-          error: "Access denied - User is not associated with a masjid" 
-        }, { status: 403 })
+        // Regular users (admin, caseworker, etc.) must have tenantId
+        try {
+          tenantFilter = await getTenantFilter(request)
+        } catch (tenantError: any) {
+          console.error("Error getting tenant filter:", tenantError)
+          return NextResponse.json({ 
+            error: "Access denied - User is not associated with a masjid" 
+          }, { status: 403 })
+        }
+        
+        // For non-super_admin users, tenantFilter MUST have tenantId
+        if (!tenantFilter.tenantId) {
+          console.error("User is not super_admin but has no tenantId filter:", { 
+            userId: user._id, 
+            role: userRole, 
+            tenantId: user.tenantId 
+          })
+          return NextResponse.json({ 
+            error: "Access denied - User is not associated with a masjid" 
+          }, { status: 403 })
+        }
       }
       
     } catch (authError: any) {

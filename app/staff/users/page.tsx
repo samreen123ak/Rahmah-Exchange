@@ -90,6 +90,7 @@ export default function UsersPage() {
     }
   }
 
+
   const handleLogout = async () => {
     try {
       const token = getAuthToken()

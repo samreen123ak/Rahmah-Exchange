@@ -38,41 +38,101 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * POST /api/users - Create new user (admin only)
+ * POST /api/users - Create new user (admin or super_admin only)
  */
 export async function POST(request: NextRequest) {
-  const roleCheck = await requireRole(request, ["admin"])
+  const roleCheck = await requireRole(request, ["admin", "super_admin"])
   if (!roleCheck.authorized) {
     return NextResponse.json({ message: roleCheck.error }, { status: roleCheck.statusCode })
   }
 
   try {
-    const { name, email, password, role, tenantId } = await request.json()
+    const body = await request.json()
+    const { name, email, password, role, tenantId } = body
 
+    // Validate required fields
     if (!name || !email || !password || !role) {
-      return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
+      const missingFields = []
+      if (!name) missingFields.push("name")
+      if (!email) missingFields.push("email")
+      if (!password) missingFields.push("password")
+      if (!role) missingFields.push("role")
+      return NextResponse.json({ 
+        message: `Missing required fields: ${missingFields.join(", ")}` 
+      }, { status: 400 })
     }
 
     const validRoles = ["admin", "caseworker", "approver", "treasurer", "super_admin"]
     if (!validRoles.includes(role)) {
-      return NextResponse.json({ message: "Invalid role. Must be admin, caseworker, approver, treasurer, or super_admin" }, { status: 400 })
+      return NextResponse.json({ 
+        message: `Invalid role "${role}". Must be one of: ${validRoles.join(", ")}` 
+      }, { status: 400 })
     }
 
     await dbConnect()
 
-    // Get tenantId from request if not provided (for regular admins, use their tenant)
-    let userTenantId = tenantId
-    if (!userTenantId && roleCheck.user.role !== "super_admin") {
-      const tenantCheck = await requireTenant(request)
-      if (tenantCheck.tenantId) {
-        userTenantId = tenantCheck.tenantId
+    // Determine tenantId for the new user (handle empty strings as null)
+    let userTenantId: string | null = (tenantId && tenantId.trim()) ? tenantId.trim() : null
+    
+    // Debug logging
+    console.log("Creating user:", {
+      creatorRole: roleCheck.user.role,
+      creatorTenantId: roleCheck.user.tenantId,
+      newUserRole: role,
+      providedTenantId: tenantId,
+      resolvedTenantId: userTenantId,
+    })
+    
+    // If tenantId not provided in body, try to get from authenticated user's tenant
+    if (!userTenantId) {
+      if (roleCheck.user.role === "super_admin") {
+        // Super admin can create users without tenantId
+        // If creating super_admin, no tenantId needed
+        // If creating other roles, tenantId is optional (can be assigned later)
+        userTenantId = null
+        console.log("Super admin creating user - tenantId optional")
+      } else {
+        // Regular admin: get tenantId from their user record
+        const adminTenantId = roleCheck.user.tenantId
+        if (adminTenantId) {
+          userTenantId = adminTenantId.toString()
+          console.log("Using admin's tenantId from user record:", userTenantId)
+        } else {
+          // Admin user doesn't have tenantId in their record
+          // Check if they're trying to create a super_admin (allowed)
+          if (role === "super_admin") {
+            userTenantId = null // Super admin users don't need tenantId
+            console.log("Admin creating super_admin user without tenantId")
+          } else {
+            // Regular admin without tenantId trying to create non-super_admin user
+            console.error("Admin without tenantId trying to create non-super_admin user:", {
+              adminId: roleCheck.user._id,
+              adminEmail: roleCheck.user.email,
+              adminRole: roleCheck.user.role,
+              targetRole: role,
+            })
+            return NextResponse.json({ 
+              message: "tenantId is required. Your admin account is not associated with a masjid. Please provide tenantId in the request body, or contact a super admin to associate your account with a masjid." 
+            }, { status: 400 })
+          }
+        }
       }
     }
 
-    // Super admin can create users without tenant, others must have tenant
-    if (!userTenantId && roleCheck.user.role !== "super_admin") {
-      return NextResponse.json({ message: "tenantId is required" }, { status: 400 })
+    // Final validation: non-super_admin users must have tenantId
+    if (!userTenantId && role !== "super_admin") {
+      console.error("Validation failed: non-super_admin user without tenantId", {
+        role,
+        userTenantId,
+        creatorRole: roleCheck.user.role,
+        creatorTenantId: roleCheck.user.tenantId,
+      })
+      return NextResponse.json({ 
+        message: `tenantId is required for role "${role}". Please provide tenantId in the request body.` 
+      }, { status: 400 })
     }
+    
+    console.log("Final tenantId for new user:", userTenantId)
 
     // Check for duplicate email within tenant (or globally for super_admin)
     const emailFilter: any = { email }
