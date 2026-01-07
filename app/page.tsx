@@ -67,8 +67,7 @@ export default function Home() {
             FAQ's
           </button>
 
-          <Link
-            href="/admin"
+          <Link href="/staff/login"
             className="bg-white text-teal-700 px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-100 hover:shadow-lg transition"
           >
             Admin Login
