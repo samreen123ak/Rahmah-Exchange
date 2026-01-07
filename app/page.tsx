@@ -245,7 +245,7 @@ export default function Home() {
               </span>
             </h3>
             <p className="text-gray-700 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
-              <span className="font-semibold text-teal-700">Al Falah</span> is a faith-inspired initiative rooted in
+              <span className="font-semibold text-teal-700">Rahmah Exchange</span> is a faith-inspired initiative rooted in
               compassion and mercy. Our mission is to connect generous hearts with those in need — ensuring every act of giving
               is filled with{" "}
               <span className="text-teal-600 font-semibold">dignity, trust,</span> and{" "}
@@ -337,7 +337,7 @@ export default function Home() {
              <div>
                <h4 className="font-bold mb-4 flex items-center gap-2">
                  <Heart className="w-5 h-5 fill-white" />
-                 Al Falah
+                 Rahmah Exchange
                </h4>
                <p className="text-gray-400 text-sm">Mercy-based giving network for verified need.</p>
              </div>
@@ -362,7 +362,7 @@ export default function Home() {
                <br/>000-123-4567<br />
              </div>
            </div>
-           <p className="text-center text-gray-500 text-sm">2025 Al Falah. All rights reserved.</p>
+           <p className="text-center text-gray-500 text-sm">2025 Rahmah Exchange. All rights reserved.</p>
          </div>
        </footer>
      </div>

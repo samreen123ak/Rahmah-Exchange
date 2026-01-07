@@ -200,7 +200,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       // Email to applicant if approved or rejected
       if (updated.email && (newStatus === "Approved" || newStatus === "Rejected")) {
         const isApproved = newStatus === "Approved"
-        const subject = isApproved ? "Your Al Falah Application - Approved" : "Your Al Falah Application - Update"
+        const subject = isApproved ? "Your Rahmah Exchange Application - Approved" : "Your Rahmah Exchange Application - Update"
         
         // Get approval amount from approval notes if approved
         let approvalAmount: number | null = null

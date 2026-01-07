@@ -1,16 +1,17 @@
 "use client"
 
 import type React from "react"
-import { Suspense, useState, useEffect } from "react"
-import Link from "next/link"
+import { useState, useEffect, Suspense } from "react"
 import Image from "next/image"
-import { AlertCircle, Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react"
+import Link from "next/link"
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { setAuthToken } from "@/lib/auth-utils"
 
 function StaffLoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -22,7 +23,6 @@ function StaffLoginForm() {
     const message = searchParams.get("message")
     if (message) {
       setSuccess(message)
-      // Clear URL parameter
       router.replace("/staff/login", { scroll: false })
     }
   }, [searchParams, router])
@@ -33,35 +33,22 @@ function StaffLoginForm() {
     setLoading(true)
 
     try {
-      const apiUrl = `/api/auth/login`
-      console.log("Login API URL:", apiUrl)
-
-      const res = await fetch(apiUrl, {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
 
-      console.log("Login response status:", res.status)
-
       const data = await res.json()
-      console.log("Login response data:", data)
 
       if (!res.ok) {
-        // Show specific error message for inactive accounts
-        if (res.status === 403) {
-          setError(data.message || "Your profile is currently inactive. Please contact an administrator.")
-        } else {
-          setError(data.message || "Invalid credentials")
-        }
-        setLoading(false)
+        setError(data.message || "Invalid credentials")
         return
       }
 
       setAuthToken(data.token)
       router.push("/staff/dashboard")
-    } catch (err) {
-      console.error("Login error:", err)
+    } catch {
       setError("Connection error. Please try again.")
     } finally {
       setLoading(false)
@@ -69,112 +56,105 @@ function StaffLoginForm() {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-2xl justify-center items-center">
-      <div className="flex items-center justify-center py-4">
-        <Image src="/logo1.svg" alt="Al Falah Logo" width={170} height={170} priority />
+    <form onSubmit={handleLogin} className="space-y-6 w-full max-w-md">
+      <h2 className="text-3xl font-bold text-gray-900">Log in</h2>
+
+      <div>
+        <label className="text-sm font-semibold text-gray-700">Email</label>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full mt-2 px-4 py-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500"
+          placeholder="staff@example.com"
+        />
       </div>
-      {/* <h2 className="text-2xl font-bold text-gray-900 mb-2">Staff Login</h2> */}
-      {/*<p className="text-gray-600 mb-8">Access the admin dashboard</p> */}
 
-      <form onSubmit={handleLogin} className="space-y-6">
-        <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>
+      <div>
+        <label className="text-sm font-semibold text-gray-700">Password</label>
+        <div className="relative mt-2">
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="staff@example.com"
+            type={showPassword ? "text" : "password"}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-3 pr-10 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500"
+            placeholder="Enter password"
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
         </div>
+      </div>
 
-        <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">Password</label>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
-          </div>
+      {success && (
+        <div className="flex items-center gap-2 text-green-700 bg-green-50 border border-green-200 p-3 rounded-lg text-sm">
+          <CheckCircle2 size={18} /> {success}
         </div>
+      )}
 
-        {success && (
-          <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-            <p className="text-green-700 text-sm">{success}</p>
-          </div>
-        )}
+      {error && (
+        <div className="flex items-center gap-2 text-red-700 bg-red-50 border border-red-200 p-3 rounded-lg text-sm">
+          <AlertCircle size={18} /> {error}
+        </div>
+      )}
 
-        {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-            <p className="text-red-700 text-sm">{error}</p>
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold rounded-lg hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        >
-          {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-          {loading ? "Logging in..." : "Log In"}
-        </button>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg flex items-center justify-center gap-2"
+      >
+        {loading && <Loader2 size={18} className="animate-spin" />}
+        {loading ? "Logging in..." : "Log in"}
+      </button>
+      <p className="text-center text-black/60 text-xs mt-6">Protected area. <Link href="/" className="text-black font-medium hover:text-teal-600">Back to home</Link></p>
       </form>
-
-      {/* <p className="text-center text-gray-600 text-sm mt-8">
-        Don't have an account?{" "}
-        <Link href="/staff/signup" className="text-teal-600 font-semibold hover:text-teal-700 transition">
-          Contact administrator
-        </Link>
-      </p> */}
-    </div>
   )
 }
 
 export default function StaffLoginPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-600 via-teal-500 to-cyan-600 flex flex-col">
-      <header className="px-8 py-6 bg-white/5 backdrop-blur-sm">
-        <Link href="/" className="text-white font-medium hover:text-teal-100 flex items-center gap-2 transition">
-          <span>←</span> Back to Home
-        </Link>
-      </header>
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
 
-      <div className="flex-1 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-md">
-          {/* <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center gap-3 mb-6 bg-white rounded-full px-6 py-3 shadow-lg">
-              <Image
-                           src="/logo1.svg"
-                           alt="Rahmah Exchange Logo"
-                           width={170}
-                           height={170}
-                           priority
-                         />
-            </div>
-            <p className="text-white/80 text-sm">Staff Administration Portal</p>
-          </div> */}
+      {/* LEFT SIDE – BACKGROUND ONLY */}
+      <div
+  className="relative bg-cover bg-center flex items-center"
+  style={{ backgroundImage: "url('/mosque.png')" }}
+>
+  {/* STRONG OVERLAY */}
+  <div className="absolute inset-0 bg-teal-900/80"></div>
 
-          <Suspense fallback={<div className="bg-white rounded-2xl p-8 shadow-2xl h-96 animate-pulse" />}>
-            <StaffLoginForm />
-          </Suspense>
+  <div className="relative z-10 text-white px-12 max-w-md">
+    
+    {/* LOGO */}
+    <Image
+      src="/logo2.svg"
+      alt="Logo"
+      width={90}
+      height={90}
+      className="mb-6"
+    />
 
-          <p className="text-center text-white/60 text-xs mt-6">Protected area. Unauthorized access is prohibited.</p>
-        </div>
+    {/* TEXT */}
+    <h1 className="text-4xl font-bold">Hey! Welcome</h1>
+    <p className="mt-4 text-white/90">
+      Secure staff access to the administration system.
+    </p>
+  </div>
+</div>
+
+      {/* RIGHT SIDE – LOGIN */}
+      <div className="flex items-center justify-center px-6 bg-white">
+        <Suspense fallback={<div>Loading...</div>}>
+          <StaffLoginForm />
+        </Suspense>
       </div>
+
     </div>
   )
 }

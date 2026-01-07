@@ -415,9 +415,9 @@ export default function StaffMessagesPage() {
       <header className="bg-white border-b border-gray-200 px-8 py-4 shadow-sm flex-shrink-0">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/staff/dashboard">
+            {/* <Link href="/staff/dashboard">
               <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={120} height={120} priority />
-            </Link>
+            </Link> */}
             <div>
               <h1 className="text-xl font-bold text-gray-900">Staff Internal Messages</h1>
               <p className="text-sm text-gray-500">Communicate with your team</p>
@@ -435,7 +435,7 @@ export default function StaffMessagesPage() {
               <MessageSquare className="w-4 h-4" />
               Start New Chat
             </button>
-            <Link
+            {/* <Link
               href="/staff/dashboard"
               className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition font-medium"
             >
@@ -447,7 +447,7 @@ export default function StaffMessagesPage() {
             >
               <LogOut className="w-4 h-4" />
               Logout
-            </button>
+            </button> */}
           </div>
         </div>
       </header>

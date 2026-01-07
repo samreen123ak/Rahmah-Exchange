@@ -488,16 +488,16 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="h-screen bg-gray-50 flex flex-col ">
       <Toast message={toast.message} type={toast.type} isVisible={toast.isVisible} />
 
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-8 py-4 shadow-sm flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/">
+            {/* <Link href="/">
               <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={120} height={120} priority />
-            </Link>
+            </Link> */}
             <div>
               <h1 className="text-xl font-bold text-gray-900">Messages</h1>
               <p className="text-sm text-gray-500">Communicate with staff</p>

@@ -298,7 +298,7 @@ export async function POST(request: NextRequest) {
                 <li>Upload missing or additional documents</li>
               </ul>
               <p>We will review your application and get back to you. JazakAllahu Khairan.</p>
-              <p>— Al Falah Team</p>
+              <p>— Rahmah Exchange Team</p>
             `,
             text: `Assalamu Alaikum ${applicant.firstName || ""},
 
@@ -313,7 +313,7 @@ This link will allow you to:
 - Upload missing or additional documents
 
 We will review your application and get back to you. JazakAllahu Khairan.
-— Al Falah Team`,
+— Rahmah Exchange Team`,
           })
         }
 

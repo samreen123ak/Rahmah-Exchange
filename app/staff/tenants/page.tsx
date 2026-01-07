@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import type React from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
@@ -164,7 +165,7 @@ export default function TenantsPage() {
     setSelectedTenant(tenant)
     setFormData({
       name: tenant.name,
-      slug: tenant.slug,
+      slug: tenant.slug || "",
       email: tenant.email || "",
       phone: tenant.phone || "",
       street: tenant.address?.street || "",
@@ -187,9 +188,7 @@ export default function TenantsPage() {
 
     try {
       const token = getAuthToken()
-      const url = showEditModal && selectedTenant
-        ? `/api/tenants/${selectedTenant._id}`
-        : "/api/tenants"
+      const url = showEditModal && selectedTenant ? `/api/tenants/${selectedTenant._id}` : "/api/tenants"
 
       const method = showEditModal ? "PATCH" : "POST"
 
@@ -240,18 +239,18 @@ export default function TenantsPage() {
 
       // Clear any previous errors
       setError(null)
-      
+
       // Show success message
-      const successMessage = showEditModal 
-        ? "Masjid updated successfully" 
+      const successMessage = showEditModal
+        ? "Masjid updated successfully"
         : "Masjid created successfully. Admin invitation email has been sent."
       setSuccess(successMessage)
-      
+
       // Close modals and reset form immediately
       setShowAddModal(false)
       setShowEditModal(false)
       setSelectedTenant(null)
-      
+
       // Reset form data
       setFormData({
         name: "",
@@ -266,7 +265,7 @@ export default function TenantsPage() {
         adminName: "",
         isActive: true,
       })
-      
+
       // Refresh the tenants list
       await fetchTenants()
 
@@ -287,7 +286,7 @@ export default function TenantsPage() {
       } else if (err?.error) {
         errorMessage = err.error
       }
-      
+
       setError(errorMessage)
       // Clear success message if there's an error
       setSuccess(null)
@@ -343,51 +342,37 @@ export default function TenantsPage() {
     }))
   }
 
-  const filteredTenants = tenants.filter((tenant) =>
-    tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    tenant.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    tenant.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredTenants = tenants.filter(
+    (tenant) =>
+      tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tenant.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tenant.email?.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
-  const navItems = [
-    { name: "Dashboard", icon: FileText, href: "/staff/dashboard", active: pathname === "/staff/dashboard" },
-    ...(userRole === "super_admin" || userRole === "admin"
-      ? [{ name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" }]
-      : []),
-    // Messages should be visible ONLY for masjid staff (admin, caseworker, approver, treasurer)
-    ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
-      ? [{ name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" }]
-      : []),
-    ...(userRole === "admin" || userRole === "super_admin"
-      ? [{ name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" }]
-      : []),
-   
-    ...(userRole === "admin" || userRole === "super_admin"
-      ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
-      : []),
-    ...(userRole === "super_admin"
-      ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
-      : []),
-  ]
+  // const navItems = [
+  //   { name: "Dashboard", icon: FileText, href: "/staff/dashboard", active: pathname === "/staff/dashboard" },
+  //   ...(userRole === "super_admin" || userRole === "admin"
+  //     ? [{ name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" }]
+  //     : []),
+  //   // Messages should be visible ONLY for masjid staff (admin, caseworker, approver, treasurer)
+  //   ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
+  //     ? [{ name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" }]
+  //     : []),
+  //   ...(userRole === "admin" || userRole === "super_admin"
+  //     ? [{ name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" }]
+  //     : []),
 
-  if (userRole !== "super_admin") {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Shield className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
-          <p className="text-gray-600">You need super admin privileges to access this page.</p>
-          <Link href="/staff/dashboard" className="text-teal-600 hover:text-teal-700 mt-4 inline-block">
-            Go to Dashboard
-          </Link>
-        </div>
-      </div>
-    )
-  }
+  //   ...(userRole === "admin" || userRole === "super_admin"
+  //     ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
+  //     : []),
+  //   ...(userRole === "super_admin"
+  //     ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
+  //     : []),
+  // ]
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
+  const TenantsContent = (
+    <div className="min-h-screen bg-gray-50">
+      {/* Sidebar
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-screen">
         <div className="p-6 border-b border-gray-200">
           <Link href="/staff/dashboard" className="flex items-center gap-3">
@@ -421,12 +406,12 @@ export default function TenantsPage() {
             <LogOut className="w-5 h-5" /> Logout
           </button>
         </div>
-      </aside>
+      </aside> */}
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
+          
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Masjids</h1>
@@ -443,13 +428,9 @@ export default function TenantsPage() {
 
           {/* Success/Error Messages */}
           {success && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
-              {success}
-            </div>
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">{success}</div>
           )}
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">{error}</div>
-          )}
+          {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">{error}</div>}
 
           {/* Search */}
           <div className="mb-6">
@@ -479,7 +460,10 @@ export default function TenantsPage() {
           ) : (
             <div className="grid gap-6">
               {filteredTenants.map((tenant) => (
-                <div key={tenant._id} className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition">
+                <div
+                  key={tenant._id}
+                  className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition"
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
@@ -558,7 +542,8 @@ export default function TenantsPage() {
               <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Delete Masjid</h3>
                 <p className="text-gray-600 mb-6">
-                  Are you sure you want to delete this masjid? This action cannot be undone. All data associated with this masjid (applicants, grants, payments, messages, etc.) will be permanently deleted.
+                  Are you sure you want to delete this masjid? This action cannot be undone. All data associated with
+                  this masjid (applicants, grants, payments, messages, etc.) will be permanently deleted.
                 </p>
                 <div className="flex gap-4">
                   <button
@@ -588,20 +573,16 @@ export default function TenantsPage() {
               <div className="text-sm text-gray-600 mt-1">Total Masjids</div>
             </div>
             <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="text-3xl font-bold text-green-600">
-                {tenants.filter((t) => t.isActive).length}
-              </div>
+              <div className="text-3xl font-bold text-green-600">{tenants.filter((t) => t.isActive).length}</div>
               <div className="text-sm text-gray-600 mt-1">Active Masjids</div>
             </div>
             <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="text-3xl font-bold text-red-600">
-                {tenants.filter((t) => !t.isActive).length}
-              </div>
+              <div className="text-3xl font-bold text-red-600">{tenants.filter((t) => !t.isActive).length}</div>
               <div className="text-sm text-gray-600 mt-1">Inactive Masjids</div>
             </div>
           </div>
         </div>
-      </main>
+  
 
       {/* Add/Edit Modal */}
       {(showAddModal || showEditModal) && (
@@ -626,9 +607,7 @@ export default function TenantsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email {showEditModal && "*"}
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Email {showEditModal && "*"}</label>
                   <input
                     type="email"
                     required={showEditModal}
@@ -637,9 +616,7 @@ export default function TenantsPage() {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                     placeholder="admin@masjid.com"
                   />
-                  {showEditModal && (
-                    <p className="mt-1 text-sm text-gray-500">Admin email for this masjid</p>
-                  )}
+                  {showEditModal && <p className="mt-1 text-sm text-gray-500">Admin email for this masjid</p>}
                 </div>
 
                 <div>
@@ -727,9 +704,10 @@ export default function TenantsPage() {
                   <div className="border-t pt-6 mt-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Admin Access</h3>
                     <p className="text-sm text-gray-600 mb-4">
-                      The admin email will be used as the masjid contact email and will receive all notifications for this masjid.
+                      The admin email will be used as the masjid contact email and will receive all notifications for
+                      this masjid.
                     </p>
-                    
+
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Admin Email *</label>
@@ -742,7 +720,8 @@ export default function TenantsPage() {
                           placeholder="admin@masjid.com"
                         />
                         <p className="mt-1 text-sm text-gray-500">
-                          Admin will receive an invitation email to set their password. This email will also be used for masjid notifications.
+                          Admin will receive an invitation email to set their password. This email will also be used for
+                          masjid notifications.
                         </p>
                       </div>
 
@@ -775,10 +754,7 @@ export default function TenantsPage() {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
-                >
+                <button type="submit" className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">
                   {showEditModal ? "Update" : "Create"} Masjid
                 </button>
               </div>
@@ -788,5 +764,21 @@ export default function TenantsPage() {
       )}
     </div>
   )
-}
 
+  if (userRole !== "super_admin") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Shield className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
+          <p className="text-gray-600">You need super admin privileges to access this page.</p>
+          <Link href="/staff/dashboard" className="text-teal-600 hover:text-teal-700 mt-4 inline-block">
+            Go to Dashboard
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  return TenantsContent
+}

@@ -3,20 +3,18 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import {
   CheckCircle2,
   TrendingUp,
   FileText,
-  LogOut,
   Users,
   MessageSquare,
   ChevronRight,
   Shield,
   Share2,
 } from "lucide-react"
-import { removeAuthToken, getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
+import { getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
 
 type ZakatApplicant = {
@@ -39,7 +37,6 @@ type StatCardProps = {
 
 export default function DashboardPage() {
   const router = useRouter()
-  const pathname = usePathname()
   const [applicants, setApplicants] = useState<ZakatApplicant[]>([])
   const [totalFromAPI, setTotalFromAPI] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
@@ -67,23 +64,6 @@ export default function DashboardPage() {
   }, [router])
 
   const normalizeStatus = (status?: string) => (status || "").trim().toLowerCase().replace(/\s+/g, " ")
-
-  const handleLogout = async () => {
-    try {
-      const token = getAuthToken()
-      if (token) {
-        await authenticatedFetch(`/api/auth/logout`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }).catch(() => {})
-      }
-      removeAuthToken()
-      router.push("/staff/login")
-    } catch {
-      removeAuthToken()
-      router.push("/staff/login")
-    }
-  }
 
   useEffect(() => {
     // Wait until we know the user's role before loading dashboard data
@@ -158,46 +138,46 @@ export default function DashboardPage() {
     return "Good Evening"
   }
 
-  const navItems = [
-    { name: "Dashboard", icon: FileText, href: "/staff/dashboard", active: pathname === "/staff/dashboard" },
-    ...(userRole === "super_admin" || userRole === "admin"
-      ? [{ name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" }]
-      : []),
-    // Messages should be visible ONLY for masjid staff (admin, caseworker, approver, treasurer)
-    ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
-      ? [{ name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" }]
-      : []),
-    ...(userRole === "admin" || userRole === "super_admin"
-      ? [{ name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" }]
-      : []),
-    // Shared Profiles also only for masjid staff, not super_admin
-    ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
-      ? [
-          {
-            name: "Shared Profiles",
-            icon: Share2,
-            href: "/staff/shared-profiles",
-            active: pathname === "/staff/shared-profiles",
-          },
-        ]
-      : []),
-    ...(userRole === "admin" || userRole === "super_admin"
-      ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
-      : []),
-    ...(userRole === "super_admin"
-      ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
-      : []),
-  ]
+  // const navItems = [
+  //   { name: "Dashboard", icon: FileText, href: "/staff/dashboard", active: pathname === "/staff/dashboard" },
+  //   ...(userRole === "super_admin" || userRole === "admin"
+  //     ? [{ name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" }]
+  //     : []),
+  //   // Messages should be visible ONLY for masjid staff (admin, caseworker, approver, treasurer)
+  //   ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
+  //     ? [{ name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" }]
+  //     : []),
+  //   ...(userRole === "admin" || userRole === "super_admin"
+  //     ? [{ name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" }]
+  //     : []),
+  //   // Shared Profiles also only for masjid staff, not super_admin
+  //   ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
+  //     ? [
+  //         {
+  //           name: "Shared Profiles",
+  //           icon: Share2,
+  //           href: "/staff/shared-profiles",
+  //           active: pathname === "/staff/shared-profiles",
+  //         },
+  //       ]
+  //     : []),
+  //   ...(userRole === "admin" || userRole === "super_admin"
+  //     ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
+  //     : []),
+  //   ...(userRole === "super_admin"
+  //     ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
+  //     : []),
+  // ]
 
   // Masjid-level stats for super admin
   const totalMasjids = tenants.length
   const activeMasjids = tenants.filter((t: any) => t.isActive !== false).length
   const inactiveMasjids = tenants.filter((t: any) => t.isActive === false).length
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex">
+  const DashboardContent = (
+    <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-screen">
+      {/* <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-screen">
         <div className="p-6 border-b border-gray-200">
           <Link href="/staff/dashboard" className="flex items-center gap-3">
             <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={80} height={80} />
@@ -220,8 +200,8 @@ export default function DashboardPage() {
               </Link>
             )
           })}
-        </nav>
-
+        </nav> */}
+{/* 
         <div className="p-4 border-t border-gray-200">
           <button
             onClick={handleLogout}
@@ -230,10 +210,10 @@ export default function DashboardPage() {
             <LogOut className="w-5 h-5" /> Logout
           </button>
         </div>
-      </aside>
+      </aside> */}
 
       {/* Main Content */}
-      <div className="flex-1 ml-64 p-8">
+      
         {/* Header */}
         {/* <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
           <div className="relative max-w-md">
@@ -243,7 +223,8 @@ export default function DashboardPage() {
         </header> */}
 
         {/* Greeting Banner */}
-        <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl p-8 text-white mt-6">
+        
+        <div className=" flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl p-8 text-white mt-6">
           <h1 className="text-3xl font-bold">
             {getGreeting()}, {userName.split(" ")[0]}
           </h1>
@@ -275,7 +256,7 @@ export default function DashboardPage() {
             />
             <StatCard
               title="Total Applications (All Masjids)"
-              value={loading ? "..." : totalFromAPI ?? applicants.length}
+              value={loading ? "..." : (totalFromAPI ?? applicants.length)}
               icon={<Shield className="w-5 h-5" />}
               color="from-purple-600 to-pink-600"
             />
@@ -409,8 +390,10 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-    </div>
+   
   )
+
+  return DashboardContent
 }
 
 function StatusRow({ label, count, color }: any) {

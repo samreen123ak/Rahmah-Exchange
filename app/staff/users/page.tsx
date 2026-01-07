@@ -3,10 +3,8 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
-import Image from "next/image"
-import { LogOut, Plus, Edit2, UserCheck, UserX, Users, AlertCircle, Loader2, Eye, EyeOff } from "lucide-react"
-import { getAuthToken, removeAuthToken, authenticatedFetch } from "@/lib/auth-utils"
+import { Plus, Edit2, UserCheck, UserX, Users, AlertCircle, Loader2, Eye, EyeOff } from "lucide-react"
+import { getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
 
 type User = {
@@ -49,7 +47,6 @@ export default function UsersPage() {
     try {
       const decoded: any = jwtDecode(token)
       setUserRole(decoded.role || "")
-      // Allow both admin and super_admin to access this page
       if (decoded.role !== "admin" && decoded.role !== "super_admin") {
         router.push("/staff/dashboard")
         return
@@ -71,7 +68,6 @@ export default function UsersPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        // Show the actual error message from the API
         throw new Error(data.message || "Failed to fetch users")
       }
 
@@ -81,33 +77,11 @@ export default function UsersPage() {
       setError(errorMessage)
       console.error("Error fetching users:", err)
 
-      // If it's an admin access error, provide helpful guidance
       if (errorMessage.includes("Admin access restricted")) {
         setError(`${errorMessage}. Please ensure your email is authorized for admin access.`)
       }
     } finally {
       setLoading(false)
-    }
-  }
-
-
-  const handleLogout = async () => {
-    try {
-      const token = getAuthToken()
-      if (token) {
-        await authenticatedFetch(`/api/auth/logout`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).catch(() => {})
-      }
-      removeAuthToken()
-      router.push("/staff/login")
-    } catch (err) {
-      console.error("Logout failed:", err)
-      removeAuthToken()
-      router.push("/staff/login")
     }
   }
 
@@ -151,8 +125,7 @@ export default function UsersPage() {
     setError("")
     try {
       const updateData: any = {}
-      
-      // Super admin can only change password
+
       if (userRole === "super_admin") {
         if (!formData.password || formData.password.trim() === "") {
           setError("Password is required for super admin")
@@ -160,13 +133,11 @@ export default function UsersPage() {
         }
         updateData.password = formData.password
       } else {
-        // Regular admin can update all fields
         updateData.name = formData.name
         updateData.email = formData.email
         updateData.role = formData.role
         updateData.isActive = formData.isActive
 
-        // Only include password if it's provided
         if (formData.password && formData.password.trim() !== "") {
           updateData.password = formData.password
         }
@@ -234,175 +205,142 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-8 py-6 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/staff/dashboard">
-              <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={170} height={170} priority />
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-              <p className="text-sm text-gray-500">Manage all system users</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/staff/dashboard"
-              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition font-medium"
-            >
-              Back to Dashboard
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded-lg transition font-medium"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
-          </div>
+    <div className="space-y-6">
+      {/* <div>
+        <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+        <p className="text-gray-600">Manage all system users</p>
+      </div> */}
+
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+          <p className="text-red-700 text-sm">{error}</p>
+          <button onClick={() => setError("")} className="ml-auto text-red-600 hover:text-red-800">
+            ×
+          </button>
         </div>
-      </header>
+      )}
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-8 py-12">
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-            <p className="text-red-700 text-sm">{error}</p>
-            <button onClick={() => setError("")} className="ml-auto text-red-600 hover:text-red-800">
-              ×
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Users className="w-6 h-6 text-teal-600" />
+            <h2 className="text-xl font-bold text-gray-900">
+              {userRole === "super_admin" ? `All Admins (${users.length})` : `All Users (${users.length})`}
+            </h2>
+          </div>
+          {userRole === "admin" && (
+            <button
+              onClick={() => {
+                setError("")
+                setShowEditModal(false)
+                setSelectedUser(null)
+                setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
+                setShowCreatePassword(false)
+                setShowEditPassword(false)
+                setShowCreateModal(true)
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium"
+            >
+              <Plus className="w-4 h-4" />
+              Create User
             </button>
-          </div>
-        )}
-
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Users className="w-6 h-6 text-teal-600" />
-              <h2 className="text-xl font-bold text-gray-900">
-                {userRole === "super_admin" ? `All Admins (${users.length})` : `All Users (${users.length})`}
-              </h2>
-            </div>
-            {userRole === "admin" && (
-              <button
-                onClick={() => {
-                  setError("")
-                  // Close edit modal if open
-                  setShowEditModal(false)
-                  setSelectedUser(null)
-                  // Reset form data completely
-                  setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
-                  // Clear password visibility states
-                  setShowCreatePassword(false)
-                  setShowEditPassword(false)
-                  // Open create modal
-                  setShowCreateModal(true)
-                }}
-                className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium"
-              >
-                <Plus className="w-4 h-4" />
-                Create User
-              </button>
-            )}
-          </div>
-
-          {loading ? (
-            <div className="p-12 text-center">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto text-teal-600 mb-4" />
-              <p className="text-gray-600">Loading users...</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Role
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {users.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                        No users found
-                      </td>
-                    </tr>
-                  ) : (
-                    users.map((user) => (
-                      <tr key={user._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
-                              <span className="text-teal-600 font-semibold">
-                                {(user.name || user.email || "U").charAt(0).toUpperCase()}
-                              </span>
-                            </div>
-                            <div>
-                              <div className="text-sm font-medium text-gray-900">
-                                {user.name || user.email || "Unknown"}
-                              </div>
-                              {user.internalEmail && <div className="text-xs text-gray-500">{user.internalEmail}</div>}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{user.email || "N/A"}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeColor(user.role || "")}`}
-                          >
-                            {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "N/A"}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {user.isActive ? (
-                            <span className="flex items-center gap-2 text-sm text-green-600">
-                              <UserCheck className="w-4 h-4" />
-                              Active
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-2 text-sm text-red-600">
-                              <UserX className="w-4 h-4" />
-                              Inactive
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <button
-                            onClick={() => openEditModal(user)}
-                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-teal-600 hover:bg-teal-50 rounded-lg transition"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                            Edit
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
           )}
         </div>
+
+        {loading ? (
+          <div className="p-12 text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto text-teal-600 mb-4" />
+            <p className="text-gray-600">Loading users...</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {users.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                      No users found
+                    </td>
+                  </tr>
+                ) : (
+                  users.map((user) => (
+                    <tr key={user._id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
+                            <span className="text-teal-600 font-semibold">
+                              {(user.name || user.email || "U").charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {user.name || user.email || "Unknown"}
+                            </div>
+                            {user.internalEmail && <div className="text-xs text-gray-500">{user.internalEmail}</div>}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{user.email || "N/A"}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeColor(user.role || "")}`}
+                        >
+                          {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "N/A"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {user.isActive ? (
+                          <span className="flex items-center gap-2 text-sm text-green-600">
+                            <UserCheck className="w-4 h-4" />
+                            Active
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-2 text-sm text-red-600">
+                            <UserX className="w-4 h-4" />
+                            Inactive
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <button
+                          onClick={() => openEditModal(user)}
+                          className="flex items-center gap-2 px-3 py-1.5 text-sm text-teal-600 hover:bg-teal-50 rounded-lg transition"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
-      {/* Create User Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
@@ -413,7 +351,6 @@ export default function UsersPage() {
                 onClick={() => {
                   setShowCreateModal(false)
                   setError("")
-                  // Reset form data when closing modal
                   setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
                   setShowCreatePassword(false)
                 }}
@@ -513,7 +450,6 @@ export default function UsersPage() {
         </div>
       )}
 
-      {/* Edit User Modal */}
       {showEditModal && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
@@ -525,7 +461,6 @@ export default function UsersPage() {
                   setShowEditModal(false)
                   setSelectedUser(null)
                   setError("")
-                  // Reset form data when closing edit modal
                   setFormData({ name: "", email: "", password: "", role: "caseworker", isActive: true })
                   setShowEditPassword(false)
                 }}
@@ -557,8 +492,7 @@ export default function UsersPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Password{" "}
-                      <span className="text-xs text-gray-500 font-normal">(required to change password)</span>
+                      Password <span className="text-xs text-gray-500 font-normal">(required to change password)</span>
                     </label>
                     <div className="relative">
                       <input

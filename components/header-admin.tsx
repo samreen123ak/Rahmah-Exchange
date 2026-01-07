@@ -37,7 +37,7 @@ export default function Header() {
         <Link href="/staff/dashboard" className="flex items-center gap-3">
           <Image
             src="/logo1.svg"
-            alt="Al Falah Logo"
+            alt="Rahmah Exchange Logo"
             width={140}
             height={140}
             priority

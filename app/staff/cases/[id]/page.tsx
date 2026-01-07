@@ -1825,7 +1825,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-8 py-6 shadow-sm">
+      {/* <header className="bg-white border-b border-gray-200 px-8 py-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/staff/dashboard" className="flex items-center gap-3">
             <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={140} height={140} priority />
@@ -1835,7 +1835,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
             Back to Cases
           </Link>
         </div>
-      </header>
+      </header> */}
 
       <div className="max-w-7xl mx-auto px-8 py-12">
         <div className="grid grid-cols-3 gap-8">
