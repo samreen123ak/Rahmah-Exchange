@@ -4,7 +4,13 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { CheckCircle, XCircle, Clock, Mail, ArrowRight, Heart } from "lucide-react"
+import {
+  CheckCircle,
+  XCircle,
+  Clock,
+  ArrowRight,
+  ShieldCheck,
+} from "lucide-react"
 
 const API_URL = "/api/zakat-applicants"
 
@@ -26,9 +32,7 @@ export default function ApplicationStatusPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (emailFromQuery) {
-      handleCheckStatus()
-    }
+    if (emailFromQuery) handleCheckStatus()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emailFromQuery])
 
@@ -59,7 +63,6 @@ export default function ApplicationStatusPage() {
           : "",
       })
     } catch (err: unknown) {
-      console.error(err)
       setError(err instanceof Error ? err.message : "An unexpected error occurred")
     } finally {
       setLoading(false)
@@ -67,29 +70,26 @@ export default function ApplicationStatusPage() {
   }
 
   const getStatusDisplay = (status: string) => {
-    const statusLower = status?.toLowerCase() || ""
-
-    if (statusLower === "approved") {
+    const s = status?.toLowerCase() || ""
+    if (s === "approved")
       return {
         icon: CheckCircle,
-        color: "text-green-600",
+        badge: "bg-green-50 text-green-700 ring-green-600/20",
         title: "Approved",
         message: "Your application has been approved. You will receive an email shortly.",
       }
-    } else if (statusLower === "rejected") {
+    if (s === "rejected")
       return {
         icon: XCircle,
-        color: "text-red-600",
+        badge: "bg-red-50 text-red-700 ring-red-600/20",
         title: "Rejected",
-        message: "Unfortunately, your application was declined. Contact support for help.",
+        message: "Unfortunately, your application was declined. Contact support for assistance.",
       }
-    } else {
-      return {
-        icon: Clock,
-        color: "text-amber-600",
-        title: "Under Review",
-        message: "Your application is being reviewed. You will be notified via email.",
-      }
+    return {
+      icon: Clock,
+      badge: "bg-amber-50 text-amber-700 ring-amber-600/20",
+      title: "Under Review",
+      message: "Your application is currently under review. We will notify you via email.",
     }
   }
 
@@ -97,82 +97,101 @@ export default function ApplicationStatusPage() {
   const StatusIcon = statusInfo ? statusInfo.icon : Clock
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
       {/* Header */}
-     <header className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full border-b border-gray-200">
-        <Link href="/" className="flex items-center gap-2">
-      <Image
-                  src="/logo1.svg"
-                  alt="Rahmah Exchange Logo"
-                  width={170}
-                  height={170}
-                  priority
-                  />
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur border-b">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo1.svg" alt="Rahmah Exchange" width={150} height={150} priority />
           </Link>
+          <div className="hidden md:flex items-center gap-2 text-sm text-gray-600">
+            <ShieldCheck className="w-4 h-4 text-teal-600" />
+            Secure & Confidential
+          </div>
+        </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12">
-        {!applicationData && !loading && (
-          <div className="w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4 text-center">Check Your Application Status</h2>
-            <form onSubmit={handleCheckStatus} className="space-y-4">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-teal-600 text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-teal-700 disabled:opacity-50"
-              >
-                {loading ? "Checking..." : "Check Status"} <ArrowRight size={16} />
-              </button>
-            </form>
-            {error && (
-              <p className="mt-4 text-red-600 text-sm text-center">{error}</p>
+      {/* Main */}
+      <main className="flex-1 px-6 py-16">
+        <div className="max-w-xl mx-auto">
+          {/* Card */}
+          <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 p-6 md:p-8">
+            {!applicationData && !loading && (
+              <>
+                <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 text-center">
+                  Application Status
+                </h1>
+                <p className="mt-2 text-gray-600 text-center">
+                  Enter your email to track the progress of your application.
+                </p>
+
+                <form onSubmit={handleCheckStatus} className="mt-8 space-y-4">
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full rounded-xl bg-teal-600 text-white py-3 font-medium flex items-center justify-center gap-2 hover:bg-teal-700 disabled:opacity-50"
+                  >
+                    Check Status <ArrowRight size={16} />
+                  </button>
+                </form>
+
+                {error && <p className="mt-4 text-sm text-red-600 text-center">{error}</p>}
+              </>
+            )}
+
+            {loading && (
+              <div className="py-12 text-center">
+                <div className="w-10 h-10 border-4 border-gray-200 border-t-teal-600 rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-gray-700">Checking your application…</p>
+              </div>
+            )}
+
+            {applicationData && statusInfo && (
+              <div className="text-center">
+                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ring-1 ${statusInfo.badge}`}>
+                  <StatusIcon className="w-4 h-4" />
+                  <span className="text-sm font-medium">{statusInfo.title}</span>
+                </div>
+
+                <h2 className="mt-4 text-2xl font-semibold text-gray-900">{statusInfo.title}</h2>
+                <p className="mt-2 text-gray-600">{statusInfo.message}</p>
+
+                <div className="mt-6 rounded-xl bg-gray-50 p-4 text-left text-sm text-gray-700 space-y-1">
+                  <p><span className="font-medium">Case ID:</span> {applicationData.caseId}</p>
+                  {applicationData.applicationDate && (
+                    <p><span className="font-medium">Date:</span> {applicationData.applicationDate}</p>
+                  )}
+                  <p><span className="font-medium">Email:</span> {applicationData.email}</p>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setApplicationData(null)
+                    setEmail("")
+                  }}
+                  className="mt-6 w-full rounded-xl border border-teal-600 text-teal-700 py-3 hover:bg-teal-50"
+                >
+                  Check Another Application
+                </button>
+              </div>
             )}
           </div>
-        )}
-
-        {loading && (
-          <div className="text-center">
-            <div className="w-10 h-10 border-4 border-gray-300 border-t-teal-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-700">Checking your application...</p>
-          </div>
-        )}
-
-        {applicationData && statusInfo && (
-          <div className="w-full max-w-md text-center space-y-4">
-            <StatusIcon size={48} className={`mx-auto ${statusInfo.color}`} />
-            <h2 className="text-2xl font-bold">{statusInfo.title}</h2>
-            <p className="text-gray-700">{statusInfo.message}</p>
-            <div className="text-gray-600 text-sm">
-              <p>Case ID: {applicationData.caseId}</p>
-              {/* {applicationData.requestedAmount && <p>Amount: PKR {applicationData.requestedAmount.toLocaleString()}</p>} */}
-              {applicationData.applicationDate && <p>Date: {applicationData.applicationDate}</p>}
-              <p>Email: {applicationData.email}</p>
-            </div>
-            <button
-              onClick={() => {
-                setApplicationData(null)
-                setEmail("")
-              }}
-              className="mt-4 w-full py-2 border border-teal-600 text-teal-600 rounded-lg hover:bg-teal-50"
-            >
-              Check Another Application
-            </button>
-          </div>
-        )}
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="px-8 py-6 bg-gray-900 text-white text-center text-sm">
-        2025 Rahmah Exchange. All rights reserved.
+      <footer className="border-t bg-gray-900 text-gray-300 text-sm">
+        <div className="max-w-7xl mx-auto px-6 py-6 text-center">
+          © 2025 Rahmah Exchange. All rights reserved.
+        </div>
       </footer>
     </div>
   )
