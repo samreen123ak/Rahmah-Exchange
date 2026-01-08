@@ -78,7 +78,7 @@ export default function Home() {
       {/* ================= HERO SECTION ================= */}
       <section
         id="home"
-        className="relative w-full min-h-screen bg-cover bg-center pt-20"
+        className="relative w-full min-h-screen bg-cover bg-center pt-15"
         style={{
           backgroundImage: "url('Vector.png')",
         }}
