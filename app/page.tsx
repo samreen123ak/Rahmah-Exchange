@@ -480,9 +480,9 @@ function ServiceCard({
         <h3 className="text-2xl font-bold mb-4">{title}</h3>
         <p className="text-white/90 leading-relaxed mb-6">{description}</p>
       </div>
-      <Link href="#" className="text-white font-semibold flex items-center gap-2 hover:gap-4 transition">
+      {/* <Link href="#" className="text-white font-semibold flex items-center gap-2 hover:gap-4 transition">
         View More <ArrowRight className="w-4 h-4" />
-      </Link>
+      </Link> */}
     </div>
   )
 }
