@@ -64,7 +64,7 @@ export default function StaffLayout({ children, title, description }: StaffLayou
       href: "/staff/dashboard",
       active: pathname === "/staff/dashboard",
     },
-    ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
+    ...(userRole && ["admin", "caseworker", "approver", "treasurer", "super_admin"].includes(userRole)
       ? [
           {
             name: "All Cases",
