@@ -62,8 +62,6 @@ export default function AddCasePage() {
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [emailExists, setEmailExists] = useState(false)
   const [checkingEmail, setCheckingEmail] = useState(false)
-  const [tenants, setTenants] = useState<{ _id: string; name: string; slug: string }[]>([])
-  const [loadingTenants, setLoadingTenants] = useState(false)
 
   const [formData, setFormData] = useState({
     // Step 1: Personal
@@ -108,7 +106,7 @@ export default function AddCasePage() {
     documents: [] as File[],
   })
 
-  // Check authentication on mount - no API calls for data
+  // Check authentication on mount and get tenant info
   useEffect(() => {
     const token = getAuthToken()
     if (!token) {
@@ -124,30 +122,43 @@ export default function AddCasePage() {
     } catch (err) {
       console.error("Failed to decode token for tenant", err)
     }
-
-    fetchTenants()
   }, [router])
-
-  const fetchTenants = async () => {
-    setLoadingTenants(true)
-    try {
-      const res = await authenticatedFetch("/api/public/tenants")
-      const data = await res.json()
-      if (res.ok) {
-        setTenants(data.tenants || [])
-      } else {
-        console.error("Failed to load masjids:", data?.message || res.statusText)
-      }
-    } catch (err) {
-      console.error("Failed to load masjids", err)
-    } finally {
-      setLoadingTenants(false)
-    }
-  }
 
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type, isVisible: true })
     setTimeout(() => setToast((prev) => ({ ...prev, isVisible: false })), 4000)
+  }
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    if (!email || !validateEmail(email)) return false
+
+    setCheckingEmail(true)
+    try {
+      const token = getAuthToken()
+      if (!token) return false
+
+      const response = await authenticatedFetch(`/api/zakat-applicants/check-email?email=${encodeURIComponent(email)}`)
+      const data = await response.json()
+
+      if (response.ok && data.exists) {
+        setEmailExists(true)
+        return true
+      } else {
+        setEmailExists(false)
+        return false
+      }
+    } catch (error) {
+      console.error("Error checking email:", error)
+      setEmailExists(false)
+      return false
+    } finally {
+      setCheckingEmail(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -156,11 +167,22 @@ export default function AddCasePage() {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }))
     }
+    // Clear email exists warning when email changes
+    if (name === "email" && emailExists) {
+      setEmailExists(false)
+    }
   }
 
   const validateStep1 = async (): Promise<boolean> => {
     const newErrors: ValidationErrors = {}
     if (!formData.tenantId) newErrors.tenantId = "Masjid is required"
+    // Check email again on validation
+    if (formData.email.trim() && validateEmail(formData.email)) {
+      const exists = await checkEmailExists(formData.email)
+      if (exists) {
+        newErrors.email = "This email is already registered"
+      }
+    }
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required"
     if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"
     if (!formData.streetAddress.trim()) newErrors.streetAddress = "Street address is required"
@@ -524,34 +546,6 @@ export default function AddCasePage() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Personal Information</h2>
 
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Select Masjid <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="tenantId"
-                  value={formData.tenantId}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 ${
-                    errors.tenantId ? "border-red-500 bg-red-50" : "border-gray-300"
-                  }`}
-                  disabled={loadingTenants}
-                >
-                  <option value="">{loadingTenants ? "Loading masjids..." : "Select a masjid"}</option>
-                  {tenants.map((tenant) => (
-                    <option key={tenant._id} value={tenant._id}>
-                      {tenant.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.tenantId && (
-                  <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.tenantId}
-                  </p>
-                )}
-              </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -778,20 +772,41 @@ export default function AddCasePage() {
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Email <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${
-                      errors.email ? "border-red-500 bg-red-50" : "border-gray-300"
-                    }`}
-                    placeholder="example@email.com"
-                  />
+                  <div className="relative">
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      onBlur={async () => {
+                        if (formData.email.trim() && validateEmail(formData.email)) {
+                          const exists = await checkEmailExists(formData.email)
+                          if (exists) {
+                            setErrors((prev) => ({ ...prev, email: "This email is already registered" }))
+                          }
+                        }
+                      }}
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${
+                        errors.email ? "border-red-500 bg-red-50" : emailExists ? "border-yellow-500 bg-yellow-50" : "border-gray-300"
+                      }`}
+                      placeholder="example@email.com"
+                    />
+                    {checkingEmail && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                      </div>
+                    )}
+                  </div>
                   {errors.email && (
                     <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
                       <AlertCircle className="w-4 h-4" />
                       {errors.email}
+                    </p>
+                  )}
+                  {emailExists && !errors.email && (
+                    <p className="text-yellow-600 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      This email is already registered
                     </p>
                   )}
                 </div>

@@ -64,7 +64,7 @@ export default function StaffLayout({ children, title, description }: StaffLayou
       href: "/staff/dashboard",
       active: pathname === "/staff/dashboard",
     },
-    ...(userRole === "super_admin" || userRole === "admin"
+    ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
       ? [
           {
             name: "All Cases",
@@ -84,7 +84,7 @@ export default function StaffLayout({ children, title, description }: StaffLayou
           },
         ]
       : []),
-    ...(userRole === "admin" || userRole === "super_admin"
+    ...(userRole === "admin" || userRole === "super_admin" || userRole === "caseworker"
       ? [
           {
             name: "Staff Messages",
