@@ -3,7 +3,7 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import { CheckCircle2, TrendingUp, FileText, ChevronRight, Shield } from "lucide-react"
 import { getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
@@ -28,6 +28,8 @@ type StatCardProps = {
 
 export default function DashboardPage() {
   const router = useRouter()
+  const params = useParams()
+  const masjidSlug = params.masjidSlug as string
   const [applicants, setApplicants] = useState<ZakatApplicant[]>([])
   const [totalFromAPI, setTotalFromAPI] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
@@ -36,12 +38,11 @@ export default function DashboardPage() {
   const [userRole, setUserRole] = useState<string>("")
   const [userName, setUserName] = useState<string>("")
   const [userEmail, setUserEmail] = useState<string>("")
-  const [roleCheckPassed, setRoleCheckPassed] = useState(false)
 
   useEffect(() => {
     const token = getAuthToken()
     if (!token) {
-      router.push("/staff/login")
+      router.push(`/${masjidSlug}/staff/login`)
       return
     }
 
@@ -50,27 +51,18 @@ export default function DashboardPage() {
       setUserRole(decoded.role || "")
       setUserName(decoded.name || "User")
       setUserEmail(decoded.email || "")
-
-      if (decoded.role !== "super_admin") {
-        router.push("/")
-        return
-      }
-      setRoleCheckPassed(true)
     } catch (err) {
       console.error("Failed to decode token:", err)
-      router.push("/staff/login")
     }
-  }, [router])
+  }, [router, masjidSlug])
 
   const normalizeStatus = (status?: string) => (status || "").trim().toLowerCase().replace(/\s+/g, " ")
 
   useEffect(() => {
-    // Wait until we know the user's role before loading dashboard data
     if (!userRole) return
 
     const fetchData = async () => {
       try {
-        // Always load applicants for counts (for tenants or super admin)
         const res = await authenticatedFetch(`/api/zakat-applicants`)
         const json = await res.json()
 
@@ -84,7 +76,6 @@ export default function DashboardPage() {
         setApplicants(normalizedArray)
         setTotalFromAPI(json.total ?? json.totalCount ?? normalizedArray.length)
 
-        // For super_admin, also load tenants to show masjid-level stats
         if (userRole === "super_admin") {
           setTenantsLoading(true)
           try {
@@ -137,93 +128,13 @@ export default function DashboardPage() {
     return "Good Evening"
   }
 
-  // const navItems = [
-  //   { name: "Dashboard", icon: FileText, href: "/staff/dashboard", active: pathname === "/staff/dashboard" },
-  //   ...(userRole === "super_admin" || userRole === "admin"
-  //     ? [{ name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" }]
-  //     : []),
-  //   // Messages should be visible ONLY for masjid staff (admin, caseworker, approver, treasurer)
-  //   ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
-  //     ? [{ name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" }]
-  //     : []),
-  //   ...(userRole === "admin" || userRole === "super_admin"
-  //     ? [{ name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" }]
-  //     : []),
-  //   // Shared Profiles also only for masjid staff, not super_admin
-  //   ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
-  //     ? [
-  //         {
-  //           name: "Shared Profiles",
-  //           icon: Share2,
-  //           href: "/staff/shared-profiles",
-  //           active: pathname === "/staff/shared-profiles",
-  //         },
-  //       ]
-  //     : []),
-  //   ...(userRole === "admin" || userRole === "super_admin"
-  //     ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
-  //     : []),
-  //   ...(userRole === "super_admin"
-  //     ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
-  //     : []),
-  // ]
-
-  // Masjid-level stats for super admin
   const totalMasjids = tenants.length
   const activeMasjids = tenants.filter((t: any) => t.isActive !== false).length
   const inactiveMasjids = tenants.filter((t: any) => t.isActive === false).length
 
   const DashboardContent = (
     <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      {/* <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-screen">
-        <div className="p-6 border-b border-gray-200">
-          <Link href="/staff/dashboard" className="flex items-center gap-3">
-            <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={80} height={80} />
-          </Link>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto p-4">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-                  item.active ? "bg-teal-50 text-teal-700 font-medium" : "text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                {item.name}
-              </Link>
-            )
-          })}
-        </nav> */}
-      {/* 
-        <div className="p-4 border-t border-gray-200">
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 w-full"
-          >
-            <LogOut className="w-5 h-5" /> Logout
-          </button>
-        </div>
-      </aside> */}
-
-      {/* Main Content */}
-
-      {/* Header */}
-      {/* <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input type="text" placeholder="Search cases, applicants..." className="w-full pl-10 pr-4 py-2 border rounded-lg" />
-          </div>
-        </header> */}
-
-      {/* Greeting Banner */}
-
-      <div className=" flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl p-8 text-white mt-6">
+      <div className="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl p-8 text-white mt-6">
         <h1 className="text-3xl font-bold">
           {getGreeting()}, {userName.split(" ")[0]}
         </h1>
@@ -232,7 +143,6 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats */}
       {userRole === "super_admin" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           <StatCard
@@ -289,11 +199,10 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Today's Applications Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mt-10">
         <div className="p-6 border-b flex items-center justify-between">
           <h2 className="text-xl font-bold">Today's Applications</h2>
-          <Link href="/staff/cases" className="text-teal-600 font-medium flex items-center gap-1">
+          <Link href={`/${masjidSlug}/staff/cases`} className="text-teal-600 font-medium flex items-center gap-1">
             View All <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -327,7 +236,7 @@ export default function DashboardPage() {
                   <tr
                     key={app._id || app.id || `app-${index}`}
                     className="hover:bg-gray-50 cursor-pointer"
-                    onClick={() => router.push(`/staff/cases/${app._id || app.id}`)}
+                    onClick={() => router.push(`/${masjidSlug}/staff/cases/${app._id || app.id}`)}
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -376,7 +285,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Status Overview moved under table */}
       <div className="p-6 mt-8 bg-white border rounded-lg shadow-sm">
         <h3 className="text-lg font-bold mb-4">Status Overview</h3>
         <div className="space-y-3">
@@ -391,7 +299,7 @@ export default function DashboardPage() {
     </div>
   )
 
-  return roleCheckPassed ? DashboardContent : null
+  return DashboardContent
 }
 
 function StatusRow({ label, count, color }: any) {
