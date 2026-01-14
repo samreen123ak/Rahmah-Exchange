@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { ChevronLeft, Upload, CheckCircle2, AlertCircle, CheckCircle } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useParams } from "next/navigation"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import ApplicationStatus from "@/components/application-status"
 
@@ -46,7 +47,10 @@ const STEPS = [
   { number: 8, label: "Review" },
 ]
 
-export default function ApplyPage() {
+export default function TenantFormPage() {
+  const params = useParams()
+  const masjidSlug = params.masjidSlug as string
+
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -61,9 +65,10 @@ export default function ApplyPage() {
   const [checkingEmail, setCheckingEmail] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
   const [submittedApplicantData, setSubmittedApplicantData] = useState<any>(null)
+  const [tenantName, setTenantName] = useState<string>("")
+  const [loadingTenant, setLoadingTenant] = useState(true)
 
   const [formData, setFormData] = useState({
-    // Step 1: Personal
     firstName: "",
     lastName: "",
     streetAddress: "",
@@ -79,11 +84,8 @@ export default function ApplyPage() {
     referredBy: "",
     referrerPhone: "",
     tenantId: "",
-    // Step 2: Employment
     employmentStatus: "",
-    // Step 3: Family
     dependentsInfo: "",
-    // Step 4: Financial
     totalMonthlyIncome: "",
     incomeSources: "",
     rentMortgage: "",
@@ -91,42 +93,51 @@ export default function ApplyPage() {
     food: "",
     otherExpenses: "",
     totalDebts: "",
-    // Step 5: Request
     requestType: "Zakat",
     amountRequested: "",
     whyApplying: "",
     circumstances: "",
     previousZakat: "",
-    zakatResourceSource: "", // Added new field
-    // Step 6: References
+    zakatResourceSource: "",
     reference1: { fullName: "", phoneNumber: "", email: "", relationship: "" },
     reference2: { fullName: "", phoneNumber: "", email: "", relationship: "" },
-    // Step 7: Documents
     documents: [] as File[],
   })
-  const [tenants, setTenants] = useState<{ _id: string; name: string; slug: string }[]>([])
-  const [loadingTenants, setLoadingTenants] = useState(false)
 
   useEffect(() => {
-    const fetchTenants = async () => {
-      setLoadingTenants(true)
+    const fetchTenantDetails = async () => {
+      console.log("[v0] Fetching tenant details. masjidSlug:", masjidSlug)
+      setLoadingTenant(true)
       try {
-        const res = await fetch("/api/public/tenants")
-        const data = await res.json()
+        const url = `/api/tenants?slug=${masjidSlug}`
+        console.log("[v0] Fetching from URL:", url)
+        const res = await fetch(url)
+        console.log("[v0] Fetch response status:", res.status)
         if (res.ok) {
-          setTenants(data.tenants || [])
+          const data = await res.json()
+          console.log("[v0] Tenant data received:", data)
+          const tenant = Array.isArray(data) ? data[0] : data.tenants?.[0] || data
+          console.log("[v0] Parsed tenant:", tenant)
+          if (tenant) {
+            setTenantName(tenant.name || "")
+            setFormData((prev) => ({ ...prev, tenantId: tenant._id || "" }))
+          }
         } else {
-          console.error("Failed to load masjids:", data?.message || res.statusText)
+          console.log("[v0] API response not OK")
         }
       } catch (err) {
-        console.error("Failed to load masjids", err)
+        console.error("[v0] Failed to load tenant details:", err)
       } finally {
-        setLoadingTenants(false)
+        setLoadingTenant(false)
       }
     }
 
-    fetchTenants()
-  }, [])
+    if (masjidSlug) {
+      fetchTenantDetails()
+    } else {
+      console.log("[v0] masjidSlug is not available yet")
+    }
+  }, [masjidSlug])
 
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type, isVisible: true })
@@ -145,11 +156,6 @@ export default function ApplyPage() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(email)
   }
-
-  // const = (phone: string): boolean => {
-  //   const digitsOnly = phone.replace(/\D/g, "")
-  //   return digitsOnly.length === 12
-  // }
 
   const validateDateOfBirth = (date: string): boolean => {
     if (!date) return false
@@ -292,10 +298,6 @@ export default function ApplyPage() {
   const validateStep6 = (): boolean => {
     const newErrors: ValidationErrors = {}
 
-    if (!formData.tenantId) {
-      newErrors.tenantId = "Please select a masjid"
-    }
-
     if (!formData.reference1.fullName.trim()) {
       newErrors["reference1.fullName"] = "Please enter full name"
     }
@@ -414,10 +416,7 @@ export default function ApplyPage() {
   }
 
   const handleSubmit = async () => {
-    console.log("handleSubmit called. Documents count:", formData.documents.length)
-
     if (!formData.documents || formData.documents.length === 0) {
-      console.log("No documents found. Form data documents:", formData.documents)
       showToast("Please upload at least one document", "error")
       setIsSubmitting(false)
       return
@@ -460,26 +459,18 @@ export default function ApplyPage() {
       submitData.append("reference1", JSON.stringify(formData.reference1))
       submitData.append("reference2", JSON.stringify(formData.reference2))
 
-      console.log("Documents being submitted:", formData.documents.length)
-
       for (let i = 0; i < formData.documents.length; i++) {
         const file = formData.documents[i]
         if (file && file instanceof File) {
-          console.log(`Appending document ${i + 1}:`, file.name, file.size, file.type)
           submitData.append("documents", file)
-        } else {
-          console.warn(`Skipping invalid document at index ${i}:`, file)
         }
       }
-      console.log("Submitting zakatResourceSource:", formData)
 
       const response = await axios.post(API_URL, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
       if (response.status === 201 || response.data.applicant) {
-        console.log("Application submitted successfully:", response.data)
-        // Store the applicant data from response
         setSubmittedApplicantData(response.data.applicant)
         showToast("Application submitted successfully!", "success")
         setIsSubmitted(true)
@@ -490,7 +481,6 @@ export default function ApplyPage() {
         error.response?.data?.error ||
         error.response?.data?.message ||
         "Something went wrong submitting your application. Please try again."
-      console.error("Error submitting application:", error, errorMessage)
       showToast(errorMessage, "error")
     } finally {
       setIsSubmitting(false)
@@ -498,6 +488,14 @@ export default function ApplyPage() {
   }
 
   const isStepCompleted = (step: number) => step < currentStep
+
+  if (loadingTenant) {
+    return (
+      <div className="min-h-screen bg-linear-to-b from-teal-50 to-blue-50 flex items-center justify-center">
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    )
+  }
 
   if (isSubmitted) {
     return (
@@ -530,6 +528,12 @@ export default function ApplyPage() {
             <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={170} height={170} priority />
           </Link>
         </div>
+        {tenantName && (
+          <div className="text-center">
+            <p className="text-sm text-gray-600">Applying for</p>
+            <p className="text-lg font-semibold text-teal-600">{tenantName}</p>
+          </div>
+        )}
         <button className="px-6 py-2 text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition">
           Save Progress
         </button>
@@ -570,6 +574,9 @@ export default function ApplyPage() {
         </div>
 
         <div className="bg-white rounded-2xl p-8 shadow-sm">
+          {/* All form steps (1-8) are identical to /app/form/page.tsx */}
+          {/* except Step 6 (References) doesn't show the masjid dropdown */}
+
           {currentStep === 1 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Personal Information</h2>
@@ -1227,7 +1234,6 @@ export default function ApplyPage() {
                 )}
               </div>
 
-              {/* Add conditional textarea for zakat resource source when "yes" is selected */}
               {formData.previousZakat === "yes" && (
                 <div className="mt-6">
                   <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -1257,36 +1263,6 @@ export default function ApplyPage() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-3">References (2 Required)</h2>
               <p className="text-gray-600 mb-8">Please provide two references who can vouch for you</p>
-
-              {/* Updated Step 6 (References) to conditionally hide the masjid dropdown for tenant-specific forms */}
-              {/* The dropdown is only shown on the main /form page, not on /[masjidSlug]/form pages */}
-              <div className="mb-10">
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Select Masjid <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="tenantId"
-                  value={formData.tenantId}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 ${
-                    errors.tenantId ? "border-red-500 bg-red-50" : "border-gray-300"
-                  }`}
-                  disabled={loadingTenants}
-                >
-                  <option value="">{loadingTenants ? "Loading masjids..." : "Select a masjid"}</option>
-                  {tenants.map((tenant) => (
-                    <option key={tenant._id} value={tenant._id}>
-                      {tenant.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.tenantId && (
-                  <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.tenantId}
-                  </p>
-                )}
-              </div>
 
               {/* Reference 1 */}
               <div className="mb-8 pb-8 border-b border-gray-200">
@@ -1555,7 +1531,6 @@ export default function ApplyPage() {
                     <p>Type: {formData.requestType}</p>
                     <p>Amount Requested: ${formData.amountRequested || "0"}</p>
                     <p>Reason: {formData.whyApplying.substring(0, 100) || "..."}</p>
-                    {/* Displaying the new field */}
                     {formData.previousZakat === "yes" && formData.zakatResourceSource && (
                       <p>Previous Zakat Resource: {formData.zakatResourceSource}</p>
                     )}

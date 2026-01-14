@@ -15,7 +15,8 @@ export default function StaffSegmentLayout({ children }: Props) {
   const isAuthPage =
     pathname?.includes("/staff/login") ||
     pathname?.includes("/staff/signup") ||
-    pathname?.includes("/staff/setup-password")
+    pathname?.includes("/staff/setup-password") ||
+    pathname?.includes("/form")
 
   if (isAuthPage) {
     return children

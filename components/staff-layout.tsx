@@ -6,7 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useRouter, usePathname, useParams } from "next/navigation"
 import { FileText, LogOut, Users, MessageSquare, Shield, Share2 } from "lucide-react"
-import { removeAuthToken, getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
+import { removeAuthToken, getAuthToken } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
 
 interface StaffLayoutProps {
@@ -23,6 +23,8 @@ export default function StaffLayout({ children, title, description }: StaffLayou
   const [userRole, setUserRole] = useState<string>("")
   const [userName, setUserName] = useState<string>("")
   const [loading, setLoading] = useState(true)
+  const [tenantLogo, setTenantLogo] = useState<string | null>(null)
+  const [tenantColor, setTenantColor] = useState<string>("#0d9488")
 
   const basePath = masjidSlug ? `/${masjidSlug}/staff` : `/staff`
 
@@ -44,22 +46,26 @@ export default function StaffLayout({ children, title, description }: StaffLayou
     }
   }, [router, basePath])
 
-  const handleLogout = async () => {
-    try {
-      const token = getAuthToken()
-      if (token) {
-        await authenticatedFetch(`/api/auth/logout`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }).catch(() => {})
+  useEffect(() => {
+    if (masjidSlug) {
+      const fetchTenantBranding = async () => {
+        try {
+          const res = await fetch(`/api/tenants?slug=${masjidSlug}`)
+          if (res.ok) {
+            const data = await res.json()
+            const tenant = Array.isArray(data) ? data[0] : data.tenants?.[0] || data
+            if (tenant) {
+              setTenantLogo(tenant.logoUrl || null)
+              setTenantColor(tenant.brandColor || "#0d9488")
+            }
+          }
+        } catch (err) {
+          console.error("Failed to fetch tenant branding:", err)
+        }
       }
-      removeAuthToken()
-      router.push(`${basePath}/login`)
-    } catch {
-      removeAuthToken()
-      router.push(`${basePath}/login`)
+      fetchTenantBranding()
     }
-  }
+  }, [masjidSlug])
 
   const navItems = [
     {
@@ -130,6 +136,11 @@ export default function StaffLayout({ children, title, description }: StaffLayou
       : []),
   ]
 
+  const handleLogout = () => {
+    removeAuthToken()
+    router.push(`${basePath}/login`)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -146,8 +157,12 @@ export default function StaffLayout({ children, title, description }: StaffLayou
       {/* SIDEBAR */}
       <aside className="w-64 bg-white border-r border-gray-200 fixed h-screen flex flex-col">
         {/* Logo */}
-        <div className="h-16 flex items-center px-6 border-b">
-          <Image src="/logo1.svg" alt="Logo" width={100} height={100} />
+        <div className="h-16 flex items-center px-6 border-b" style={{ borderBottomColor: tenantColor }}>
+          {tenantLogo ? (
+            <img src={tenantLogo || "/placeholder.svg"} alt="Logo" className="max-w-full max-h-full" />
+          ) : (
+            <Image src="/logo1.svg" alt="Logo" width={100} height={100} />
+          )}
         </div>
 
         {/* Navigation */}

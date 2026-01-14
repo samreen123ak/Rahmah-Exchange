@@ -21,6 +21,8 @@ function StaffLoginForm() {
   const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
   const [masjidName, setMasjidName] = useState<string | null>(null)
+  const [tenantLogo, setTenantLogo] = useState<string | null>(null)
+  const [tenantColor, setTenantColor] = useState<string>("#0d9488")
 
   useEffect(() => {
     const fetchMasjidName = async () => {
@@ -29,6 +31,8 @@ function StaffLoginForm() {
         if (res.ok) {
           const data = await res.json()
           setMasjidName(data.name)
+          setTenantLogo(data.logoUrl || null)
+          setTenantColor(data.brandColor || "#0d9488")
         }
       } catch (err) {
         console.error("Failed to fetch masjid name:", err)
@@ -76,11 +80,22 @@ function StaffLoginForm() {
 
   return (
     <form onSubmit={handleLogin} className="space-y-6 w-full max-w-md">
+      <div className="flex justify-center mb-8">
+        {tenantLogo ? (
+          <img src={tenantLogo || "/placeholder.svg"} alt="Masjid Logo" className="max-h-20 max-w-full" />
+        ) : (
+          <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={80} height={80} />
+        )}
+      </div>
+
       <div>
         <h2 className="text-3xl font-bold text-gray-900">Log in</h2>
         {masjidName && (
           <p className="text-sm text-gray-600 mt-1">
-            Logging in to <span className="font-semibold text-teal-600">{masjidName}</span>
+            Logging in to{" "}
+            <span className="font-semibold" style={{ color: tenantColor }}>
+              {masjidName}
+            </span>
           </p>
         )}
       </div>

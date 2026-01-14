@@ -3,25 +3,8 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
-import {
-  FileText,
-  LogOut,
-  Users,
-  MessageSquare,
-  Search,
-  Plus,
-  Shield,
-  Building2,
-  Edit,
-  Trash2,
-  CheckCircle2,
-  XCircle,
-  Mail,
-  Phone,
-  MapPin,
-} from "lucide-react"
+import { Search, Plus, Shield, Building2, Edit, Trash2, CheckCircle2, XCircle, Mail, Phone, MapPin } from "lucide-react"
 import { removeAuthToken, getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
 
@@ -41,6 +24,8 @@ interface Tenant {
   subscriptionStatus: string
   createdAt: string
   updatedAt: string
+  logoUrl?: string
+  brandColor?: string
 }
 
 export default function TenantsPage() {
@@ -66,6 +51,8 @@ export default function TenantsPage() {
     adminEmail: "",
     adminName: "",
     isActive: true,
+    logoUrl: "",
+    brandColor: "#0d9488",
   })
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -155,6 +142,8 @@ export default function TenantsPage() {
       adminEmail: "",
       adminName: "",
       isActive: true,
+      logoUrl: "",
+      brandColor: "#0d9488",
     })
     setError(null)
     setSuccess(null)
@@ -172,9 +161,11 @@ export default function TenantsPage() {
       city: tenant.address?.city || "",
       state: tenant.address?.state || "",
       zipCode: tenant.address?.zipCode || "",
-      adminEmail: "", // Admin email not shown in edit (can be added later if needed)
+      adminEmail: "",
       adminName: "",
       isActive: tenant.isActive !== undefined ? tenant.isActive : true,
+      logoUrl: (tenant as any).logoUrl || "",
+      brandColor: (tenant as any).brandColor || "#0d9488",
     })
     setError(null)
     setSuccess(null)
@@ -210,6 +201,8 @@ export default function TenantsPage() {
               adminName: formData.adminName,
             }
           : {}),
+        logoUrl: formData.logoUrl,
+        brandColor: formData.brandColor,
       }
 
       const res = await authenticatedFetch(url, {
@@ -264,6 +257,8 @@ export default function TenantsPage() {
         adminEmail: "",
         adminName: "",
         isActive: true,
+        logoUrl: "",
+        brandColor: "#0d9488",
       })
 
       // Refresh the tenants list
@@ -342,6 +337,18 @@ export default function TenantsPage() {
     }))
   }
 
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string
+        setFormData({ ...formData, logoUrl: base64String })
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   const filteredTenants = tenants.filter(
     (tenant) =>
       tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -349,240 +356,181 @@ export default function TenantsPage() {
       tenant.email?.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
-  // const navItems = [
-  //   { name: "Dashboard", icon: FileText, href: "/staff/dashboard", active: pathname === "/staff/dashboard" },
-  //   ...(userRole === "super_admin" || userRole === "admin"
-  //     ? [{ name: "All Cases", icon: FileText, href: "/staff/cases", active: pathname === "/staff/cases" }]
-  //     : []),
-  //   // Messages should be visible ONLY for masjid staff (admin, caseworker, approver, treasurer)
-  //   ...(userRole && ["admin", "caseworker", "approver", "treasurer"].includes(userRole)
-  //     ? [{ name: "Messages", icon: MessageSquare, href: "/messages", active: pathname === "/messages" }]
-  //     : []),
-  //   ...(userRole === "admin" || userRole === "super_admin"
-  //     ? [{ name: "Staff Messages", icon: Users, href: "/staff/messages", active: pathname === "/staff/messages" }]
-  //     : []),
-
-  //   ...(userRole === "admin" || userRole === "super_admin"
-  //     ? [{ name: "Manage Users", icon: Users, href: "/staff/users", active: pathname === "/staff/users" }]
-  //     : []),
-  //   ...(userRole === "super_admin"
-  //     ? [{ name: "Manage Masjids", icon: Shield, href: "/staff/tenants", active: pathname === "/staff/tenants" }]
-  //     : []),
-  // ]
-
   const TenantsContent = (
     <div className="min-h-screen bg-gray-50">
-      {/* Sidebar
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-screen">
-        <div className="p-6 border-b border-gray-200">
-          <Link href="/staff/dashboard" className="flex items-center gap-3">
-            <Image src="/logo1.svg" alt="Rahmah Exchange Logo" width={80} height={80} />
-          </Link>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto p-4">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-                  item.active ? "bg-teal-50 text-teal-700 font-medium" : "text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                {item.name}
-              </Link>
-            )
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-gray-200">
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Masjids</h1>
+            <p className="text-gray-600">View and manage all mosques in the system</p>
+          </div>
           <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 w-full"
+            onClick={handleAdd}
+            className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
           >
-            <LogOut className="w-5 h-5" /> Logout
+            <Plus className="w-5 h-5" />
+            Add New Masjid
           </button>
         </div>
-      </aside> */}
 
-      {/* Main Content */}
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Masjids</h1>
-              <p className="text-gray-600">View and manage all mosques in the system</p>
-            </div>
-            <button
-              onClick={handleAdd}
-              className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
-            >
-              <Plus className="w-5 h-5" />
-              Add New Masjid
-            </button>
-          </div>
+        {/* Success/Error Messages */}
+        {success && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">{success}</div>
+        )}
+        {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">{error}</div>}
 
-          {/* Success/Error Messages */}
-          {success && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">{success}</div>
-          )}
-          {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">{error}</div>}
-
-          {/* Search */}
-          <div className="mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search masjids by name, slug, or email..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
-          </div>
-
-          {/* Tenants List */}
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
-              <p className="mt-4 text-gray-600">Loading masjids...</p>
-            </div>
-          ) : filteredTenants.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg">
-              <Building2 className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-              <p className="text-gray-600">No masjids found</p>
-            </div>
-          ) : (
-            <div className="grid gap-6">
-              {filteredTenants.map((tenant) => (
-                <div
-                  key={tenant._id}
-                  className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <Building2 className="w-6 h-6 text-teal-600" />
-                        <h3 className="text-xl font-bold text-gray-900">{tenant.name}</h3>
-                        {tenant.isActive ? (
-                          <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium flex items-center gap-1">
-                            <CheckCircle2 className="w-4 h-4" />
-                            Active
-                          </span>
-                        ) : (
-                          <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium flex items-center gap-1">
-                            <XCircle className="w-4 h-4" />
-                            Inactive
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 mt-4">
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <span className="text-sm font-medium">Slug:</span>
-                          <code className="px-2 py-1 bg-gray-100 rounded text-sm">{tenant.slug}</code>
-                        </div>
-                        {tenant.email && (
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <Mail className="w-4 h-4" />
-                            <span className="text-sm">{tenant.email}</span>
-                          </div>
-                        )}
-                        {tenant.phone && (
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <Phone className="w-4 h-4" />
-                            <span className="text-sm">{tenant.phone}</span>
-                          </div>
-                        )}
-                        {tenant.address && (tenant.address.city || tenant.address.state) && (
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <MapPin className="w-4 h-4" />
-                            <span className="text-sm">
-                              {[tenant.address.city, tenant.address.state].filter(Boolean).join(", ")}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="mt-4 text-sm text-gray-500">
-                        Created: {new Date(tenant.createdAt).toLocaleDateString()}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleEdit(tenant)}
-                        className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition"
-                        title="Edit"
-                      >
-                        <Edit className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(tenant._id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                        title="Delete Masjid"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Delete Confirmation Modal */}
-          {showDeleteConfirm && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Delete Masjid</h3>
-                <p className="text-gray-600 mb-6">
-                  Are you sure you want to delete this masjid? This action cannot be undone. All data associated with
-                  this masjid (applicants, grants, payments, messages, etc.) will be permanently deleted.
-                </p>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => {
-                      setShowDeleteConfirm(false)
-                      setTenantToDelete(null)
-                    }}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={confirmDelete}
-                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-                  >
-                    Delete Permanently
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Stats */}
-          <div className="mt-8 grid grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="text-3xl font-bold text-gray-900">{tenants.length}</div>
-              <div className="text-sm text-gray-600 mt-1">Total Masjids</div>
-            </div>
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="text-3xl font-bold text-green-600">{tenants.filter((t) => t.isActive).length}</div>
-              <div className="text-sm text-gray-600 mt-1">Active Masjids</div>
-            </div>
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="text-3xl font-bold text-red-600">{tenants.filter((t) => !t.isActive).length}</div>
-              <div className="text-sm text-gray-600 mt-1">Inactive Masjids</div>
-            </div>
+        {/* Search */}
+        <div className="mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search masjids by name, slug, or email..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+            />
           </div>
         </div>
-  
+
+        {/* Tenants List */}
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+            <p className="mt-4 text-gray-600">Loading masjids...</p>
+          </div>
+        ) : filteredTenants.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-lg">
+            <Building2 className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+            <p className="text-gray-600">No masjids found</p>
+          </div>
+        ) : (
+          <div className="grid gap-6">
+            {filteredTenants.map((tenant) => (
+              <div
+                key={tenant._id}
+                className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Building2 className="w-6 h-6 text-teal-600" />
+                      <h3 className="text-xl font-bold text-gray-900">{tenant.name}</h3>
+                      {tenant.isActive ? (
+                        <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium flex items-center gap-1">
+                          <CheckCircle2 className="w-4 h-4" />
+                          Active
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium flex items-center gap-1">
+                          <XCircle className="w-4 h-4" />
+                          Inactive
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <span className="text-sm font-medium">Slug:</span>
+                        <code className="px-2 py-1 bg-gray-100 rounded text-sm">{tenant.slug}</code>
+                      </div>
+                      {tenant.email && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Mail className="w-4 h-4" />
+                          <span className="text-sm">{tenant.email}</span>
+                        </div>
+                      )}
+                      {tenant.phone && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Phone className="w-4 h-4" />
+                          <span className="text-sm">{tenant.phone}</span>
+                        </div>
+                      )}
+                      {tenant.address && (tenant.address.city || tenant.address.state) && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <MapPin className="w-4 h-4" />
+                          <span className="text-sm">
+                            {[tenant.address.city, tenant.address.state].filter(Boolean).join(", ")}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 text-sm text-gray-500">
+                      Created: {new Date(tenant.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleEdit(tenant)}
+                      className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition"
+                      title="Edit"
+                    >
+                      <Edit className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(tenant._id)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                      title="Delete Masjid"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Delete Masjid</h3>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete this masjid? This action cannot be undone. All data associated with this
+                masjid (applicants, grants, payments, messages, etc.) will be permanently deleted.
+              </p>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    setShowDeleteConfirm(false)
+                    setTenantToDelete(null)
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                >
+                  Delete Permanently
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Stats */}
+        <div className="mt-8 grid grid-cols-3 gap-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="text-3xl font-bold text-gray-900">{tenants.length}</div>
+            <div className="text-sm text-gray-600 mt-1">Total Masjids</div>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="text-3xl font-bold text-green-600">{tenants.filter((t) => t.isActive).length}</div>
+            <div className="text-sm text-gray-600 mt-1">Active Masjids</div>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="text-3xl font-bold text-red-600">{tenants.filter((t) => !t.isActive).length}</div>
+            <div className="text-sm text-gray-600 mt-1">Inactive Masjids</div>
+          </div>
+        </div>
+      </div>
 
       {/* Add/Edit Modal */}
       {(showAddModal || showEditModal) && (
@@ -603,6 +551,53 @@ export default function TenantsPage() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                   placeholder="e.g., Masjid Al-Noor"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Masjid Logo</label>
+                <div className="flex items-center gap-4">
+                  {formData.logoUrl && (
+                    <div className="w-20 h-20 rounded-lg border border-gray-300 overflow-hidden flex-shrink-0">
+                      <img
+                        src={formData.logoUrl || "/placeholder.svg"}
+                        alt="Logo preview"
+                        className="w-full h-full object-contain p-2"
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  />
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  Upload a logo image. This will be displayed on the admin dashboard, login page, and form.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Brand Color</label>
+                <div className="flex items-center gap-4">
+                  <input
+                    type="color"
+                    value={formData.brandColor}
+                    onChange={(e) => setFormData({ ...formData, brandColor: e.target.value })}
+                    className="w-16 h-10 border border-gray-300 rounded-lg cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    value={formData.brandColor}
+                    onChange={(e) => setFormData({ ...formData, brandColor: e.target.value })}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 font-mono"
+                    placeholder="#0d9488"
+                  />
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  Choose a color for your system branding (default: teal #0d9488). This will be used throughout your
+                  admin interface.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
