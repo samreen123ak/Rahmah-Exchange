@@ -211,7 +211,7 @@ export async function POST(request: NextRequest) {
               </a>
             </p>
             <p style="color: #666; font-size: 14px;">
-              Direct link: <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 3px;">${baseUrl}/${tenant.slug}/form</code>
+              Direct link: <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 3px;">${baseUrl}/${tenant.slug}/staff/form</code>
             </p>
             
             <p style="margin-top: 20px;">After setting your password, you can log in at: <a href="${baseUrl}/${tenant.slug}/staff/login">${baseUrl}/${tenant.slug}/staff/login</a></p>
