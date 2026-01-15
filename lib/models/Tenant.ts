@@ -45,6 +45,19 @@ const tenantSchema = new mongoose.Schema(
       of: mongoose.Schema.Types.Mixed,
       default: {},
     },
+    // Branding (per-tenant / per-masjid)
+    // logoUrl can be a hosted URL or a data URL (PNG only enforced at API layer)
+    logoUrl: {
+      type: String,
+      required: false,
+      default: null,
+    },
+    // Hex color (e.g. #0d9488)
+    brandColor: {
+      type: String,
+      required: false,
+      default: "#0d9488",
+    },
   },
   { timestamps: true },
 )

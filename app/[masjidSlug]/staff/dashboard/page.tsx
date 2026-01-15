@@ -7,6 +7,7 @@ import { useRouter, useParams } from "next/navigation"
 import { CheckCircle2, TrendingUp, FileText, ChevronRight, Shield } from "lucide-react"
 import { getAuthToken, authenticatedFetch } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
+import { useTenantBranding } from "@/lib/hooks/useTenantBranding"
 
 type ZakatApplicant = {
   id?: string | number
@@ -38,6 +39,7 @@ export default function DashboardPage() {
   const [userRole, setUserRole] = useState<string>("")
   const [userName, setUserName] = useState<string>("")
   const [userEmail, setUserEmail] = useState<string>("")
+  const { brandColor: tenantColor } = useTenantBranding(masjidSlug)
 
   useEffect(() => {
     const token = getAuthToken()
@@ -132,13 +134,36 @@ export default function DashboardPage() {
   const activeMasjids = tenants.filter((t: any) => t.isActive !== false).length
   const inactiveMasjids = tenants.filter((t: any) => t.isActive === false).length
 
+  // Convert hex to gradient colors
+  const hexToRgb = (hex: string) => {
+    const normalized = hex.replace("#", "").trim()
+    if (normalized.length !== 6) return { r: 13, g: 148, b: 136 }
+    return {
+      r: parseInt(normalized.slice(0, 2), 16),
+      g: parseInt(normalized.slice(2, 4), 16),
+      b: parseInt(normalized.slice(4, 6), 16),
+    }
+  }
+
+  const rgb = hexToRgb(tenantColor)
+  const rgbLighter = {
+    r: Math.min(255, rgb.r + 20),
+    g: Math.min(255, rgb.g + 20),
+    b: Math.min(255, rgb.b + 20),
+  }
+
   const DashboardContent = (
     <div className="min-h-screen bg-gray-50">
-      <div className="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl p-8 text-white mt-6">
+      <div
+        className="flex-1 rounded-xl p-8 text-white mt-6"
+        style={{
+          background: `linear-gradient(to right, rgb(${rgb.r}, ${rgb.g}, ${rgb.b}), rgb(${rgbLighter.r}, ${rgbLighter.g}, ${rgbLighter.b}))`,
+        }}
+      >
         <h1 className="text-3xl font-bold">
           {getGreeting()}, {userName.split(" ")[0]}
         </h1>
-        <p className="text-teal-100 mt-2">
+        <p className="text-white/80 mt-2">
           You have <span className="font-semibold text-white">{pendingCount}</span> pending applications.
         </p>
       </div>
@@ -202,7 +227,11 @@ export default function DashboardPage() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mt-10">
         <div className="p-6 border-b flex items-center justify-between">
           <h2 className="text-xl font-bold">Today's Applications</h2>
-          <Link href={`/${masjidSlug}/staff/cases`} className="text-teal-600 font-medium flex items-center gap-1">
+          <Link
+            href={`/${masjidSlug}/staff/cases`}
+            className="font-medium flex items-center gap-1"
+            style={{ color: tenantColor }}
+          >
             View All <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -240,8 +269,11 @@ export default function DashboardPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
-                          <span className="text-teal-600 font-semibold">
+                        <div
+                          className="w-10 h-10 rounded-full flex items-center justify-center"
+                          style={{ backgroundColor: `${tenantColor}20` }}
+                        >
+                          <span className="font-semibold" style={{ color: tenantColor }}>
                             {((app.firstName || "") + " " + (app.lastName || "")).charAt(0).toUpperCase() || "?"}
                           </span>
                         </div>

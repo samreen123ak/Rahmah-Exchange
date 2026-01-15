@@ -6,7 +6,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { authenticatedFetch, getAuthToken, removeAuthToken } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
+import { useTenantBranding } from "@/lib/hooks/useTenantBranding"
 
 interface StaffUser {
   _id: string
@@ -46,6 +47,21 @@ interface StaffMessage {
 
 export default function StaffMessagesPage() {
   const router = useRouter()
+  const params = useParams()
+  const masjidSlug = params?.masjidSlug as string
+  const { brandColor: tenantColor } = useTenantBranding(masjidSlug)
+  
+  // Helper to convert hex to RGB for hover effects
+  const hexToRgb = (hex: string) => {
+    const normalized = hex.replace("#", "").trim()
+    if (normalized.length !== 6) return { r: 13, g: 148, b: 136 }
+    return {
+      r: parseInt(normalized.slice(0, 2), 16),
+      g: parseInt(normalized.slice(2, 4), 16),
+      b: parseInt(normalized.slice(4, 6), 16),
+    }
+  }
+  
   const [currentUser, setCurrentUser] = useState<StaffUser | null>(null)
   const [conversations, setConversations] = useState<StaffConversation[]>([])
   const [allStaff, setAllStaff] = useState<StaffUser[]>([])
@@ -430,7 +446,17 @@ export default function StaffMessagesPage() {
                 setSelectedConversation(null)
                 setSelectedRecipients([])
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium"
+              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg transition font-medium"
+              style={{
+                backgroundColor: tenantColor,
+              }}
+              onMouseEnter={(e) => {
+                const rgb = hexToRgb(tenantColor)
+                e.currentTarget.style.backgroundColor = `rgb(${Math.max(0, rgb.r - 20)}, ${Math.max(0, rgb.g - 20)}, ${Math.max(0, rgb.b - 20)})`
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = tenantColor
+              }}
             >
               <MessageSquare className="w-4 h-4" />
               Start New Chat
@@ -463,7 +489,8 @@ export default function StaffMessagesPage() {
                 placeholder="Search staff members..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                style={{ outlineColor: tenantColor }}
               />
             </div>
           </div>
@@ -641,7 +668,8 @@ export default function StaffMessagesPage() {
                   placeholder="Search staff members..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ outlineColor: tenantColor }}
                 />
               </div>
               <div className="flex-1 overflow-y-auto border border-gray-200 rounded-lg p-4 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
@@ -703,7 +731,19 @@ export default function StaffMessagesPage() {
                 <button
                   onClick={() => handleStartConversation(selectedRecipients)}
                   disabled={selectedRecipients.length === 0 || sending}
-                  className="w-full px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    backgroundColor: tenantColor,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!e.currentTarget.disabled) {
+                      const rgb = hexToRgb(tenantColor)
+                      e.currentTarget.style.backgroundColor = `rgb(${Math.max(0, rgb.r - 20)}, ${Math.max(0, rgb.g - 20)}, ${Math.max(0, rgb.b - 20)})`
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = tenantColor
+                  }}
                 >
                   {sending ? "Starting..." : `Start Conversation (${selectedRecipients.length})`}
                 </button>
@@ -777,12 +817,25 @@ export default function StaffMessagesPage() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type a message..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                    style={{ outlineColor: tenantColor }}
                   />
                   <button
                     type="submit"
                     disabled={!newMessage.trim() || sending}
-                    className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-6 py-2 text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    style={{
+                      backgroundColor: tenantColor,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!e.currentTarget.disabled) {
+                        const rgb = hexToRgb(tenantColor)
+                        e.currentTarget.style.backgroundColor = `rgb(${Math.max(0, rgb.r - 20)}, ${Math.max(0, rgb.g - 20)}, ${Math.max(0, rgb.b - 20)})`
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = tenantColor
+                    }}
                   >
                     <Send className="w-4 h-4" />
                     Send

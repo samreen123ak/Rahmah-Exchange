@@ -25,6 +25,7 @@ export default function StaffLayout({ children, title, description }: StaffLayou
   const [loading, setLoading] = useState(true)
   const [tenantLogo, setTenantLogo] = useState<string | null>(null)
   const [tenantColor, setTenantColor] = useState<string>("#0d9488")
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false)
 
   const basePath = masjidSlug ? `/${masjidSlug}/staff` : `/staff`
 
@@ -39,6 +40,7 @@ export default function StaffLayout({ children, title, description }: StaffLayou
       const decoded: any = jwtDecode(token)
       setUserRole(decoded.role || "")
       setUserName(decoded.name || "User")
+      setIsSuperAdmin(decoded.role === "super_admin")
       setLoading(false)
     } catch (err) {
       console.error("Failed to decode token:", err)
@@ -47,7 +49,8 @@ export default function StaffLayout({ children, title, description }: StaffLayou
   }, [router, basePath])
 
   useEffect(() => {
-    if (masjidSlug) {
+    // Super admins always see default branding (even if browsing a tenant slug area)
+    if (masjidSlug && !isSuperAdmin) {
       const fetchTenantBranding = async () => {
         try {
           const res = await fetch(`/api/tenants?slug=${masjidSlug}`)
@@ -64,8 +67,20 @@ export default function StaffLayout({ children, title, description }: StaffLayou
         }
       }
       fetchTenantBranding()
+    } else {
+      setTenantLogo(null)
+      setTenantColor("#0d9488")
     }
-  }, [masjidSlug])
+  }, [masjidSlug, isSuperAdmin])
+
+  const hexToRgba = (hex: string, alpha: number) => {
+    const normalized = hex.replace("#", "").trim()
+    if (normalized.length !== 6) return `rgba(13, 148, 136, ${alpha})`
+    const r = parseInt(normalized.slice(0, 2), 16)
+    const g = parseInt(normalized.slice(2, 4), 16)
+    const b = parseInt(normalized.slice(4, 6), 16)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
 
   const navItems = [
     {
@@ -178,17 +193,34 @@ export default function StaffLayout({ children, title, description }: StaffLayou
                 className={`relative group flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200
           ${
             isActive
-              ? "bg-gradient-to-r from-teal-500/10 to-teal-500/0 text-teal-700 font-semibold shadow-sm"
+              ? "text-gray-900 font-semibold shadow-sm"
               : "text-gray-700 hover:bg-gray-100"
           }
         `}
+                style={
+                  isActive
+                    ? {
+                        background: `linear-gradient(to right, ${hexToRgba(tenantColor, 0.12)}, ${hexToRgba(
+                          tenantColor,
+                          0,
+                        )})`,
+                        color: tenantColor,
+                      }
+                    : undefined
+                }
               >
                 {/* Left Active Indicator */}
                 {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded-full bg-gradient-to-b from-teal-400 to-teal-600" />
+                  <span
+                    className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded-full"
+                    style={{ background: `linear-gradient(to bottom, ${hexToRgba(tenantColor, 0.7)}, ${tenantColor})` }}
+                  />
                 )}
 
-                <Icon className={`w-4 h-4 transition-colors ${isActive ? "text-teal-600" : "text-gray-500"}`} />
+                <Icon
+                  className={`w-4 h-4 transition-colors ${isActive ? "" : "text-gray-500"}`}
+                  style={isActive ? { color: tenantColor } : undefined}
+                />
 
                 <span>{item.name}</span>
               </Link>

@@ -7,6 +7,28 @@ import { sendEmail } from "@/lib/email"
 import { generateAdminInviteLink } from "@/lib/admin-invite-utils"
 import { escapeHtml } from "@/lib/utils/html-sanitize"
 
+function isValidHexColor(color: unknown) {
+  return typeof color === "string" && /^#[0-9a-fA-F]{6}$/.test(color.trim())
+}
+
+function isPngLogoUrl(value: unknown) {
+  if (value == null || value === "") return true // optional
+  if (typeof value !== "string") return false
+  const v = value.trim()
+  // Allow PNG data URLs (what the super-admin UI currently sends)
+  if (v.startsWith("data:")) {
+    return v.startsWith("data:image/png;base64,")
+  }
+  // Allow hosted/static .png URLs
+  try {
+    const url = new URL(v)
+    return url.pathname.toLowerCase().endsWith(".png")
+  } catch {
+    // If it's not a URL, only allow relative paths ending in .png
+    return v.toLowerCase().endsWith(".png")
+  }
+}
+
 /**
  * GET /api/tenants - List all tenants (super_admin only) or fetch by slug
  */
@@ -92,6 +114,14 @@ export async function POST(request: NextRequest) {
         { message: "Complete address (street, city, state, zipCode) is required" },
         { status: 400 },
       )
+    }
+
+    if (!isPngLogoUrl(logoUrl)) {
+      return NextResponse.json({ message: "Logo must be a PNG file" }, { status: 400 })
+    }
+
+    if (brandColor != null && brandColor !== "" && !isValidHexColor(brandColor)) {
+      return NextResponse.json({ message: "Brand color must be a valid hex color like #0d9488" }, { status: 400 })
     }
 
     await dbConnect()

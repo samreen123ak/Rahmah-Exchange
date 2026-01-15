@@ -21,6 +21,8 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
         email: tenant.email,
         phone: tenant.phone,
         address: tenant.address,
+        logoUrl: (tenant as any).logoUrl || null,
+        brandColor: (tenant as any).brandColor || "#0d9488",
       },
       { status: 200 },
     )

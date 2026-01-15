@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter, useParams } from "next/navigation"
 import { getAuthToken, removeAuthToken, authenticatedFetch } from "@/lib/auth-utils"
 import { jwtDecode } from "jwt-decode"
+import { useTenantBranding } from "@/lib/hooks/useTenantBranding"
 
 interface Case {
   _id: string
@@ -39,6 +40,17 @@ interface Tenant {
   slug: string
 }
 
+// Helper function to convert hex to RGB
+const hexToRgb = (hex: string) => {
+  const normalized = hex.replace("#", "").trim()
+  if (normalized.length !== 6) return { r: 13, g: 148, b: 136 }
+  return {
+    r: parseInt(normalized.slice(0, 2), 16),
+    g: parseInt(normalized.slice(2, 4), 16),
+    b: parseInt(normalized.slice(4, 6), 16),
+  }
+}
+
 export default function CasesPage() {
   const [cases, setCases] = useState<Case[]>([])
   const [loading, setLoading] = useState(true)
@@ -50,6 +62,7 @@ export default function CasesPage() {
   const router = useRouter()
   const params = useParams()
   const masjidSlug = params?.masjidSlug as string
+  const { brandColor: tenantColor } = useTenantBranding(masjidSlug)
 
   useEffect(() => {
     const token = getAuthToken()
@@ -156,7 +169,8 @@ export default function CasesPage() {
               <select
                 value={selectedTenantId}
                 onChange={(e) => setSelectedTenantId(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                style={{ outlineColor: tenantColor }}
                 disabled={loadingTenants}
               >
                 <option value="">All Masjids</option>
@@ -170,7 +184,19 @@ export default function CasesPage() {
             {userRole === "admin" && (
               <>
                 <Link href={`/${masjidSlug}/staff/cases/add`}>
-                  <button className="px-6 py-3 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 transition flex items-center gap-2">
+                  <button
+                    className="px-6 py-3 text-white rounded-lg font-medium transition flex items-center gap-2"
+                    style={{
+                      backgroundColor: tenantColor,
+                    }}
+                    onMouseEnter={(e) => {
+                      const rgb = hexToRgb(tenantColor)
+                      e.currentTarget.style.backgroundColor = `rgb(${Math.max(0, rgb.r - 20)}, ${Math.max(0, rgb.g - 20)}, ${Math.max(0, rgb.b - 20)})`
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = tenantColor
+                    }}
+                  >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
@@ -239,7 +265,19 @@ export default function CasesPage() {
                 </div>
                 <div className="text-right">
                   <Link href={`/${masjidSlug}/staff/cases/${caseItem._id}`}>
-                    <button className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition font-medium">
+                    <button
+                      className="px-4 py-2 text-white rounded-lg transition font-medium"
+                      style={{
+                        backgroundColor: tenantColor,
+                      }}
+                      onMouseEnter={(e) => {
+                        const rgb = hexToRgb(tenantColor)
+                        e.currentTarget.style.backgroundColor = `rgb(${Math.max(0, rgb.r - 20)}, ${Math.max(0, rgb.g - 20)}, ${Math.max(0, rgb.b - 20)})`
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = tenantColor
+                      }}
+                    >
                       Review
                     </button>
                   </Link>

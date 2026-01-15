@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams, useParams } from "next/navigation"
 import Image from "next/image"
 import { CheckCircle2, XCircle, Eye, EyeOff } from "lucide-react"
+import { useTenantBranding } from "@/lib/hooks/useTenantBranding"
 
 function SetupPasswordContent() {
   const router = useRouter()
@@ -25,6 +26,7 @@ function SetupPasswordContent() {
   const [success, setSuccess] = useState(false)
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null)
   const [tokenValid, setTokenValid] = useState(false)
+  const { logoUrl: tenantLogo, brandColor: tenantColor } = useTenantBranding(tenantSlug)
 
   useEffect(() => {
     const tokenParam = searchParams.get("token")
@@ -106,7 +108,10 @@ function SetupPasswordContent() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-b-2 border-teal-600 rounded-full mx-auto mb-4" />
+          <div
+            className="animate-spin h-8 w-8 border-b-2 rounded-full mx-auto mb-4"
+            style={{ borderBottomColor: tenantColor }}
+          />
           <p className="text-gray-600">Verifying invitation link...</p>
         </div>
       </div>
@@ -142,7 +147,11 @@ function SetupPasswordContent() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow p-8">
         <div className="text-center mb-8">
-          <Image src="/logo1.svg" alt="Rahmah Exchange" width={120} height={120} className="mx-auto mb-4" />
+          {tenantLogo ? (
+            <img src={tenantLogo || "/placeholder.svg"} alt="Masjid Logo" className="mx-auto mb-4 max-h-24 max-w-full" />
+          ) : (
+            <Image src="/logo1.svg" alt="Rahmah Exchange" width={120} height={120} className="mx-auto mb-4" />
+          )}
           <h1 className="text-2xl font-bold">Set Your Password</h1>
           {userInfo && (
             <p className="text-gray-600 mt-2">
@@ -196,7 +205,8 @@ function SetupPasswordContent() {
 
           <button
             disabled={submitting}
-            className="w-full py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50"
+            className="w-full py-3 text-white rounded-lg disabled:opacity-50"
+            style={{ backgroundColor: tenantColor }}
           >
             {submitting ? "Setting Password..." : "Set Password"}
           </button>
@@ -204,7 +214,7 @@ function SetupPasswordContent() {
 
         <p className="mt-6 text-center text-sm text-gray-500">
           Login after setup:{" "}
-          <a href={`/${tenantSlug}/staff/login`} className="text-teal-600 hover:underline">
+          <a href={`/${tenantSlug}/staff/login`} className="hover:underline" style={{ color: tenantColor }}>
             /{tenantSlug}/staff/login
           </a>
         </p>

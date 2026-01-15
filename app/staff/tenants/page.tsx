@@ -340,9 +340,29 @@ export default function TenantsPage() {
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // PNG-only enforcement (client-side)
+      if (file.type !== "image/png" && !file.name.toLowerCase().endsWith(".png")) {
+        setError("Logo must be a PNG file")
+        e.target.value = ""
+        return
+      }
+
+      // Basic size guard (avoid massive base64 in DB); tweak as needed.
+      const maxBytes = 2 * 1024 * 1024
+      if (file.size > maxBytes) {
+        setError("Logo is too large. Please upload a PNG under 2MB.")
+        e.target.value = ""
+        return
+      }
+
       const reader = new FileReader()
       reader.onload = (event) => {
         const base64String = event.target?.result as string
+        if (!base64String?.startsWith("data:image/png;base64,")) {
+          setError("Logo must be a PNG file")
+          e.target.value = ""
+          return
+        }
         setFormData({ ...formData, logoUrl: base64String })
       }
       reader.readAsDataURL(file)
@@ -567,7 +587,7 @@ export default function TenantsPage() {
                   )}
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/png"
                     onChange={handleLogoUpload}
                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                   />

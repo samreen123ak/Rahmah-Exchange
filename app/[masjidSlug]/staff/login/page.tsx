@@ -7,6 +7,7 @@ import Link from "next/link"
 import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from "lucide-react"
 import { useRouter, useSearchParams, useParams } from "next/navigation"
 import { setAuthToken } from "@/lib/auth-utils"
+import { useTenantBranding } from "@/lib/hooks/useTenantBranding"
 
 function StaffLoginForm() {
   const router = useRouter()
@@ -21,8 +22,7 @@ function StaffLoginForm() {
   const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
   const [masjidName, setMasjidName] = useState<string | null>(null)
-  const [tenantLogo, setTenantLogo] = useState<string | null>(null)
-  const [tenantColor, setTenantColor] = useState<string>("#0d9488")
+  const { logoUrl: tenantLogo, brandColor: tenantColor } = useTenantBranding(masjidSlug)
 
   useEffect(() => {
     const fetchMasjidName = async () => {
@@ -31,8 +31,6 @@ function StaffLoginForm() {
         if (res.ok) {
           const data = await res.json()
           setMasjidName(data.name)
-          setTenantLogo(data.logoUrl || null)
-          setTenantColor(data.brandColor || "#0d9488")
         }
       } catch (err) {
         console.error("Failed to fetch masjid name:", err)
@@ -107,7 +105,8 @@ function StaffLoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mt-2 px-4 py-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500"
+          className="w-full mt-2 px-4 py-3 border rounded-lg bg-gray-50 focus:ring-2"
+          style={{ outlineColor: tenantColor }}
           placeholder="staff@example.com"
         />
       </div>
@@ -120,7 +119,8 @@ function StaffLoginForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 pr-10 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500"
+            className="w-full px-4 py-3 pr-10 border rounded-lg bg-gray-50 focus:ring-2"
+            style={{ outlineColor: tenantColor }}
             placeholder="Enter password"
           />
           <button
@@ -148,7 +148,8 @@ function StaffLoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg flex items-center justify-center gap-2"
+        className="w-full py-3 text-white font-semibold rounded-lg flex items-center justify-center gap-2"
+        style={{ backgroundColor: tenantColor }}
       >
         {loading && <Loader2 size={18} className="animate-spin" />}
         {loading ? "Logging in..." : "Log in"}
@@ -178,16 +179,34 @@ function LoginFormWrapper() {
 }
 
 export default function MasjidStaffLoginPage() {
+  const params = useParams()
+  const masjidSlug = params.masjidSlug as string
+  const { logoUrl: tenantLogo, brandColor: tenantColor } = useTenantBranding(masjidSlug)
+
+  // Convert hex to rgba for overlay
+  const hexToRgba = (hex: string, alpha: number) => {
+    const normalized = hex.replace("#", "").trim()
+    if (normalized.length !== 6) return `rgba(13, 148, 136, ${alpha})`
+    const r = parseInt(normalized.slice(0, 2), 16)
+    const g = parseInt(normalized.slice(2, 4), 16)
+    const b = parseInt(normalized.slice(4, 6), 16)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       {/* LEFT SIDE – BACKGROUND ONLY */}
       <div className="relative bg-cover bg-center flex items-center" style={{ backgroundImage: "url('/mosque.png')" }}>
         {/* STRONG OVERLAY */}
-        <div className="absolute inset-0 bg-teal-900/80"></div>
+        <div className="absolute inset-0" style={{ backgroundColor: hexToRgba(tenantColor, 0.8) }}></div>
 
         <div className="relative z-10 text-white px-12 max-w-md">
           {/* LOGO */}
-          <Image src="/logo2.svg" alt="Logo" width={90} height={90} className="mb-6" />
+          {tenantLogo ? (
+            <img src={tenantLogo} alt="Masjid Logo" className="mb-6 max-h-24 max-w-full" />
+          ) : (
+            <Image src="/logo2.svg" alt="Logo" width={90} height={90} className="mb-6" />
+          )}
 
           {/* TEXT */}
           <h1 className="text-4xl font-bold">Hey! Welcome</h1>

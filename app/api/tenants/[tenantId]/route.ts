@@ -3,6 +3,25 @@ import { dbConnect } from "@/lib/db"
 import Tenant from "@/lib/models/Tenant"
 import { requireRole } from "@/lib/role-middleware"
 
+function isValidHexColor(color: unknown) {
+  return typeof color === "string" && /^#[0-9a-fA-F]{6}$/.test(color.trim())
+}
+
+function isPngLogoUrl(value: unknown) {
+  if (value == null || value === "") return true // optional
+  if (typeof value !== "string") return false
+  const v = value.trim()
+  if (v.startsWith("data:")) {
+    return v.startsWith("data:image/png;base64,")
+  }
+  try {
+    const url = new URL(v)
+    return url.pathname.toLowerCase().endsWith(".png")
+  } catch {
+    return v.toLowerCase().endsWith(".png")
+  }
+}
+
 /**
  * GET /api/tenants/[tenantId] - Get tenant details
  */
@@ -43,6 +62,14 @@ export async function PATCH(
   try {
     const { tenantId } = await params
     const updates = await request.json()
+
+    if ("logoUrl" in updates && !isPngLogoUrl(updates.logoUrl)) {
+      return NextResponse.json({ message: "Logo must be a PNG file" }, { status: 400 })
+    }
+
+    if ("brandColor" in updates && updates.brandColor != null && updates.brandColor !== "" && !isValidHexColor(updates.brandColor)) {
+      return NextResponse.json({ message: "Brand color must be a valid hex color like #0d9488" }, { status: 400 })
+    }
 
     await dbConnect()
 
